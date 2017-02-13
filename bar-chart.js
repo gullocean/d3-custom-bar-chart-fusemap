@@ -6,18 +6,6 @@ const legendTitleHeight = 20;
 const graphMargin = { bottom: 20, left: 10, right: 10, top: 10};
 const graphPadding = { bottom: 30, left: 50, right: 0, top: 0};
 
-const mainContainerHeight = mainContainer.node().getBoundingClientRect().height;
-const mainContainerWidth = mainContainer.node().getBoundingClientRect().width;
-
-const graphContainerHeight = mainContainerHeight;
-const graphContainerWidth = mainContainerWidth - legendWidth;
-
-const legendContainerHeight = graphContainerHeight - graphMargin.bottom - graphMargin.top - graphPadding.bottom - graphPadding.top;
-const legendContainerWidth = legendWidth;
-
-const graphHeight = graphContainerHeight - graphMargin.bottom - graphMargin.top - graphPadding.bottom - graphPadding.top;
-const graphWidth = graphContainerWidth - graphMargin.left - graphMargin.right - graphPadding.left - graphPadding.right;
-
 const graphContainer = mainContainer
   .append('div')
     .attr('class', 'graph-container');
@@ -29,67 +17,18 @@ const legendTitleContainer = legendContainer
     .attr('class', 'legend-title-container');
 const legendContentContainer = legendContainer
   .append('div')
-    .attr('class', 'legend-content-container')
-
-graphContainer
-  .style('height', graphContainerHeight + 'px')
-  .style('width', graphContainerWidth + 'px');
-
-legendTitleContainer
-  .style('padding-top', (graphMargin.top + graphPadding.top) + 'px');
-
-legendContentContainer
-  .style('height', legendContainerHeight + 'px')
-  .style('width', legendContainerWidth + 'px');
-
+    .attr('class', 'legend-content-container');
 const svgGraphD3Selection = graphContainer
-  .append('svg')
-    .attr('height', graphContainerHeight)
-    .attr('width', graphContainerWidth);
-
+  .append('svg');
 const svgLegendContainer = legendContentContainer
-  .append('svg')
-    .attr('height', legendContainerHeight * 0.8)
-    .attr('width', legendContainerWidth * 0.8);
-
-const graphBackgroundRectD3Selection = svgGraphD3Selection
-  .append('rect')
-    .attr('class', 'graph-background')
-    .attr('height', graphHeight + graphMargin.bottom)
-    .attr('width', graphWidth)
-    .attr('transform', 'translate(' + (graphMargin.left + graphPadding.left) + ',' + graphMargin.top + ')');
-
-const barChartContainerD3Selection = svgGraphD3Selection
-  .append('g')
-    .attr('class', 'bar-chart')
-    .attr('transform', 'translate(' + (graphMargin.left + graphPadding.left) + ',' + graphMargin.top + ')');
-
-const axesContainerD3Selection = barChartContainerD3Selection
-  .append('g')
-    .attr('class', 'axes')
-
-const gridsContainerD3Selection = barChartContainerD3Selection
-  .append('g')
-    .attr('class', 'grids')
-
+  .append('svg');
 const legendContainerD3Selection = svgLegendContainer
   .append('g')
-    .attr('class', 'legend')
+    .attr('class', 'legend');
 
 const parseDate = d3.timeParse('%A, %B %d, %Y %I:%M:%S %p');
 
-var x0 = d3.scaleBand()
-    .rangeRound([0, graphWidth])
-    .paddingInner(0.1);
-
-var x1 = d3.scaleBand()
-    .padding(0);
-
-var y = d3.scaleLinear()
-    .rangeRound([graphHeight, 0]);
-
-var z = d3.scaleOrdinal()
-    .range(['#F8766D', '#00BA38', '#619CFF', '#6b486b', '#a05d56', '#d0743c', '#ff8c00']);
+var graphData = {};
 
 function GetGroupItemNames(data) {
   let keys = Object.keys(data);
@@ -105,7 +44,9 @@ d3.json('sample_data.json', function(d) {
     });
   });
 
-  BarChart(d);
+  graphData = d;
+
+  BarChart(graphData);
 });
 
 function BarChart(data) {
@@ -114,9 +55,78 @@ function BarChart(data) {
     return;
   }
 
+  const mainContainerHeight = mainContainer.node().getBoundingClientRect().height;
+  const mainContainerWidth = mainContainer.node().getBoundingClientRect().width;
+
+  const graphContainerHeight = mainContainerHeight;
+  const graphContainerWidth = mainContainerWidth - legendWidth;
+
+  const legendContainerHeight = graphContainerHeight - graphMargin.bottom - graphMargin.top - graphPadding.bottom - graphPadding.top;
+  const legendContainerWidth = legendWidth;
+
+  const graphHeight = graphContainerHeight - graphMargin.bottom - graphMargin.top - graphPadding.bottom - graphPadding.top;
+  const graphWidth = graphContainerWidth - graphMargin.left - graphMargin.right - graphPadding.left - graphPadding.right;
+
+  svgGraphD3Selection
+    .selectAll('*')
+    .remove();
+
+  const graphBackgroundRectD3Selection = svgGraphD3Selection
+    .append('rect')
+      .attr('class', 'graph-background');
+  const barChartContainerD3Selection = svgGraphD3Selection
+    .append('g')
+      .attr('class', 'bar-chart');
+  const axesContainerD3Selection = barChartContainerD3Selection
+    .append('g')
+      .attr('class', 'axes');
+  const gridsContainerD3Selection = barChartContainerD3Selection
+    .append('g')
+      .attr('class', 'grids');
+
+  graphContainer
+    .style('height', graphContainerHeight + 'px')
+    .style('width', graphContainerWidth + 'px');
+
+  legendTitleContainer
+    .style('padding-top', (graphMargin.top + graphPadding.top) + 'px');
+
+  legendContentContainer
+    .style('height', legendContainerHeight + 'px')
+    .style('width', legendContainerWidth + 'px');
+
+  svgGraphD3Selection
+    .attr('height', graphContainerHeight)
+    .attr('width', graphContainerWidth);
+
+  svgLegendContainer
+    .attr('height', legendContainerHeight * 0.8)
+    .attr('width', legendContainerWidth * 0.8);
+
+  graphBackgroundRectD3Selection
+    .attr('height', graphHeight + graphMargin.bottom)
+    .attr('width', graphWidth)
+    .attr('transform', 'translate(' + (graphMargin.left + graphPadding.left) + ',' + graphMargin.top + ')');
+
+  barChartContainerD3Selection
+    .attr('transform', 'translate(' + (graphMargin.left + graphPadding.left) + ',' + graphMargin.top + ')');
+
+  var x0 = d3.scaleBand()
+      .rangeRound([0, graphWidth])
+      .paddingInner(0.1);
+
+  var x1 = d3.scaleBand()
+      .padding(0);
+
+  var y = d3.scaleLinear()
+      .rangeRound([graphHeight, 0]);
+
+  var z = d3.scaleOrdinal()
+      .range(['#F8766D', '#00BA38', '#619CFF', '#6b486b', '#a05d56', '#d0743c', '#ff8c00']);
+
   const dataset = [];
   const formatXaxis = data.xAxisDateFormat;
-  const labelXaxis = data.XaxisText
+  const labelXaxis = data.XaxisText;
   const labelYaxis = data.YaxisText === '0' ? 'kWh' : data.YaxisText;
 
   if (data.GraphPointsList.length === 0) {
@@ -167,7 +177,7 @@ function BarChart(data) {
     .append('g')
       .attr('class', 'bars')
     .selectAll('g')
-    .data(dataset)
+    .data(dataset);
 
   var barGroupD3Selection = barsD3Selection
     .enter()
@@ -177,8 +187,8 @@ function BarChart(data) {
       .selectAll('g')
       .data((d) => {
         let groupItemNames = GetGroupItemNames(d);
-        return groupItemNames.map((itemName) => ({key: itemName, value: d[itemName]}))
-      })
+        return groupItemNames.map((itemName) => ({key: itemName, value: d[itemName]}));
+      });
 
   barGroupD3Selection
     .enter()
@@ -188,7 +198,7 @@ function BarChart(data) {
         .attr('width', (d) => (x1.bandwidth() * d.value.Xaxis))
         .attr('height', (d) => (graphHeight - y(d.value.Yaxis)))
         .attr('fill', (d) => z(d.key))
-        .attr('class', 'bar')
+        .attr('class', 'bar');
 
   axesContainerD3Selection
     .append('g')
@@ -223,19 +233,18 @@ function BarChart(data) {
       .attr('class', 'grid-y')
       .call(d3.axisRight(y)
         .tickFormat('')
-        .tickSize(graphWidth))
-
-  // legendContainerD3Selection
-  //   .attr('transform', 'translate(' + (0 + 10) + ',' + graphHeight / 2 + ')')
+        .tickSize(graphWidth));
 
   legendTitleContainer
-    .text('FloorName')
+    .text('FloorName');
 
   var legend = legendContainerD3Selection
     .selectAll('g')
     .data(itemNames.slice())
     .enter().append('g')
-      .attr('transform', function(d, i) { return 'translate(0,' + i * 21 + ')'; });
+      .attr('transform', function(d, i) {
+        return 'translate(0,' + i * 21 + ')';
+      });
 
   legend.append('rect')
       .attr('width', 20)
@@ -246,9 +255,11 @@ function BarChart(data) {
     .attr('x', 22)
     .attr('y', 10)
     .attr('dy', '0.32em')
-    .text(function(d) { return d; });
+    .text(function(d) {
+      return d;
+    });
 }
 
-// $(window).on('resize', function() {
-//   init();
-// });
+$(window).on('resize', function() {
+  BarChart(graphData);
+});
