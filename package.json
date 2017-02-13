@@ -1,0 +1,14 @@
+{
+  "name": "fusemap",
+  "version": "1.0.0",
+  "description": "build charts",
+  "main": "bar-chart.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.8.0"
+  }
+}

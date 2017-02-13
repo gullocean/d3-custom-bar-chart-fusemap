@@ -1,0 +1,776 @@
+{
+  "TopUserListCounts":[
+    {
+      "Selected":false,
+      "Text":"1",
+      "Value":"1"
+    },
+    {
+      "Selected":false,
+      "Text":"2",
+      "Value":"2"
+    },
+    {
+      "Selected":false,
+      "Text":"3",
+      "Value":"3"
+    },
+    {
+      "Selected":false,
+      "Text":"4",
+      "Value":"4"
+    },
+    {
+      "Selected":false,
+      "Text":"5",
+      "Value":"5"
+    },
+    {
+      "Selected":false,
+      "Text":"6",
+      "Value":"6"
+    },
+    {
+      "Selected":false,
+      "Text":"7",
+      "Value":"7"
+    },
+    {
+      "Selected":false,
+      "Text":"8",
+      "Value":"8"
+    },
+    {
+      "Selected":false,
+      "Text":"9",
+      "Value":"9"
+    },
+    {
+      "Selected":false,
+      "Text":"10",
+      "Value":"10"
+    }
+  ],
+  "PlugloadsFilterTypes":[
+    {
+      "Selected":false,
+      "Text":"Location",
+      "Value":"5"
+    },
+    {
+      "Selected":false,
+      "Text":"Users",
+      "Value":"1"
+    },
+    {
+      "Selected":false,
+      "Text":"Groups",
+      "Value":"3"
+    }
+  ],
+  "SelectedFilterType":3,
+  "SelectedUserFilterType":3,
+  "SelectedLocationsFilterType":5,
+  "SelectedFloorsFilterType":2,
+  "SelectedAppliancesFilterType":0,
+  "SelectedGraphType":1,
+  "SelectedGraphYaxisUnit":0,
+  "SelectedGraphXaxisMode":1,
+  "IsUserHasModuleAssignments":true,
+  "TopUserListCount":0,
+  "BottomUserListCount":0,
+  "SelectedUserID":null,
+  "SelectedRoomID":null,
+  "SelectedGroupID":null,
+  "SelectedApplianceID":null,
+  "SelectedBuildingID":null,
+  "SelectedBuildingIDs":"5823a1b14a5d27089406a77e",
+  "SelectedUserIDsMongo":null,
+  "SelectedItemIDs":"5823a1d24a5d27089406a77f,5823a30b4a5d27089406a780,5883a2094a5d280afc12d853",
+  "SelectedFromDate":null,
+  "SelectedToDate":null,
+  "IsApplianceScheduleClicked":false,
+  "IsExportButtonClicked":false,
+  "ApplainceScheduleStatus":false,
+  "ApplianceScheduleON":null,
+  "ApplianceScheduleOFF":null,
+  "ApplianceScheduleONPrevious":null,
+  "ApplianceScheduleOFFPrevious":null,
+  "SelectedApplianceThreshold":0,
+  "xAxisDateFormat":"%H:%M",
+  "ShowAreaGraph":false,
+  "IsUpdateButtonClicked":false,
+  "GraphYmaxValue":0,
+  "UserBuildingID":null,
+  "UserApplianceList":[
+
+  ],
+  "CurrentClientDate":"\/Date(1486425600000)\/",
+  "CurrentTimeZoneOffset":-180,
+  "TotalUsage":"3.15",
+  "AverageUsage":"1.05",
+  "MaximumUsageHour":"18:00-19:00",
+  "TotalKWH":"3.15",
+  "CostPerKWH":"0",
+  "TotalCost":"0",
+  "TotalCount":"3",
+  "MyRanking":null,
+  "XaxisText":"Hours",
+  "YaxisText":"0",
+  "XaxisTextAngle":"0",
+  "LoggedUserType":1,
+  "LoggedUserID":{
+    "Timestamp":0,
+    "Machine":0,
+    "Pid":0,
+    "Increment":0,
+    "CreationTime":"\/Date(0)\/"
+  },
+  "UserGraphPointsList":null,
+  "UsersGraphPointsList":null,
+  "RoomGraphPointsList":[
+
+  ],
+  "RoomsGraphPointsList":[
+
+  ],
+  "GroupGraphPointsList":[
+
+  ],
+  "GroupsGraphPointsList":[
+
+  ],
+  "ApplianceGraphPointsList":[
+
+  ],
+  "AppliancesGraphPointsList":[
+
+  ],
+  "UserList":null,
+  "ItemsList":null,
+  "GraphPointList":[
+
+  ],
+  "GraphPointsList":[
+    {
+      "GraphPointList":[
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 12:00:00 AM",
+          "Yaxis":"0"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 1:00:00 AM",
+          "Yaxis":"0.012"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 2:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 3:00:00 AM",
+          "Yaxis":"0.004"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 4:00:00 AM",
+          "Yaxis":"0.004"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 5:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 6:00:00 AM",
+          "Yaxis":"0.003"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 7:00:00 AM",
+          "Yaxis":"0.002"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 8:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 9:00:00 AM",
+          "Yaxis":"0.007"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 10:00:00 AM",
+          "Yaxis":"0.002"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 11:00:00 AM",
+          "Yaxis":"0.003"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 12:00:00 PM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 1:00:00 PM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 2:00:00 PM",
+          "Yaxis":"0.029"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 3:00:00 PM",
+          "Yaxis":"0.121"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 4:00:00 PM",
+          "Yaxis":"0.204"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 5:00:00 PM",
+          "Yaxis":"0.261"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 6:00:00 PM",
+          "Yaxis":"0.305"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 7:00:00 PM",
+          "Yaxis":"0"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 8:00:00 PM",
+          "Yaxis":"0"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 9:00:00 PM",
+          "Yaxis":null
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 10:00:00 PM",
+          "Yaxis":null
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 11:00:00 PM",
+          "Yaxis":null
+        }
+      ],
+      "ItemID":"5823a1d24a5d27089406a77f",
+      "ItemName":"PTPP31",
+      "TotalUsage":1.38,
+      "AverageUsage":0.07,
+      "IsModuleIsOnStatus":null
+    },
+    {
+      "GraphPointList":[
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 12:00:00 AM",
+          "Yaxis":"0"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 1:00:00 AM",
+          "Yaxis":"0.016"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 2:00:00 AM",
+          "Yaxis":"0.009"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 3:00:00 AM",
+          "Yaxis":"0.007"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 4:00:00 AM",
+          "Yaxis":"0.008"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 5:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 6:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 7:00:00 AM",
+          "Yaxis":"0.007"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 8:00:00 AM",
+          "Yaxis":"0.004"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 9:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 10:00:00 AM",
+          "Yaxis":"0.008"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 11:00:00 AM",
+          "Yaxis":"0.004"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 12:00:00 PM",
+          "Yaxis":"0.004"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 1:00:00 PM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 2:00:00 PM",
+          "Yaxis":"0.010"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 3:00:00 PM",
+          "Yaxis":"0.022"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 4:00:00 PM",
+          "Yaxis":"0.091"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 5:00:00 PM",
+          "Yaxis":"0.179"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 6:00:00 PM",
+          "Yaxis":"0.199"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 7:00:00 PM",
+          "Yaxis":"0.188"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 8:00:00 PM",
+          "Yaxis":"0"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 9:00:00 PM",
+          "Yaxis":null
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 10:00:00 PM",
+          "Yaxis":null
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 11:00:00 PM",
+          "Yaxis":null
+        }
+      ],
+      "ItemID":"5883a2094a5d280afc12d853",
+      "ItemName":"PTPP33",
+      "TotalUsage":0.91,
+      "AverageUsage":0.05,
+      "IsModuleIsOnStatus":null
+    },
+    {
+      "GraphPointList":[
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 12:00:00 AM",
+          "Yaxis":"0.076"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 1:00:00 AM",
+          "Yaxis":"0.010"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 2:00:00 AM",
+          "Yaxis":"0.011"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 3:00:00 AM",
+          "Yaxis":"0.012"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 4:00:00 AM",
+          "Yaxis":"0.004"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 5:00:00 AM",
+          "Yaxis":"0.006"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 6:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 7:00:00 AM",
+          "Yaxis":"0.008"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 8:00:00 AM",
+          "Yaxis":"0.006"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 9:00:00 AM",
+          "Yaxis":"0.005"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 10:00:00 AM",
+          "Yaxis":"0.008"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 11:00:00 AM",
+          "Yaxis":"0.008"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 12:00:00 PM",
+          "Yaxis":"0.006"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 1:00:00 PM",
+          "Yaxis":"0.006"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 2:00:00 PM",
+          "Yaxis":"0.016"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 3:00:00 PM",
+          "Yaxis":"0.055"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 4:00:00 PM",
+          "Yaxis":"0.154"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 5:00:00 PM",
+          "Yaxis":"0.154"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 6:00:00 PM",
+          "Yaxis":"0.163"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 7:00:00 PM",
+          "Yaxis":"0.149"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 8:00:00 PM",
+          "Yaxis":"0"
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 9:00:00 PM",
+          "Yaxis":null
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 10:00:00 PM",
+          "Yaxis":null
+        },
+        {
+          "ItemID":null,
+          "ItemName":null,
+          "ConsumptionDate":"\/Date(-62135596800000)\/",
+          "TotalUsage":0,
+          "Xaxis":"Tuesday, February 7, 2017 11:00:00 PM",
+          "Yaxis":null
+        }
+      ],
+      "ItemID":"5823a30b4a5d27089406a780",
+      "ItemName":"PTPP32",
+      "TotalUsage":0.86,
+      "AverageUsage":0.04,
+      "IsModuleIsOnStatus":null
+    }
+  ],
+  "TemperatureGraphPointList":[
+
+  ],
+  "TemperatureGraphPointsList":[
+
+  ],
+  "Id":{
+    "Timestamp":0,
+    "Machine":0,
+    "Pid":0,
+    "Increment":0,
+    "CreationTime":"\/Date(0)\/"
+  },
+  "ErrorCode":0,
+  "ErrorMessage":"",
+  "Status":null,
+  "SuccessMessage":null
+}

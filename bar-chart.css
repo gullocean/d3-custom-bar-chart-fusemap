@@ -1,0 +1,68 @@
+#plugloadsGraph {
+  height: 300px;
+  width: 100%;
+}
+
+#plugloadsGraph .bar-chart .axes .axis-x path,
+#plugloadsGraph .bar-chart .axes .axis-y path,
+#plugloadsGraph .bar-chart .grids .grid-x path,
+#plugloadsGraph .bar-chart .grids .grid-y path,
+#plugloadsGraph .bar-chart .grids .grid-x .tick line,
+#plugloadsGraph .bar-chart .grids .grid-y .tick line {
+  stroke: #FFFFFF;
+}
+
+#plugloadsGraph .graph-container {
+  float: left;
+}
+
+#plugloadsGraph .legend-container {
+  float: left;
+  font-size: 12px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+#plugloadsGraph .graph-container .graph-background {
+  fill: #EBEBEB;
+}
+
+#plugloadsGraph .axis-label {
+  fill: #000000;
+  font-size: 12px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+#plugloadsGraph .bar-group text {
+  fill: #000000;
+  font-size: 4px;
+  font-weight: normal;
+  text-anchor: middle;
+}
+
+#plugloadsGraph .legend-container {
+  height: 100%;
+}
+
+#plugloadsGraph .legend-container .legend-title-container {
+  width: 100%;
+}
+
+#plugloadsGraph .legend-container .legend-content-container {
+  overflow: auto;
+}
+
+#plugloadsGraph .legend-container .legend-content-container .legend text {
+  fill: #000000;
+  font-size: 12px;
+  font-weight: bold;
+  text-anchor: start;
+}
+
+#plugloadsGraph .legend-container .legend-content-container .legend g text {
+  fill: #000000;
+  font-size: 8px;
+  font-weight: normal;
+  text-anchor: start;
+}
