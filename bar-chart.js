@@ -321,7 +321,7 @@ function BarChart() {
     };
     backgroundRectSize = {
       height: chartSize.height + chartMargin.bottom,
-      width: chartSize.width + chartPadding.left + chartPadding.right
+      width: chartSize.width
     };
 
     legendContainerSize = {
@@ -360,7 +360,7 @@ function BarChart() {
     chartBackgroundSelection
       .attr('height', backgroundRectSize.height)
       .attr('width', backgroundRectSize.width)
-      .attr('transform', 'translate(' + chartMargin.left + ',' + chartMargin.top + ')');
+      .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + (chartMargin.top + chartPadding.top) + ')');
     zoomLayerSelection
       .attr('height', backgroundRectSize.height)
       .attr('width', backgroundRectSize.width)
