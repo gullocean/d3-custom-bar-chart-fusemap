@@ -7,11 +7,24 @@
 
   <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="./bower_components/d3/d3.min.js"></script>
+  <script type="text/javascript" src="./bower_components/moment/min/moment.min.js"></script>
 </head>
 <body>
 
 <div id="plugloadsGraph"></div>
 
 <script type="text/javascript" src="./bar-chart.js"></script>
+
+<script>
+  var chart = BarChart();
+
+  d3.json('sample_data.json', function(chartData) {
+    const mainContainer = d3.select('#plugloadsGraph');
+    chart.mainContainer(mainContainer);
+    chart.dataset(chartData);
+
+    chart();
+  });
+</script>
 </body>
 </html>

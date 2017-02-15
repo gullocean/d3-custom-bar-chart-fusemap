@@ -134,7 +134,8 @@ function BarChart() {
       item.key = xAxisKey;
       data.GraphPointsList.forEach((graphPoints) => {
         for (var i = 0; i < graphPoints.GraphPointList.length; i ++) {
-          if (graphPoints.GraphPointList[i].Xaxis.getTime() === xAxisKey.getTime() &&
+          
+          if (moment(graphPoints.GraphPointList[i].Xaxis).isSame(xAxisKey) &&
             !(graphPoints.GraphPointList[i].Yaxis === 0 ||
               graphPoints.GraphPointList[i].Yaxis === null)) {
             item[graphPoints.ItemName] = {};
@@ -482,13 +483,3 @@ function BarChart() {
 
   return chart;
 }
-
-var chart = BarChart();
-
-d3.json('sample_data.json', function(chartData) {
-  const mainContainer = d3.select('#plugloadsGraph');
-  chart.mainContainer(mainContainer);
-  chart.dataset(chartData);
-
-  chart();
-});
