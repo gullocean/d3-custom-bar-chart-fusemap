@@ -5,9 +5,10 @@ function BarChart() {
   var xAxisKeys = [];
 
   // dimensions
-  const chartMargin = { bottom: 20, left: 50, right: 10, top: 10 };
-  const chartPadding = { bottom: 30, left: 10, right: 10, top: 0 };
+  const chartMargin = { bottom: 40, left: 50, right: 10, top: 10 };
+  const chartPadding = { bottom: 20, left: 0, right: 0, top: 0 };
   const legendHeight = 21;
+  const legendRectSize = { height: 12, width: 12 };
   const legendTitleHeight = 20;
   const legendWidth = 100;
 
@@ -320,8 +321,8 @@ function BarChart() {
       width: chartSVGSize.width - chartMargin.left - chartMargin.right - chartPadding.left - chartPadding.right
     };
     backgroundRectSize = {
-      height: chartSize.height + chartMargin.bottom,
-      width: chartSize.width
+      height: chartSize.height + chartPadding.bottom + chartPadding.top,
+      width: chartSize.width + chartPadding.left + chartPadding.right
     };
 
     legendContainerSize = {
@@ -334,7 +335,7 @@ function BarChart() {
     };
     legendSVGSize = {
       height: itemNames.length * legendHeight,
-      width: legendContentContainerSize.width * 0.8
+      width: legendContentContainerSize.width
     };
   }
 
@@ -368,20 +369,19 @@ function BarChart() {
     barChartSelection
       .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + chartMargin.top + ')');
     xAxisLeftCoverRectSelection
-      .attr('width', (chartMargin.left + chartPadding.left))
+      .attr('width', chartMargin.left + chartPadding.left)
       .attr('height', chartSVGSize.height)
       .attr('transform', 'translate(' + (-chartMargin.left - chartPadding.left) + ',0)');
     xAxisRightCoverRectSelection
-      .attr('width', (chartMargin.right + chartPadding.right))
+      .attr('width', chartMargin.right + chartPadding.right)
       .attr('height', chartSVGSize.height)
       .attr('transform', 'translate(' + chartSize.width + ',0)');
     xAxisSelection
-      .attr('transform', 'translate(0,' + (chartSize.height + chartMargin.bottom) + ')');
+      .attr('transform', 'translate(0,' + (chartSize.height + chartPadding.bottom) + ')');
     xGridsSelection
       .attr('transform', 'translate(0,' + (chartSize.height + chartMargin.bottom) + ')');
     xAxisLabelSelection
-      .attr('transform', 'translate(' + chartSize.width / 2 + ',' + (chartSVGSize.height - chartMargin.top) + ')')
-      .text(chartData.labelXaxis)
+      .text(chartData.labelXaxis);
     yAxisLabelSelection
       .text(chartData.labelYaxis);
   }
@@ -415,6 +415,8 @@ function BarChart() {
         .tickFormat('')
         .tickSize(chartSize.width));
 
+    xAxisLabelSelection
+      .attr('transform', 'translate(' + chartSize.width / 2 + ',' + (chartSVGSize.height - xAxisSelection.node().getBBox().height) + ')');
     yAxisLabelSelection
       .attr('dy', -5)
       .attr('transform', 'translate(' + (-yAxisSelection.node().getBBox().width) + ',' + chartSize.height / 2 + '), rotate(-90)');
@@ -440,8 +442,8 @@ function BarChart() {
       });
 
     legendRectMergedEnterUpdateSelection
-      .attr('width', 12)
-      .attr('height', 12)
+      .attr('height', legendRectSize.height)
+      .attr('width', legendRectSize.width)
       .attr('fill', colorScale);
 
     legendTextMergedEnterUpdateSelection
