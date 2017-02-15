@@ -3,16 +3,35 @@
   width: 100%;
 }
 
-#plugloadsGraph .bar-chart .axes .axis-x path,
-#plugloadsGraph .bar-chart .axes .axis-y path,
-#plugloadsGraph .bar-chart .grids .grid-x path,
-#plugloadsGraph .bar-chart .grids .grid-y path,
-#plugloadsGraph .bar-chart .grids .grid-x .tick line,
-#plugloadsGraph .bar-chart .grids .grid-y .tick line {
+#plugloadsGraph .bar-chart .axis-x path,
+#plugloadsGraph .bar-chart .axis-y path,
+#plugloadsGraph .bar-chart .grids-x path,
+#plugloadsGraph .bar-chart .grids-y path,
+#plugloadsGraph .bar-chart .grids-x .tick line,
+#plugloadsGraph .bar-chart .grids-y .tick line {
   stroke: #FFFFFF;
 }
 
-#plugloadsGraph .graph-container {
+#plugloadsGraph .bar-chart .cover-x {
+  fill: #FFFFFF;
+}
+
+#plugloadsGraph .bar-chart .label-x {
+  fill: #000000;
+  font-size: 12px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+#plugloadsGraph .bar-chart .label-y {
+  fill: #000000;
+  font-size: 12px;
+  font-weight: bold;
+  padding-left: 2px;
+  text-anchor: middle;
+}
+
+#plugloadsGraph .chart-container {
   float: left;
 }
 
@@ -20,11 +39,15 @@
   float: left;
   font-size: 12px;
   font-weight: bold;
-  text-anchor: middle;
+  text-anchor: start;
 }
 
-#plugloadsGraph .graph-container .graph-background {
+#plugloadsGraph .chart-container .chart-background {
   fill: #EBEBEB;
+}
+
+#plugloadsGraph .chart-container .zoom-layer {
+  fill: transparent;
 }
 
 #plugloadsGraph .axis-label {
@@ -41,10 +64,6 @@
   text-anchor: middle;
 }
 
-#plugloadsGraph .legend-container {
-  height: 100%;
-}
-
 #plugloadsGraph .legend-container .legend-title-container {
   width: 100%;
 }
@@ -53,16 +72,9 @@
   overflow: auto;
 }
 
-#plugloadsGraph .legend-container .legend-content-container .legend text {
+#plugloadsGraph .legend-container .legend-content-container .legends .legend .legend-text {
   fill: #000000;
   font-size: 12px;
-  font-weight: bold;
-  text-anchor: start;
-}
-
-#plugloadsGraph .legend-container .legend-content-container .legend g text {
-  fill: #000000;
-  font-size: 8px;
   font-weight: normal;
   text-anchor: start;
 }
