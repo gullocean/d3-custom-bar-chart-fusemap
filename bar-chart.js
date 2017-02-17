@@ -179,6 +179,10 @@ function BarChart() {
         DrawLegend();
       });
 
+    mainContainer
+      .selectAll('*')
+      .remove();
+
     chartContainer = mainContainer
       .append('div')
         .attr('class', 'chart-container');
