@@ -1,0 +1,31 @@
+#plugloadsGraph {
+  height: 300px;
+  width: 100%;
+}
+
+#plugloadsGraph .chart .cards .card-row .card {
+  stroke: #5AB0EE;
+  stroke-width: 2px;
+}
+
+#plugloadsGraph .chart .x-axis text,
+#plugloadsGraph .chart .y-axis text {
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+#plugloadsGraph .legends .legend text {
+  alignment-baseline: hanging;
+  font-size: 12px;
+}
+
+.toolTip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 5px;
+  text-align: center;
+}
