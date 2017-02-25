@@ -168,6 +168,7 @@ function Heatmap() {
       graphPointsList.GraphPointList.forEach(function(graphPoint) {
         if (graphPoint.Yaxis !== null) {
           dataset.data[floorIndex].items.push({
+            itemName: dataset.data[floorIndex].itemName,
             Xaxis: new Date(graphPoint.Xaxis),
             Yaxis: +graphPoint.Yaxis
           });
@@ -203,7 +204,8 @@ function Heatmap() {
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY - 30) + 'px')
           .style('display', 'inline-block')
-          .html('Plug load : ' + numberFormat(d.Yaxis));
+          .html('<div><span>' + d3.timeFormat(chartData.formatXaxis)(d.Xaxis) + '</span>' + 
+            '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});
 
