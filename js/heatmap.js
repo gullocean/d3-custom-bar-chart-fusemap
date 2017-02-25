@@ -7,7 +7,7 @@ function Heatmap() {
   // dimensions
   const chartMargin = { bottom: 40, left: 50, right: 10, top: 10 };
   const chartPadding = { bottom: 20, left: 0, right: 0, top: 0 };
-  const colorRange = ['#C8DD59', '#FEDD2E', '#5574A6', '#66AA00 ', '#0099C6', '#3366CC', '#3b3EAC', '#E67300', '#DC3912', '#B82E2E', '#8B0707'];
+  const colorRange = ['#EEF1F7','#ED1A24'];
   const legendSize = { height: 50, width: 100 };
   const legendsCNT = 10;
   const xAxisTextHeight = 20;
@@ -56,7 +56,7 @@ function Heatmap() {
   var yAxisTextsUpdateSelection = null;
 
   // scales
-  var colorScale = (d) => (colorScaleStep === 0 ? colorRange[0] : colorRange[Math.round((d - colorDomain[0]) / colorScaleStep) + 0]);
+  var colorScale = null;
 
   // tooltip
   var tooltip = null;
@@ -274,6 +274,9 @@ function Heatmap() {
       .append('div')
       .attr('class', 'toolTip');
 
+    colorScale = d3.scaleLinear()
+      .range(colorRange);
+
     mainContainer
       .selectAll('*')
       .remove();
@@ -472,9 +475,8 @@ function Heatmap() {
   }
 
   function UpdateScale() {
-    colorDomain = [d3.min(chartData.data, (floorData) => d3.min(floorData.items, (d) => (d.Yaxis))),
-      d3.max(chartData.data, (floorData) => d3.max(floorData.items, (d) => (d.Yaxis)))];
-    colorScaleStep = (colorDomain[1] - colorDomain[0]) / (legendsCNT);
+    colorScale
+      .domain([0, d3.max(chartData.data, (floorData) => d3.max(floorData.items, (d) => (d.Yaxis)))]);
   }
 
   $(window).on('resize', function() {
