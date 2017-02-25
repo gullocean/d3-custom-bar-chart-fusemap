@@ -122,7 +122,7 @@ function BarChart() {
     data.GraphPointsList.forEach(function(graphPointsList) {
       graphPointsList.GraphPointList.forEach(function(graphPoint) {
         if (graphPoint.Yaxis !== null) graphPoint.Yaxis = +graphPoint.Yaxis;
-        graphPoint.Xaxis = parseDate(graphPoint.Xaxis);
+        graphPoint.Xaxis = new Date(graphPoint.Xaxis);
       });
     });
 

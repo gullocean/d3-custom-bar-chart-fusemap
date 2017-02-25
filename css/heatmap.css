@@ -1,21 +1,26 @@
-#plugloadsGraph {
+#plugloadsGraph-heatmap {
   height: 300px;
   width: 100%;
 }
 
-#plugloadsGraph .chart .cards .card-row .card {
+#plugloadsGraph-heatmap .chart .cards .card-row .card {
   stroke: #5AB0EE;
   stroke-width: 2px;
 }
 
-#plugloadsGraph .chart .x-axis text,
-#plugloadsGraph .chart .y-axis text {
+#plugloadsGraph-heatmap .chart .cards .card-row .card-label {
+  font-size: 12px;
+  text-anchor: middle;
+  alignment-baseline: central;
+}
+
+#plugloadsGraph-heatmap .chart .x-axis text,
+#plugloadsGraph-heatmap .chart .y-axis text {
   font-size: 12px;
   text-anchor: middle;
 }
 
-#plugloadsGraph .legends .legend text {
-  alignment-baseline: hanging;
+#plugloadsGraph-heatmap .legends .legend text {
   font-size: 12px;
 }
 

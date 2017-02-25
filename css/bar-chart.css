@@ -1,29 +1,29 @@
-#plugloadsGraph {
+#plugloadsGraph-barchart {
   height: 300px;
   width: 100%;
 }
 
-#plugloadsGraph .bar-chart .axis-x path,
-#plugloadsGraph .bar-chart .axis-y path,
-#plugloadsGraph .bar-chart .grids-x path,
-#plugloadsGraph .bar-chart .grids-y path,
-#plugloadsGraph .bar-chart .grids-x .tick line,
-#plugloadsGraph .bar-chart .grids-y .tick line {
+#plugloadsGraph-barchart .bar-chart .axis-x path,
+#plugloadsGraph-barchart .bar-chart .axis-y path,
+#plugloadsGraph-barchart .bar-chart .grids-x path,
+#plugloadsGraph-barchart .bar-chart .grids-y path,
+#plugloadsGraph-barchart .bar-chart .grids-x .tick line,
+#plugloadsGraph-barchart .bar-chart .grids-y .tick line {
   stroke: #FFFFFF;
 }
 
-#plugloadsGraph .bar-chart .cover-x {
+#plugloadsGraph-barchart .bar-chart .cover-x {
   fill: #FFFFFF;
 }
 
-#plugloadsGraph .bar-chart .label-x {
+#plugloadsGraph-barchart .bar-chart .label-x {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
   text-anchor: middle;
 }
 
-#plugloadsGraph .bar-chart .label-y {
+#plugloadsGraph-barchart .bar-chart .label-y {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
@@ -31,48 +31,48 @@
   text-anchor: middle;
 }
 
-#plugloadsGraph .chart-container {
+#plugloadsGraph-barchart .chart-container {
   float: left;
 }
 
-#plugloadsGraph .legend-container {
+#plugloadsGraph-barchart .legend-container {
   float: left;
   font-size: 12px;
   font-weight: bold;
   text-anchor: start;
 }
 
-#plugloadsGraph .chart-container .chart-background {
+#plugloadsGraph-barchart .chart-container .chart-background {
   fill: #EBEBEB;
 }
 
-#plugloadsGraph .chart-container .zoom-layer {
+#plugloadsGraph-barchart .chart-container .zoom-layer {
   fill: transparent;
 }
 
-#plugloadsGraph .axis-label {
+#plugloadsGraph-barchart .axis-label {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
   text-anchor: middle;
 }
 
-#plugloadsGraph .bar-group text {
+#plugloadsGraph-barchart .bar-group text {
   fill: #000000;
   font-size: 4px;
   font-weight: normal;
   text-anchor: middle;
 }
 
-#plugloadsGraph .legend-container .legend-title-container {
+#plugloadsGraph-barchart .legend-container .legend-title-container {
   width: 100%;
 }
 
-#plugloadsGraph .legend-container .legend-content-container {
+#plugloadsGraph-barchart .legend-container .legend-content-container {
   overflow: auto;
 }
 
-#plugloadsGraph .legend-container .legend-content-container .legends .legend .legend-text {
+#plugloadsGraph-barchart .legend-container .legend-content-container .legends .legend .legend-text {
   fill: #000000;
   font-size: 12px;
   font-weight: normal;

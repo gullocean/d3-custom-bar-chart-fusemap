@@ -4,7 +4,7 @@
   <title>grouped bar chart</title>
   <meta charset="utf-8">
 
-  <!-- <link rel="stylesheet" type="text/css" href="./css/bar-chart.css"> -->
+  <link rel="stylesheet" type="text/css" href="./css/bar-chart.css">
   <link rel="stylesheet" type="text/css" href="./css/heatmap.css">
 
   <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
@@ -13,21 +13,31 @@
 </head>
 <body>
 
-<div id="plugloadsGraph"></div>
+<div id="plugloadsGraph-barchart"></div>
+<div id="plugloadsGraph-heatmap"></div>
 
-<!-- <script type="text/javascript" src="./js/bar-chart.js"></script> -->
+<script type="text/javascript" src="./js/bar-chart.js"></script>
 <script type="text/javascript" src="./js/heatmap.js"></script>
 
 <script>
-  // var chart = BarChart();
-  var chart = Heatmap();
+  var barChart = BarChart();
+  var heatmap = Heatmap();
 
   d3.json('data/sample_data.json', function(chartData) {
-    const mainContainer = d3.select('#plugloadsGraph');
-    chart.mainContainer(mainContainer);
-    chart.dataset(chartData);
+    const mainContainerBarchart = d3.select('#plugloadsGraph-barchart');
+    barChart.mainContainer(mainContainerBarchart);
+    barChart.dataset(chartData);
 
-    chart();
+    barChart();
+
+    const mainContainerHeatmap = d3.select('#plugloadsGraph-heatmap');
+    heatmap.mainContainer(mainContainerHeatmap);
+    heatmap.dataset(chartData);
+    heatmap.legendPosition('bottom');
+    heatmap.showLabel(false);
+    heatmap.isPercent(false);
+
+    heatmap();
   });
 </script>
 </body>

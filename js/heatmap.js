@@ -7,28 +7,32 @@ function Heatmap() {
   // dimensions
   const chartMargin = { bottom: 40, left: 50, right: 10, top: 10 };
   const chartPadding = { bottom: 20, left: 0, right: 0, top: 0 };
-  const colorRange = ['#EEF1F7','#FF1C00'];
-  const legendHeight = 50;
+  const colorRange = ['#C8DD59', '#FEDD2E', '#5574A6', '#66AA00 ', '#0099C6', '#3366CC', '#3b3EAC', '#E67300', '#DC3912', '#B82E2E', '#8B0707'];
+  const legendSize = { height: 50, width: 100 };
   const legendsCNT = 10;
   const xAxisTextHeight = 20;
   const YaxisTextWidth = 20;
 
   var cardSize = {};
-  var cardsSize = {};
   var chartSize = {};
   var legendRectSize = {};
-  var legendsSize = {};
+  var legendTransform = {};
   var mainContainerSize = {};
   var svgSize = {};
 
   // selections
-  var cardsEnterSelection = null;
-  var cardsExitSelection = null;
-  var cardsMergedEnterUpdateSelection = null;
+  var cardLabelsEnterSelection = null;
+  var cardLabelsExitSelection = null;
+  var cardLabelsMergedEnterUpdateSelection = null;
+  var cardLabelsSelection = null;
+  var cardLabelsUpdateSelection = null;
   var cardRowsEnterSelection = null;
   var cardRowsExitSelection = null;
   var cardRowsMergedEnterUpdateSelection = null;
   var cardRowsUpdateSelection = null;
+  var cardsMergedEnterUpdateSelection = null;
+  var cardsEnterSelection = null;
+  var cardsExitSelection = null;
   var cardsSelection = null;
   var cardsUpdateSelection = null;
   var chartSelection = null;
@@ -52,22 +56,24 @@ function Heatmap() {
   var yAxisTextsUpdateSelection = null;
 
   // scales
-  var colorScale = null;
+  var colorScale = (d) => (colorScaleStep === 0 ? colorRange[0] : colorRange[Math.round((d - colorDomain[0]) / colorScaleStep) + 0]);
 
   // tooltip
   var tooltip = null;
 
   // format
-  const numberFormat = d3.format('.2n');
-  const parseDate = d3.timeParse('%A, %B %d, %Y %I:%M:%S %p');
+  numberFormat = (d) => (Math.round(d * 100) / 100 + (isPercent ? '%' : ''));
   
   function chart() {
     if (!dataset || !mainContainer) return;
+
+    if (typeof legendPosition === 'undefined') legendPosition = 'bottom';
 
     chartData = GetHeatmapData(dataset);
     
     chartDataExtent = [d3.min(chartData.data, (d) => (d3.min(d.items, (item) => item.Yaxis))),
                       d3.max(chartData.data, (d) => (d3.max(d.items, (item) => item.Yaxis)))];
+    
     for (var i = 0; i < legendsCNT; i ++) {
       legendData.push(chartDataExtent[0] + i * (chartDataExtent[1] - chartDataExtent[0]) / legendsCNT);
     }
@@ -89,6 +95,42 @@ function Heatmap() {
   chart.mainContainer = function(value) {
     if (!arguments.length) return mainContainer;
     mainContainer = value;
+    return chart;
+  }
+
+  /*
+   *  position of legend : bottom, left, right, top
+   */
+  chart.legendPosition = function(value) {
+    if (!arguments.length) return legendPosition;
+    legendPosition = value;
+    return chart;
+  }
+
+  /*
+   *  flag for showing of label on card
+   */
+  chart.showLabel = function(value) {
+    if (!arguments.length) return showLabel;
+    showLabel = value;
+    return chart;
+  }
+
+  /*
+   *  flag : true if Yaxis is a value of percent
+   */
+  chart.isPercent = function(value) {
+    if (!arguments.length) return isPercent;
+    isPercent = value;
+    return chart;
+  }
+
+  /*
+   *  label of legend
+   */
+  chart.legendLabel = function(value) {
+    if (!arguments.length) return legendLabel;
+    legendLabel = value;
     return chart;
   }
 
@@ -126,7 +168,7 @@ function Heatmap() {
       graphPointsList.GraphPointList.forEach(function(graphPoint) {
         if (graphPoint.Yaxis !== null) {
           dataset.data[floorIndex].items.push({
-            Xaxis: parseDate(graphPoint.Xaxis),
+            Xaxis: new Date(graphPoint.Xaxis),
             Yaxis: +graphPoint.Yaxis
           });
         }
@@ -165,10 +207,17 @@ function Heatmap() {
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});
 
+    if (showLabel) {
+      cardLabelsMergedEnterUpdateSelection
+        .attr('x', (d, i) => ((i + 0.5) * cardSize.width))
+        .attr('y', 0.5 * cardSize.height)
+        .text((d) => numberFormat(d.Yaxis));
+    }
+
     xAxisTexxtsMergedEnterUpdateSelection
       .attr('x', (d, i) => ((i + 0.5) * cardSize.width))
       .attr('dy', 12)
-      .text((d) => (d3.timeFormat(chartData.formatXaxis)(d)));
+      .text((d) => d3.timeFormat(chartData.formatXaxis)(d));
 
     yAxisTextsSelection
       .attr('transform', 'translate(' + (-2 - YaxisTextWidth) + ',' + xAxisTextHeight + ')');
@@ -180,28 +229,50 @@ function Heatmap() {
 
   function DrawLegend() {
     legendsSelection
-      .attr('transform', 'translate(' + chartMargin.left + ',' + (chartMargin.top + chartSize.height + legendRectSize.height / 5) + ')');
+      .attr('transform', 'translate(' + legendTransform.left + ',' + legendTransform.top + ')');
 
-    legendRectSelection
-      .attr('height', legendRectSize.height)
-      .attr('width', legendRectSize.width)
-      .attr('x', (d, i) => (i * legendRectSize.width))
-      .attr('fill', (d) => colorScale(d));
+    switch (legendPosition) {
+      case 'bottom':
+        legendRectSelection
+          .attr('height', legendRectSize.height)
+          .attr('width', legendRectSize.width)
+          .attr('x', (d, i) => (i * legendRectSize.width))
+          .attr('fill', (d) => colorScale(d));
 
-    legendTextSelection
-      .attr('x', (d, i) => (i * legendRectSize.width))
-      .attr('y', legendRectSize.height)
-      .attr('dy', 2)
-      .text((d) => ('≥ ' + numberFormat(d)));
+        legendTextSelection
+          .attr('x', (d, i) => (i * legendRectSize.width))
+          .attr('y', legendRectSize.height)
+          .style('alignment-baseline', 'before-edge')
+          .text((d) => numberFormat(d));
+
+        break;
+      case 'left':
+        break;
+      case 'right':
+        legendRectSelection
+          .attr('height', legendRectSize.height)
+          .attr('width', legendRectSize.width)
+          .attr('y', (d, i) => ((legendsCNT - i - 1) * legendRectSize.height))
+          .attr('fill', (d) => colorScale(d));
+
+        legendTextSelection
+          .attr('x', legendRectSize.width)
+          .attr('y', (d, i) => ((legendsCNT - i) * legendRectSize.height))
+          .attr('dx', 2)
+          .style('alignment-baseline', 'after-edge')
+          .text((d) => numberFormat(d));
+          
+        break;
+      case 'top':
+        break;
+    }
+    
   }
 
   function Init() {
     tooltip = d3.select('body')
       .append('div')
       .attr('class', 'toolTip');
-
-    colorScale = d3.scaleLinear()
-      .range(colorRange);
 
     mainContainer
       .selectAll('*')
@@ -241,6 +312,21 @@ function Heatmap() {
       .append('rect')
         .attr('class', 'card')
       .merge(cardsUpdateSelection);
+
+    if (showLabel) {
+      cardLabelsUpdateSelection = cardRowsMergedEnterUpdateSelection
+        .selectAll('card-label')
+        .data((d) => d.items);
+      cardLabelsEnterSelection = cardLabelsUpdateSelection.enter();
+      cardLabelsExitSelection = cardLabelsUpdateSelection.exit();
+
+      cardLabelsExitSelection.remove();
+
+      cardLabelsMergedEnterUpdateSelection = cardLabelsEnterSelection
+        .append('text')
+          .attr('class', 'card-label')
+        .merge(cardLabelsUpdateSelection);
+    }
 
     xAxisTextsSelection = chartSelection
       .append('g')
@@ -295,7 +381,6 @@ function Heatmap() {
       .append('rect');
     legendTextSelection = legendMergedEnterUpdateSelection
       .append('text');
-
   }
 
   function GetDimensions() {
@@ -307,38 +392,77 @@ function Heatmap() {
       height: mainContainerSize.height,
       width: mainContainerSize.width
     };
-    chartSize = {
-      height: svgSize.height - chartMargin.bottom - chartMargin.top - legendHeight,
-      width: svgSize.width - chartMargin.left - chartMargin.right
-    };
-    legendsSize = {
-      height: svgSize.height - chartSize.height,
-      width: chartSize.width
-    };
-    cardsSize = {
-      height: chartSize.height - xAxisTextHeight,
-      width: chartSize.width - YaxisTextWidth
-    };
 
-    if (chartData.data.length === 0) {
-      console.log('chart data error!');
-      return;
+    switch (legendPosition) {
+      case 'bottom':
+        chartSize = {
+          height: svgSize.height - chartMargin.bottom - chartMargin.top - legendSize.height,
+          width: svgSize.width - chartMargin.left - chartMargin.right
+        };
+
+        if (chartData.data.length === 0) {
+          console.log('chart data error!');
+          return;
+        }
+
+        if (chartData.data[0].items.length === 0) {
+          console.log('chart data error!');
+          return;
+        }
+
+        cardSize = {
+          height: (chartSize.height - xAxisTextHeight) / chartData.data.length,
+          width: chartSize.width / chartData.data[0].items.length
+        };
+
+        legendRectSize = {
+          height: legendSize.height / 2,
+          width: chartSize.width / legendsCNT
+        };
+
+        legendTransform = {
+          left: chartMargin.left,
+          top: chartMargin.top + chartSize.height + legendRectSize.height / 5
+        };
+
+        break;
+      case 'top':
+        break;
+      case 'left':
+        break;
+      case 'right':
+        chartSize = {
+          height: svgSize.height - chartMargin.bottom - chartMargin.top,
+          width: svgSize.width - chartMargin.left - chartMargin.right - legendSize.width
+        };
+
+        if (chartData.data.length === 0) {
+          console.log('chart data error!');
+          return;
+        }
+
+        if (chartData.data[0].items.length === 0) {
+          console.log('chart data error!');
+          return;
+        }
+
+        cardSize = {
+          height: (chartSize.height - xAxisTextHeight) / chartData.data.length,
+          width: chartSize.width / chartData.data[0].items.length
+        };
+
+        legendRectSize = {
+          height: (chartSize.height - xAxisTextHeight) / legendsCNT,
+          width: legendSize.width / 2
+        };
+
+        legendTransform = {
+          left: chartMargin.left + chartMargin.right + chartPadding.left + chartPadding.right + chartSize.width,
+          top: chartMargin.top + xAxisTextHeight
+        };
+
+        break;
     }
-
-    if (chartData.data[0].items.length === 0) {
-      console.log('chart data error!');
-      return;
-    }
-
-    cardSize = {
-      height: (chartSize.height - xAxisTextHeight) / chartData.data.length,
-      width: chartSize.width / chartData.data[0].items.length
-    };
-
-    legendRectSize = {
-      height: legendHeight / 2,
-      width: chartSize.width / legendsCNT
-    };
   }
 
   function SetDimensions() {
@@ -348,8 +472,9 @@ function Heatmap() {
   }
 
   function UpdateScale() {
-    colorScale
-      .domain([0, d3.max(chartData.data, (floorData) => d3.max(floorData.items, (d) => (d.Yaxis)))]);
+    colorDomain = [d3.min(chartData.data, (floorData) => d3.min(floorData.items, (d) => (d.Yaxis))),
+      d3.max(chartData.data, (floorData) => d3.max(floorData.items, (d) => (d.Yaxis)))];
+    colorScaleStep = (colorDomain[1] - colorDomain[0]) / (legendsCNT);
   }
 
   $(window).on('resize', function() {
