@@ -1,4 +1,5 @@
 #plugloadsGraph-heatmap {
+  font-size: 12px;
   height: 300px;
   width: 100%;
 }
@@ -9,19 +10,20 @@
 }
 
 #plugloadsGraph-heatmap .chart .cards .card-row .card-label {
-  font-size: 12px;
+  alignment-baseline: central;
   text-anchor: middle;
+}
+
+#plugloadsGraph-heatmap .chart .x-axis text {
+  alignment-baseline: after-edge;
+  text-anchor: middle;
+}
+
+#plugloadsGraph-heatmap .chart .y-axis text {
   alignment-baseline: central;
 }
 
-#plugloadsGraph-heatmap .chart .x-axis text,
-#plugloadsGraph-heatmap .chart .y-axis text {
-  font-size: 12px;
-  text-anchor: middle;
-}
-
 #plugloadsGraph-heatmap .legends .legend text {
-  font-size: 12px;
 }
 
 .toolTip {

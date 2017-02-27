@@ -474,6 +474,7 @@ function BarChart() {
       .node()
       .getBBox();
     bodySelection.remove();
+    
     return textSize;
   }
 
