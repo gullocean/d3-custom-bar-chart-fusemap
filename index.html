@@ -4,7 +4,7 @@
   <title>grouped bar chart</title>
   <meta charset="utf-8">
 
-  <!-- <link rel="stylesheet" type="text/css" href="./css/bar-chart.css"> -->
+  <link rel="stylesheet" type="text/css" href="./css/bar-chart.css">
   <link rel="stylesheet" type="text/css" href="./css/heatmap.css">
 
   <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
@@ -16,7 +16,7 @@
 <!-- <div id="plugloadsGraph-barchart"></div> -->
 <div id="plugloadsGraph-heatmap"></div>
 
-<!-- <script type="text/javascript" src="./js/bar-chart.js"></script> -->
+<script type="text/javascript" src="./js/bar-chart.js"></script>
 <script type="text/javascript" src="./js/heatmap.js"></script>
 
 <script>
@@ -35,7 +35,7 @@
     heatmap.colorRange(['#EBF1F1','#43AEA8']);
     heatmap.dataset(chartData);
     heatmap.legendPosition('right');
-    heatmap.showLabel(false);
+    heatmap.showCardLabel(false);
     heatmap.isPercent(false);
 
     heatmap();

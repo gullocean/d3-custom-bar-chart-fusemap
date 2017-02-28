@@ -15,7 +15,7 @@
 }
 
 #plugloadsGraph-heatmap .chart .x-axis text {
-  alignment-baseline: after-edge;
+  alignment-baseline: alphabetic;
   text-anchor: middle;
 }
 
@@ -23,7 +23,9 @@
   alignment-baseline: central;
 }
 
-#plugloadsGraph-heatmap .legends .legend text {
+#plugloadsGraph-heatmap .chart .axis-label {
+  font-weight: bold;
+  alignment-baseline: before-edge;
 }
 
 .toolTip {
