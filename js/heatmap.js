@@ -81,8 +81,6 @@ function Heatmap() {
   function chart() {
     if (!dataset || !mainContainer) return;
 
-    if (typeof legendPosition === 'undefined') legendPosition = 'bottom';
-
     chartData = GetHeatmapData(dataset);
     
     chartDataExtent = [d3.min(chartData.data, (d) => (d3.min(d.items, (item) => item.Yaxis))),
@@ -115,15 +113,6 @@ function Heatmap() {
   chart.mainContainer = function(value) {
     if (!arguments.length) return mainContainer;
     mainContainer = value;
-    return chart;
-  }
-
-  /*
-   *  position of legend : bottom, left, right, top
-   */
-  chart.legendPosition = function(value) {
-    if (!arguments.length) return legendPosition;
-    legendPosition = value;
     return chart;
   }
 
@@ -265,41 +254,18 @@ function Heatmap() {
     legendsSelection
       .attr('transform', 'translate(' + legendTranslate.x + ',' + legendTranslate.y + ')');
 
-    switch (legendPosition) {
-      case 'bottom':
-        legendRectSelection
-          .attr('height', legendRectSize.height)
-          .attr('width', legendRectSize.width)
-          .attr('x', (d, i) => (i * legendRectSize.width))
-          .attr('fill', (d) => colorScale(d));
+    legendRectSelection
+      .attr('height', legendRectSize.height)
+      .attr('width', legendRectSize.width)
+      .attr('y', (d, i) => ((legendsCNT - i - 1) * legendRectSize.height))
+      .attr('fill', (d) => colorScale(d));
 
-        legendTextSelection
-          .attr('x', (d, i) => (i * legendRectSize.width))
-          .attr('y', legendRectSize.height)
-          .style('alignment-baseline', 'before-edge')
-          .text((d) => numberFormat(d));
-
-        break;
-      case 'left':
-        break;
-      case 'right':
-        legendRectSelection
-          .attr('height', legendRectSize.height)
-          .attr('width', legendRectSize.width)
-          .attr('y', (d, i) => ((legendsCNT - i - 1) * legendRectSize.height))
-          .attr('fill', (d) => colorScale(d));
-
-        legendTextSelection
-          .attr('x', legendRectSize.width)
-          .attr('y', (d, i) => ((legendsCNT - i) * legendRectSize.height))
-          .attr('dx', 2)
-          .style('alignment-baseline', 'after-edge')
-          .text((d) => numberFormat(d));
-          
-        break;
-      case 'top':
-        break;
-    }
+    legendTextSelection
+      .attr('x', legendRectSize.width)
+      .attr('y', (d, i) => ((legendsCNT - i) * legendRectSize.height))
+      .attr('dx', 2)
+      .style('alignment-baseline', 'after-edge')
+      .text((d) => numberFormat(d));
   }
 
   function GetTextSize(text, fontSize, fontWeight) {
@@ -471,27 +437,11 @@ function Heatmap() {
       height: GetTextSize('0', 12, 'normal').height,
       width: d3.max(legendData, (d) => GetTextSize(numberFormat(d), 12, 'normal').width)
     };
-
-    switch (legendPosition) {
-      case 'bottom':
-        chartSize = {
-          height: svgSize.height - chartMargin.bottom - chartMargin.top - legendSize.height - legendLabelSize.height,
-          width: svgSize.width - chartMargin.left - chartMargin.right
-        };
-
-        break;
-      case 'top':
-        break;
-      case 'left':
-        break;
-      case 'right':
-        chartSize = {
-          height: svgSize.height - chartMargin.bottom - chartMargin.top,
-          width: svgSize.width - chartMargin.left - chartMargin.right - legendSize.width - legendLabelSize.width
-        };
-
-        break;
-    }
+    
+    chartSize = {
+      height: svgSize.height - chartMargin.bottom - chartMargin.top,
+      width: svgSize.width - chartMargin.left - chartMargin.right - legendSize.width - legendLabelSize.width
+    };
 
     xAxisSize = {
       height: axisTicksize.height,
@@ -553,56 +503,25 @@ function Heatmap() {
       return;
     }
 
-    switch (legendPosition) {
-      case 'bottom':
-        cardSize = {
-          height: (cardsSize.height - chartPadding.bottom) / chartData.data.length,
-          width: cardsSize.width / chartData.data[0].items.length
-        };
+    cardSize = {
+      height: cardsSize.height / chartData.data.length,
+      width: (cardsSize.width - chartPadding.right) / chartData.data[0].items.length
+    };
 
-        legendsSize = {
-          height: legendSize.height / 2,
-          width: cardsSize.width
-        }
+    legendsSize = {
+      height: cardsSize.height,
+      width: legendSize.width + legendLabelSize.width
+    };
 
-        legendRectSize = {
-          height: legendsSize.height,
-          width: legendsSize.width / legendsCNT
-        };
+    legendRectSize = {
+      height: legendsSize.height / legendsCNT,
+      width: legendSize.width
+    };
 
-        legendTranslate = {
-          x: chartTranslate.x + cardsTranslate.x,
-          y: chartTranslate.y + cardsTranslate.y + cardsSize.height
-        };
-        
-        break;
-      case 'top':
-        break;
-      case 'left':
-        break;
-      case 'right':
-        cardSize = {
-          height: cardsSize.height / chartData.data.length,
-          width: (cardsSize.width - chartPadding.right) / chartData.data[0].items.length
-        };
-
-        legendsSize = {
-          height: cardsSize.height,
-          width: legendSize.width + legendLabelSize.width
-        };
-
-        legendRectSize = {
-          height: legendsSize.height / legendsCNT,
-          width: legendSize.width
-        };
-
-        legendTranslate = {
-          x: chartTranslate.x + cardsTranslate.x + cardsSize.width,
-          y: chartTranslate.y + cardsTranslate.y
-        };
-
-        break;
-    }
+    legendTranslate = {
+      x: chartTranslate.x + cardsTranslate.x + cardsSize.width,
+      y: chartTranslate.y + cardsTranslate.y
+    };
   }
 
   function SetDimensions() {
