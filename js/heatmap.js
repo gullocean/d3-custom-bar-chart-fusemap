@@ -19,9 +19,12 @@ function Heatmap() {
   var cardsSize = {};
   var cardsTranslate = {};
   var chartSize = {};
+  var chartTitleSize = {};
+  var chartTitleTranslate = {};
   var chartTranslate = {};
   var legendLabelSize = {};
   var legendRectSize = {};
+  var legendTitleTextSize = {};
   var legendTranslate = {};
   var mainContainerSize = {};
   var svgSize = {};
@@ -48,10 +51,12 @@ function Heatmap() {
   var cardsSelection = null;
   var cardsUpdateSelection = null;
   var chartSelection = null;
+  var chartTitleSelection = null;
   var legendEnterSelection = null;
   var legendExitSelection = null;
   var legendMergedEnterUpdateSelection = null;
   var legendTextSelection = null;
+  var legendTitleTextSelection = null;
   var legendRectSelection = null;
   var legendUpdateSelection = null;
   var legendsSelection = null;
@@ -66,7 +71,7 @@ function Heatmap() {
   var yAxisTextsEnterSelection = null;
   var yAxisTextsExitSelection = null;
   var yAxisTextsSelection = null;
-  var yAxisTexxtsMergedEnterUpdateSelection = null;
+  var yAxisTextsMergedEnterUpdateSelection = null;
   var yAxisTextsUpdateSelection = null;
 
   // scales
@@ -157,7 +162,9 @@ function Heatmap() {
 
     dataset.formatXaxis = data.xAxisDateFormat;
     dataset.labelXaxis = data.XaxisText;
-    dataset.labelYaxis = data.YaxisText === '0' ? 'kWh' : data.YaxisText;
+    dataset.labelYaxis = data.YaxisText === '0' ? 'Floors' : data.YaxisText;
+    dataset.legendTitle = 'kwh';
+    dataset.chartTitle = 'Heatmap';
 
     if (data.GraphPointsList.length === 0) {
       console.log('There is no GraphPointsList!');
@@ -234,6 +241,10 @@ function Heatmap() {
       .attr('dy', axisTicksize.height)
       .text((d) => d3.timeFormat(chartData.formatXaxis)(d));
 
+    chartTitleSelection
+      .attr('transform', 'translate(' + chartTitleTranslate.x + ',' + chartTitleTranslate.y + ')')
+      .text(chartData.chartTitle);
+
     xAxisLabelSelection
       .attr('transform', 'translate(' + xAxisLabelTranslate.x + ',' + xAxisLabelTranslate.y + ')')
       .text(chartData.labelXaxis);
@@ -245,8 +256,9 @@ function Heatmap() {
     yAxisTextsSelection
       .attr('transform', 'translate(' + yAxisTranslate.x + ',' + yAxisTranslate.y + ')');
 
-    yAxisTexxtsMergedEnterUpdateSelection
+    yAxisTextsMergedEnterUpdateSelection
       .attr('y', (d, i) => ((i + 0.5) * cardSize.height))
+      .attr('dx', -2)
       .text((d) => d);
   }
 
@@ -264,8 +276,12 @@ function Heatmap() {
       .attr('x', legendRectSize.width)
       .attr('y', (d, i) => ((legendsCNT - i) * legendRectSize.height))
       .attr('dx', 2)
-      .style('alignment-baseline', 'after-edge')
       .text((d) => numberFormat(d));
+
+    legendTitleTextSelection
+      .attr('x', legendRectSize.width)
+      .attr('dx', 2)
+      .text(chartData.legendTitle);
   }
 
   function GetTextSize(text, fontSize, fontWeight) {
@@ -378,9 +394,15 @@ function Heatmap() {
 
     yAxisTextsExitSelection.remove();
 
-    yAxisTexxtsMergedEnterUpdateSelection = yAxisTextsEnterSelection
+    yAxisTextsMergedEnterUpdateSelection = yAxisTextsEnterSelection
       .append('text')
       .merge(yAxisTextsUpdateSelection);
+
+    chartTitleSelection = chartSelection
+      .append('text')
+        .attr('class', 'chart-title')
+        .style('font-size', '14px')
+        .style('font-weight', 'bold');
 
     xAxisLabelSelection = chartSelection
       .append('text')
@@ -411,6 +433,10 @@ function Heatmap() {
       .append('rect');
     legendTextSelection = legendMergedEnterUpdateSelection
       .append('text');
+
+    legendTitleTextSelection = legendsSelection
+      .append('text')
+        .attr('class', 'legend-title');
   }
 
   function GetDimensions() {
@@ -428,19 +454,31 @@ function Heatmap() {
       width: d3.max(chartData.yAxisKeys, (key) => GetTextSize(key, 12, 'normal').width)
     };
 
+    chartTitleSize = GetTextSize(chartData.chartTitle, 14, 'bold');
+
     chartTranslate = {
       x: chartMargin.left,
       y: chartMargin.top
+    };
+
+    legendTitleTextSize = {
+      height: GetTextSize(chartData.legendTitle, 12, 'bold').height,
+      width: GetTextSize(chartData.legendTitle, 12, 'bold').width
     };
 
     legendLabelSize = {
       height: GetTextSize('0', 12, 'normal').height,
       width: d3.max(legendData, (d) => GetTextSize(numberFormat(d), 12, 'normal').width)
     };
-    
+
     chartSize = {
       height: svgSize.height - chartMargin.bottom - chartMargin.top,
       width: svgSize.width - chartMargin.left - chartMargin.right - legendSize.width - legendLabelSize.width
+    };
+
+    chartTitleTranslate = {
+      x: chartTranslate.x + chartSize.width / 2,
+      y: chartTranslate.y
     };
 
     xAxisSize = {
@@ -464,18 +502,18 @@ function Heatmap() {
     };
 
     cardsSize = {
-      height: chartSize.height - xAxisSize.height - xAxisLabelSize.height,
+      height: chartSize.height - xAxisSize.height - xAxisLabelSize.height - chartTitleSize.height,
       width: chartSize.width - yAxisSize.width - yAxisLabelSize.width
     };
 
     cardsTranslate = {
       x: yAxisLabelSize.width + axisTicksize.width,
-      y: 0
+      y: chartTitleSize.height
     };
 
     xAxisTranslate = {
       x: cardsTranslate.x,
-      y: cardsSize.height
+      y: cardsTranslate.y + cardsSize.height
     };
 
     yAxisTranslate = {
@@ -510,7 +548,7 @@ function Heatmap() {
 
     legendsSize = {
       height: cardsSize.height,
-      width: legendSize.width + legendLabelSize.width
+      width: d3.max([(legendSize.width + legendLabelSize.width), legendTitleTextSize.width])
     };
 
     legendRectSize = {

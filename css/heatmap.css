@@ -25,7 +25,16 @@
 
 #plugloadsGraph-heatmap .chart .axis-label {
   font-weight: bold;
-  alignment-baseline: before-edge;
+  alignment-baseline: central;
+}
+
+#plugloadsGraph-heatmap .legends .legend text {
+  alignment-baseline: after-edge;
+}
+
+#plugloadsGraph-heatmap .legends .legend-title {
+  alignment-baseline: mathematical;
+  font-weight: bold;
 }
 
 .toolTip {

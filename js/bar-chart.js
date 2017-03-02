@@ -298,7 +298,7 @@ function BarChart() {
         .attr('class', 'zoom-layer');
 
     colorScale = d3.scaleOrdinal()
-      .range(['#F19D68', '#5AB1EF', '#5DC7C9', '#D77A81', '#B6A2DE', '#F7C049']);
+      .range(['#F8766D', '#A3A500', '#00BF7D', '#00B0F6', '#E76BF3', '#F7C049']);
     xBarGroupeScale = d3.scaleBand()
       .domain(itemNames);
     xScale = d3.scaleBand()
