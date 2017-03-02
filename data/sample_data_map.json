@@ -1,0 +1,31 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "color": "red",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0366048812866,
+          38.89784666877921
+        ]
+      },
+      "properties": {
+        "show_on_map": true
+      }
+    }, {
+      "type": "Feature",
+      "color": "blue",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0256048812866,
+          38.89784666877921
+        ]
+      },
+      "properties": {
+        "show_on_map": true
+      }
+    }
+  ]
+}

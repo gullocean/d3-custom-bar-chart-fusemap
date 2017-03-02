@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+#plugloadsGraph-heatmap .chart .chart-title {
+  text-anchor: middle;
+}
+
 #plugloadsGraph-heatmap .chart .cards .card-row .card {
   stroke: #5AB0EE;
   stroke-width: 2px;
@@ -26,6 +30,10 @@
 #plugloadsGraph-heatmap .chart .axis-label {
   font-weight: bold;
   alignment-baseline: central;
+}
+
+#plugloadsGraph-heatmap .chart .axis-label.x-axis-label {
+  text-anchor: middle;
 }
 
 #plugloadsGraph-heatmap .legends .legend text {

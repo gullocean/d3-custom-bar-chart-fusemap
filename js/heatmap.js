@@ -1,6 +1,4 @@
 function Heatmap() {
-
-
   // data
   var chartData = {};
   var chartDataExtent = [];
@@ -522,7 +520,7 @@ function Heatmap() {
     };
 
     xAxisLabelTranslate = {
-      x: chartSize.width / 2,
+      x: chartTranslate.x + chartSize.width / 2,
       y: chartTranslate.y + xAxisTranslate.y + xAxisLabelSize.height
     };
 
