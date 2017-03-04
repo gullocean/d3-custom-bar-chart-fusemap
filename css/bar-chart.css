@@ -1,6 +1,7 @@
 #plugloadsGraph-barchart {
-  height: 300px;
+  height: 600px;
   width: 100%;
+  overflow: hidden;
 }
 
 #plugloadsGraph-barchart .bar-chart .axis-x path,
@@ -21,14 +22,15 @@
   font-size: 12px;
   font-weight: bold;
   text-anchor: middle;
+  alignment-baseline: after-edge;
 }
 
 #plugloadsGraph-barchart .bar-chart .label-y {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
-  padding-left: 2px;
   text-anchor: middle;
+  alignment-baseline: before-edge;
 }
 
 #plugloadsGraph-barchart .chart-container {
@@ -70,11 +72,12 @@
 
 #plugloadsGraph-barchart .legend-container .legend-content-container {
   overflow: auto;
+  width: 100%;
 }
 
 #plugloadsGraph-barchart .legend-container .legend-content-container .legends .legend .legend-text {
   fill: #000000;
-  font-size: 12px;
   font-weight: normal;
   text-anchor: start;
+  alignment-baseline: before-edge;
 }

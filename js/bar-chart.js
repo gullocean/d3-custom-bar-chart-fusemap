@@ -1,28 +1,43 @@
 function BarChart() {
+  // global
+  var _this = this;
+  // constants
+  const mainContainerPadding = { bottom: 10, left: 10, right: 10, top: 10 };
+  const chartMargin = { bottom: 40, left: 50, right: 10, top: 10 };
+  const chartPadding = { bottom: 20, left: 0, right: 0, top: 0 };
+  const legendPaddingBottom = 3;
+  const legendRectSize = { height: 12, width: 12 };
+  const legendTextMaringLeft = 3;
+  const legendTitleMarginBottom = 5;
+  const legendWidth = 100;
+  // input data
+  var mainContainer = null;
+  var dataset = {};
   // data
   var chartData = {};
   var itemNames = [];
   var xAxisKeys = [];
-
   // dimensions
-  const chartMargin = { bottom: 40, left: 50, right: 10, top: 10 };
-  const chartPadding = { bottom: 20, left: 0, right: 0, top: 0 };
-  const legendHeight = 21;
-  const legendRectSize = { height: 12, width: 12 };
-  const legendTitleHeight = 20;
-  const legendWidth = 100;
-
   var backgroundRectSize = {};
   var chartContainerSize = {};
   var chartSize = {};
   var chartSVGSize = {};
   var legendContainerSize = {};
   var legendContentContainerSize = {};
+  var legendContainerMarginTop = 0;
   var legendSVGSize = {};
+  var legendSize = {};
+  var legendTitleSize = {};
   var mainContainerSize = {};
   var xPanning = 0;
   var xScaleFactor = 1;
-
+  // translations
+  var chartTranslate = {};
+  var legendTranslate = {};
+  var xAxisTranslate = {};
+  var yAxisTranslate = {};
+  var xAxisLabelTranslate = {};
+  var yAxisLabelTranslate = {};
   // containers
   var barChartSelection = null;
   var barGroupEnterSelection = null;
@@ -57,45 +72,41 @@ function BarChart() {
   var yAxisSelection = null;
   var yGridsSelection = null;
   var zoomLayerSelection = null;
-
   // scales
   var colorScale = null;
   var xBarGroupeScale = null;
   var xScale = null;
   var yScale = null;
-
   // events
   var zoom = null;
-
   // time format
   const parseDate = d3.timeParse('%A, %B %d, %Y %I:%M:%S %p');
 
-  function chart() {
+  this.chart = function() {
     if (!dataset || !mainContainer) return;
 
-    chartData = GetBarChartData(dataset);
+    chartData = this.GetBarChartData(dataset);
 
-    Init();
-    GetDimensions();
-    SetDimensions();
-    UpdateScale();
-    DrawChart();
-    DrawLegend();
+    this.Init();
+    this.GetDimensions();
+    this.GetTranslations();
+    this.SetDimensions();
+    this.UpdateScale();
+    this.DrawChart();
+    this.DrawLegend();
   }
 
-  chart.dataset = function(value) {
+  this.Dataset = function(value) {
     if (!arguments.length) return dataset;
     dataset = value;
-    return chart;
   }
 
-  chart.mainContainer = function(value) {
+  this.MainContainer = function(value) {
     if (!arguments.length) return mainContainer;
     mainContainer = value;
-    return chart;
   }
 
-  function GetBarChartData(data) {
+  this.GetBarChartData = function(data) {
     if (!data) return null;
 
     var dataset = {
@@ -108,6 +119,7 @@ function BarChart() {
     dataset.formatXaxis = data.xAxisDateFormat;
     dataset.labelXaxis = data.XaxisText;
     dataset.labelYaxis = data.YaxisText === '0' ? 'kWh' : data.YaxisText;
+    dataset.legendTitle = 'FloorName';
 
     if (data.GraphPointsList.length === 0) {
       console.log('There is no GraphPointsList!');
@@ -146,7 +158,7 @@ function BarChart() {
         }
       });
 
-      var groupItemNames = GetGroupItemNames(item);
+      var groupItemNames = this.GetGroupItemNames(item);
 
       groupItemNames.forEach((itemName) => {
         item[itemName].Xaxis = itemNames.length / groupItemNames.length;
@@ -158,13 +170,13 @@ function BarChart() {
     return dataset;
   }
 
-  function GetGroupItemNames(data) {
+  this.GetGroupItemNames = function(data) {
     let keys = Object.keys(data);
     keys.splice(keys.indexOf('key'), 1);
     return keys;
   }
 
-  function Init() {
+  this.Init = function() {
     zoom = d3.zoom()
       .scaleExtent([1, 10])
       .on('zoom', function() {
@@ -172,11 +184,12 @@ function BarChart() {
         xPanning = d3.min([0, d3.max([d3.event.transform.x, chartSize.width * (1 - xScaleFactor)])]);
         d3.event.transform.x = xPanning;
 
-        GetDimensions();
-        SetDimensions();
-        UpdateScale();
-        DrawChart();
-        DrawLegend();
+        _this.GetDimensions();
+        _this.GetTranslations();
+        _this.SetDimensions();
+        _this.UpdateScale();
+        _this.DrawChart();
+        _this.DrawLegend();
       });
 
     mainContainer
@@ -225,7 +238,7 @@ function BarChart() {
     barUpdateSelection = barGroupMergedEnterUpdateSelection
       .selectAll('.bar')
       .data((d) => {
-        let groupItemNames = GetGroupItemNames(d);
+        let groupItemNames = this.GetGroupItemNames(d);
         return groupItemNames.map((itemName) => ({key: itemName, value: d[itemName]}));
       });
     barEnterSelection = barUpdateSelection.enter();
@@ -261,7 +274,7 @@ function BarChart() {
     legendTitleContainer = legendContainer
       .append('div')
         .attr('class', 'legend-title-container')
-        .text('FloorName');
+        .text(chartData.legendTitle);
     legendContentContainer = legendContainer
       .append('div')
         .attr('class', 'legend-content-container');
@@ -308,14 +321,31 @@ function BarChart() {
     yScale = d3.scaleLinear();
   }
 
-  function GetDimensions() {
+  this.GetDimensions = function() {
     mainContainerSize = mainContainer
       .node()
       .getBoundingClientRect();
 
+    mainContainerSize = {
+      height: mainContainerSize.height - mainContainerPadding.bottom - mainContainerPadding.top,
+      width: mainContainerSize.width - mainContainerPadding.left - mainContainerPadding.right,
+    };
+
+    // calculation legend width
+    legendTitleSize = GetTextSize(chartData.legendTitle, 12, 'bold');
+    legendSize = {
+      height: GetTextSize('A', 12, 'normal').height + legendPaddingBottom,
+      width: legendRectSize.width + legendTextMaringLeft + d3.max(itemNames, (itemName) => (GetTextSize(itemName, 12, 'normal').width))
+    };
+
+    legendContainerSize = {
+      height: mainContainerSize.height - chartMargin.bottom - chartMargin.top - legendTitleMarginBottom,
+      width: d3.max([legendTitleSize.width, legendSize.width])
+    };
+
     chartContainerSize = {
       height: mainContainerSize.height,
-      width: mainContainerSize.width - legendWidth
+      width: mainContainerSize.width - legendContainerSize.width
     };
     chartSVGSize = {
       height: chartContainerSize.height,
@@ -330,32 +360,48 @@ function BarChart() {
       width: chartSize.width + chartPadding.left + chartPadding.right
     };
 
-    legendContainerSize = {
-      height: chartContainerSize.height - chartMargin.bottom - chartMargin.top - chartPadding.bottom - chartPadding.top,
-      width: legendWidth
-    };
-    legendContentContainerSize = {
-      height: legendContainerSize.height - legendTitleHeight,
+    legendSVGSize = {
+      height: itemNames.length * legendSize.height,
       width: legendContainerSize.width
     };
-    legendSVGSize = {
-      height: itemNames.length * legendHeight,
-      width: legendContentContainerSize.width
+    legendContainerMarginTop = mainContainerPadding.top + chartMargin.top + d3.max([0, (backgroundRectSize.height - legendTitleSize.height - legendTitleMarginBottom - legendSVGSize.height) / 2]);
+    legendContentContainerSize = {
+      height: legendContainerSize.height - legendTitleSize.height - legendContainerMarginTop,
+      width: legendContainerSize.width
     };
   }
 
-  function SetDimensions() {
+  this.GetTranslations = function() {
+    xAxisTranslate = {
+      x: 0,
+      y: backgroundRectSize.height
+    };
+    yAxisTranslate = {
+      x: 0,
+      y: 0
+    };
+    xAxisLabelTranslate = {
+      x: chartSize.width / 2,
+      y: mainContainerSize.height - chartMargin.top
+    };
+    yAxisLabelTranslate = {
+      x: -chartMargin.left,
+      y: chartSize.height / 2
+    };
+  }
+
+  this.SetDimensions = function() {
     chartContainer
       .style('height', chartContainerSize.height + 'px')
-      .style('width', chartContainerSize.width + 'px');
+      .style('width', chartContainerSize.width + 'px')
+      .style('margin-left', mainContainerPadding.left + 'px')
+      .style('margin-top', mainContainerPadding.top + 'px');
     legendContainer
-      .style('height', legendContainerSize.height + 'px')
-      .style('width', legendContainerSize.width + 'px');
+      .style('margin-top', legendContainerMarginTop + 'px');
     legendContentContainer
       .style('height', legendContentContainerSize.height + 'px')
-      .style('width', legendContentContainerSize.width + 'px');
     legendTitleContainer
-      .style('padding-top', (chartMargin.top + chartPadding.top) + 'px');
+      .style('margin-bottom', legendTitleMarginBottom + 'px');
     
     svgChartSelection
       .attr('height', chartSVGSize.height)
@@ -382,22 +428,29 @@ function BarChart() {
       .attr('height', chartSVGSize.height)
       .attr('transform', 'translate(' + chartSize.width + ',0)');
     xAxisSelection
-      .attr('transform', 'translate(0,' + (chartSize.height + chartPadding.bottom) + ')');
+      .attr('transform', 'translate(' + xAxisTranslate.x + ',' + xAxisTranslate.y + ')');
+    yAxisSelection
+      .attr('transform', 'translate(' + yAxisTranslate.x + ',' + yAxisTranslate.y + ')');
     xGridsSelection
       .attr('transform', 'translate(0,' + (chartSize.height + chartMargin.bottom) + ')');
     xAxisLabelSelection
+      // .attr('transform', 'translate(' + chartSize.width / 2 + ',' + (chartSVGSize.height - xAxisSelection.node().getBBox().height) + ')')
+      .attr('transform', 'translate(' + xAxisLabelTranslate.x + ',' + xAxisLabelTranslate.y + ')')
       .text(chartData.labelXaxis);
     yAxisLabelSelection
+      // .attr('dy', -5)
+      // .attr('transform', 'translate(' + (-yAxisSelection.node().getBBox().width) + ',' + chartSize.height / 2 + '), rotate(-90)')
+      .attr('transform', 'translate(' + yAxisLabelTranslate.x + ',' + yAxisLabelTranslate.y + '), rotate(-90)')
       .text(chartData.labelYaxis);
   }
 
-  function UpdateScale() {
+  this.UpdateScale = function() {
     xScale
       .rangeRound([xPanning, xPanning + chartSize.width * xScaleFactor]);
     yScale
       .rangeRound([chartSize.height, 0])
       .domain([0, d3.max(chartData.data, (d) => {
-        let groupItemNames = GetGroupItemNames(d);
+        let groupItemNames = this.GetGroupItemNames(d);
         return d3.max(groupItemNames, (itemName) => d[itemName].Yaxis);
       })])
       .nice();
@@ -405,7 +458,7 @@ function BarChart() {
       .rangeRound([0, xScale.bandwidth()]);
   }
 
-  function DrawChart() {
+  this.DrawChart = function() {
     xAxisSelection
       .call(d3.axisBottom(xScale)
         .tickFormat(d3.timeFormat(chartData.formatXaxis)));
@@ -419,12 +472,6 @@ function BarChart() {
       .call(d3.axisRight(yScale)
         .tickFormat('')
         .tickSize(chartSize.width));
-
-    xAxisLabelSelection
-      .attr('transform', 'translate(' + chartSize.width / 2 + ',' + (chartSVGSize.height - xAxisSelection.node().getBBox().height) + ')');
-    yAxisLabelSelection
-      .attr('dy', -5)
-      .attr('transform', 'translate(' + (-yAxisSelection.node().getBBox().width) + ',' + chartSize.height / 2 + '), rotate(-90)');
 
     barGroupMergedEnterUpdateSelection
       .attr('transform', (d) => ('translate(' + xScale(d.key) + ',0)'));
@@ -440,10 +487,10 @@ function BarChart() {
       .call(zoom);
   } 
 
-  function DrawLegend() {
+  this.DrawLegend = function() {
     legendsMergedEnterUpdateSelection
       .attr('transform', function(d, i) {
-        return 'translate(0,' + i * legendHeight + ')';
+        return 'translate(0,' + i * legendSize.height + ')';
       });
 
     legendRectMergedEnterUpdateSelection
@@ -452,39 +499,17 @@ function BarChart() {
       .attr('fill', colorScale);
 
     legendTextMergedEnterUpdateSelection
-      .attr('x', 10)
-      .attr('y', 10)
-      .attr('dx', 3)
+      .attr('x', legendRectSize.width + legendTextMaringLeft)
+      .style('font-size', legendRectSize.height)
       .text((d) => d);
   }
 
-  function GetTextSize(text, fontSize, fontWeight) {
-    const bodySelection = d3.select('body')
-      .append('svg');
-
-    bodySelection
-      .append('text')
-        .attr('x', -99999)
-        .attr('y', -99999)
-        .style('font-size', fontSize + 'px')
-        .style('font-weight', fontWeight)
-        .text(text);
-
-    var textSize = bodySelection
-      .node()
-      .getBBox();
-    bodySelection.remove();
-
-    return textSize;
-  }
-
   $(window).on('resize', function() {
-    GetDimensions();
-    SetDimensions();
-    UpdateScale();
-    DrawChart();
-    DrawLegend();
+    _this.GetDimensions();
+    _this.GetTranslations();
+    _this.SetDimensions();
+    _this.UpdateScale();
+    _this.DrawChart();
+    _this.DrawLegend();
   });
-
-  return chart;
 }

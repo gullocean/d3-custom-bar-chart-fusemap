@@ -90,6 +90,7 @@ function Map() {
     });
 
     myLayer.on('click', function(e) {
+      onClick(e.layer.feature);
       var popup = L.popup()
         .setLatLng(e.latlng)
         .setContent('<div>' + e.layer.feature.color + '</div>')
@@ -112,6 +113,10 @@ function Map() {
     myLayer.on('mouseout', function(e) {
       map.closePopup();
     });
+  }
+
+  function onClick(feature) {
+    console.log(feature);
   }
 
   return map;

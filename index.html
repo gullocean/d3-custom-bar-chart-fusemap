@@ -18,25 +18,26 @@
 </head>
 <body>
 
-<!-- <div id="plugloadsGraph-barchart"></div> -->
+<div id="plugloadsGraph-barchart"></div>
 <!-- <div id="plugloadsGraph-heatmap"></div> -->
-<div id="mapbox"></div>
+<!-- <div id="mapbox"></div> -->
 
+<script type="text/javascript" src="./js/app.js"></script>
 <script type="text/javascript" src="./js/bar-chart.js"></script>
 <script type="text/javascript" src="./js/heatmap.js"></script>
 <script type="text/javascript" src="./js/map.js"></script>
 
 <script>
-  var barChart = BarChart();
-  var heatmap = Heatmap();
-  var map = Map();
+  var barChart = new BarChart();
+  // var heatmap = Heatmap();
+  // var map = Map();
 
   d3.json('data/sample_data.json', function(chartData) {
-    // const mainContainerBarchart = d3.select('#plugloadsGraph-barchart');
-    // barChart.mainContainer(mainContainerBarchart);
-    // barChart.dataset(chartData);
+    const mainContainerBarchart = d3.select('#plugloadsGraph-barchart');
+    barChart.MainContainer(mainContainerBarchart);
+    barChart.Dataset(chartData);
 
-    // barChart();
+    barChart.chart();
 
     // const mainContainerHeatmap = d3.select('#plugloadsGraph-heatmap');
     // heatmap.mainContainer(mainContainerHeatmap);
@@ -48,15 +49,15 @@
     // heatmap();
   });
 
-  d3.json('data/sample_data_map.json', function(geojson) {
-    map.accessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
-    map.containerID('mapbox');
-    map.viewCenter([38.8929, -77.0252]);
-    map.zoomLevel(14);
-    map.geojson(geojson)
+  // d3.json('data/sample_data_map.json', function(geojson) {
+  //   map.accessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
+  //   map.containerID('mapbox');
+  //   map.viewCenter([38.8929, -77.0252]);
+  //   map.zoomLevel(14);
+  //   map.geojson(geojson)
 
-    map();
-  });
+  //   map();
+  // });
 </script>
 </body>
 </html>
