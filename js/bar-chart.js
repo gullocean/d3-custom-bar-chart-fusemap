@@ -345,7 +345,7 @@ function BarChart() {
 
     chartContainerSize = {
       height: mainContainerSize.height,
-      width: mainContainerSize.width - legendContainerSize.width
+      width: mainContainerSize.width - legendContainerSize.width * 1.2
     };
     chartSVGSize = {
       height: chartContainerSize.height,

@@ -18,8 +18,8 @@
 </head>
 <body>
 
-<div id="plugloadsGraph-barchart"></div>
-<!-- <div id="plugloadsGraph-heatmap"></div> -->
+<!-- <div id="plugloadsGraph-barchart"></div> -->
+<div id="plugloadsGraph-heatmap"></div>
 <!-- <div id="mapbox"></div> -->
 
 <script type="text/javascript" src="./js/app.js"></script>
@@ -28,25 +28,27 @@
 <script type="text/javascript" src="./js/map.js"></script>
 
 <script>
-  var barChart = new BarChart();
-  // var heatmap = Heatmap();
+  // var barChart = new BarChart();
+  var heatmap = new Heatmap();
   // var map = Map();
 
-  d3.json('data/sample_data.json', function(chartData) {
-    const mainContainerBarchart = d3.select('#plugloadsGraph-barchart');
-    barChart.MainContainer(mainContainerBarchart);
-    barChart.Dataset(chartData);
+  d3.json('data/sample_data_Occupancy.json', function(chartData) {
+    // const mainContainerBarchart = d3.select('#plugloadsGraph-barchart');
+    // barChart.MainContainer(mainContainerBarchart);
+    // barChart.Dataset(chartData);
 
-    barChart.chart();
+    // barChart.chart();
 
-    // const mainContainerHeatmap = d3.select('#plugloadsGraph-heatmap');
-    // heatmap.mainContainer(mainContainerHeatmap);
-    // heatmap.colorRange(['#EBF1F1','#43AEA8']);
-    // heatmap.dataset(chartData);
-    // heatmap.showCardLabel(false);
-    // heatmap.isPercent(false);
+    heatmap.MainContainerID('plugloadsGraph-heatmap');
+    heatmap.ColorRange(['#FFF9BF','#7F0026']);
+    heatmap.Dataset(chartData);
+    heatmap.ShowCardLabel(true);
+    heatmap.IsPercent(false);
+    heatmap.LegendLabel('OCC');
+    heatmap.ChartTitle('Occupancy by seat and week day : PTPP33');
+    heatmap.LabelYaxis('seat');
 
-    // heatmap();
+    heatmap.chart();
   });
 
   // d3.json('data/sample_data_map.json', function(geojson) {

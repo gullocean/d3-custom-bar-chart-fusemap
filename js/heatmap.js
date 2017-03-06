@@ -1,4 +1,15 @@
 function Heatmap() {
+  // input data
+  var legendLabel = '';
+  var chartTitle = '';
+  var isPercent = false;
+  var showCardLabel = false;
+  var mainContainer = null;
+  var dataset = {};
+  var colorRange = ['#EBF1F1','#43AEA8'];
+  var labelYaxis = '';
+  // global
+  var _this = this;
   // data
   var chartData = {};
   var chartDataExtent = [];
@@ -11,6 +22,11 @@ function Heatmap() {
   const legendsCNT = 10;
   const xAxisTextHeight = 20;
   const YaxisTextWidth = 20;
+  const fontSize = {
+    normal: 16,
+    large: 18
+  };
+  const minCardHeight = 30;
 
   var axisTicksize = {};
   var cardSize = {};
@@ -80,11 +96,69 @@ function Heatmap() {
 
   // format
   numberFormat = (d) => (Math.round(d * 100) / 100 + (isPercent ? '%' : ''));
+
+  this.ColorRange = function(value) {
+    if (!arguments.length) return colorRange;
+    colorRange = value;
+  }
+
+  this.Dataset = function(value) {
+    if (!arguments.length) return dataset;
+    dataset = value;
+  }
+
+  this.MainContainerID = function(value) {
+    if (!arguments.length) {
+      if (mainContainer === null) return null;
+      return mainContainer.attr('id');
+    }
+    mainContainer = d3.select('#' + value);
+  }
+
+  /*
+   *  flag for showing of label on card
+   */
+  this.ShowCardLabel = function(value) {
+    if (!arguments.length) return showCardLabel;
+    showCardLabel = value;
+  }
+
+  /*
+   *  flag : true if Yaxis is a value of percent
+   */
+  this.IsPercent = function(value) {
+    if (!arguments.length) return isPercent;
+    isPercent = value;
+  }
+
+  /*
+   *  label of legend
+   */
+  this.LegendLabel = function(value) {
+    if (!arguments.length) return legendLabel;
+    legendLabel = value;
+  }
+
+  /*
+   *  title of chart
+   */
+  this.ChartTitle = function(value) {
+    if (!arguments.length) return chartTitle;
+    chartTitle = value;
+  }
+
+  /*
+   *  label of y-axis
+   */
+  this.LabelYaxis = function(value) {
+    if (!arguments.length) return labelYaxis;
+    labelYaxis = value;
+  }
   
-  function chart() {
+  this.chart = function() {
     if (!dataset || !mainContainer) return;
 
-    chartData = GetHeatmapData(dataset);
+    chartData = this.GetHeatmapData(dataset);
     
     chartDataExtent = [d3.min(chartData.data, (d) => (d3.min(d.items, (item) => item.Yaxis))),
                       d3.max(chartData.data, (d) => (d3.max(d.items, (item) => item.Yaxis)))];
@@ -93,60 +167,15 @@ function Heatmap() {
       legendData.push(chartDataExtent[0] + i * (chartDataExtent[1] - chartDataExtent[0]) / legendsCNT);
     }
 
-    Init();
-    GetDimensions();
-    SetDimensions();
-    UpdateScale();
-    DrawChart();
-    DrawLegend();
+    this.Init();
+    this.GetDimensions();
+    this.SetDimensions();
+    this.UpdateScale();
+    this.DrawChart();
+    this.DrawLegend();
   }
 
-  chart.colorRange = function(value) {
-    if (!arguments.length) return colorRange;
-    colorRange = value;
-    return chart;
-  }
-
-  chart.dataset = function(value) {
-    if (!arguments.length) return dataset;
-    dataset = value;
-    return chart;
-  }
-
-  chart.mainContainer = function(value) {
-    if (!arguments.length) return mainContainer;
-    mainContainer = value;
-    return chart;
-  }
-
-  /*
-   *  flag for showing of label on card
-   */
-  chart.showCardLabel = function(value) {
-    if (!arguments.length) return showCardLabel;
-    showCardLabel = value;
-    return chart;
-  }
-
-  /*
-   *  flag : true if Yaxis is a value of percent
-   */
-  chart.isPercent = function(value) {
-    if (!arguments.length) return isPercent;
-    isPercent = value;
-    return chart;
-  }
-
-  /*
-   *  label of legend
-   */
-  chart.legendLabel = function(value) {
-    if (!arguments.length) return legendLabel;
-    legendLabel = value;
-    return chart;
-  }
-
-  function GetHeatmapData(data) {
+  this.GetHeatmapData = function(data) {
     if (!data) return null;
 
     var dataset = {
@@ -160,9 +189,9 @@ function Heatmap() {
 
     dataset.formatXaxis = data.xAxisDateFormat;
     dataset.labelXaxis = data.XaxisText;
-    dataset.labelYaxis = data.YaxisText === '0' ? 'Floors' : data.YaxisText;
-    dataset.legendTitle = 'kwh';
-    dataset.chartTitle = 'Heatmap';
+    dataset.labelYaxis = data.YaxisText === '0' ? labelYaxis : data.YaxisText;
+    dataset.legendTitle = legendLabel;
+    dataset.chartTitle = chartTitle;
 
     if (data.GraphPointsList.length === 0) {
       console.log('There is no GraphPointsList!');
@@ -197,7 +226,7 @@ function Heatmap() {
     return dataset;
   }
 
-  function DrawChart() {
+  this.DrawChart = function() {
     chartSelection
       .attr('transform', 'translate(' + chartTranslate.x + ',' + chartTranslate.y +')');
 
@@ -245,10 +274,14 @@ function Heatmap() {
 
     xAxisLabelSelection
       .attr('transform', 'translate(' + xAxisLabelTranslate.x + ',' + xAxisLabelTranslate.y + ')')
+      .style('font-size', fontSize.large)
+      .style('text-transform', 'capitalize')
       .text(chartData.labelXaxis);
 
     yAxisLabelSelection
       .attr('transform', 'translate(' + yAxisLabelTranslate.x + ',' + yAxisLabelTranslate.y + '), rotate(-90)')
+      .style('font-size', fontSize.large)
+      .style('text-transform', 'capitalize')
       .text(chartData.labelYaxis);
 
     yAxisTextsSelection
@@ -260,7 +293,7 @@ function Heatmap() {
       .text((d) => d);
   }
 
-  function DrawLegend() {
+  this.DrawLegend = function() {
     legendsSelection
       .attr('transform', 'translate(' + legendTranslate.x + ',' + legendTranslate.y + ')');
 
@@ -282,7 +315,7 @@ function Heatmap() {
       .text(chartData.legendTitle);
   }
 
-  function Init() {
+  this.Init = function() {
     tooltip = d3.select('body')
       .append('div')
       .attr('class', 'toolTip');
@@ -379,7 +412,7 @@ function Heatmap() {
     chartTitleSelection = chartSelection
       .append('text')
         .attr('class', 'chart-title')
-        .style('font-size', '14px')
+        .style('font-size', '18px')
         .style('font-weight', 'bold');
 
     xAxisLabelSelection = chartSelection
@@ -417,10 +450,15 @@ function Heatmap() {
         .attr('class', 'legend-title');
   }
 
-  function GetDimensions() {
+  this.GetDimensions = function() {
     mainContainerSize = mainContainer
       .node()
       .getBoundingClientRect();
+
+    mainContainerSize = {
+      height: d3.max([mainContainerSize.height, minCardHeight * chartData.yAxisKeys.length]),
+      width: mainContainerSize.width - getScrollBarWidth()
+    };
 
     svgSize = {
       height: mainContainerSize.height,
@@ -428,11 +466,11 @@ function Heatmap() {
     };
 
     axisTicksize = {
-      height: GetTextSize('0', 12, 'normal').height,
-      width: d3.max(chartData.yAxisKeys, (key) => GetTextSize(key, 12, 'normal').width)
+      height: GetTextSize('0', fontSize.normal, 'normal').height,
+      width: d3.max(chartData.yAxisKeys, (key) => GetTextSize(key, fontSize.normal, 'normal').width)
     };
 
-    chartTitleSize = GetTextSize(chartData.chartTitle, 14, 'bold');
+    chartTitleSize = GetTextSize(chartData.chartTitle, fontSize.large, 'bold');
 
     chartTranslate = {
       x: chartMargin.left,
@@ -440,13 +478,13 @@ function Heatmap() {
     };
 
     legendTitleTextSize = {
-      height: GetTextSize(chartData.legendTitle, 12, 'bold').height,
-      width: GetTextSize(chartData.legendTitle, 12, 'bold').width
+      height: GetTextSize(chartData.legendTitle, fontSize.normal, 'bold').height,
+      width: GetTextSize(chartData.legendTitle, fontSize.normal, 'bold').width
     };
 
     legendLabelSize = {
-      height: GetTextSize('0', 12, 'normal').height,
-      width: d3.max(legendData, (d) => GetTextSize(numberFormat(d), 12, 'normal').width)
+      height: GetTextSize('0', fontSize.normal, 'normal').height,
+      width: d3.max(legendData, (d) => GetTextSize(numberFormat(d), fontSize.normal, 'normal').width)
     };
 
     chartSize = {
@@ -470,13 +508,13 @@ function Heatmap() {
     };
 
     xAxisLabelSize = {
-      height: GetTextSize(chartData.labelXaxis, 14, 'bold').height,
-      width: GetTextSize(chartData.labelXaxis, 14, 'bold').width 
+      height: GetTextSize(chartData.labelXaxis, fontSize.large, 'bold').height,
+      width: GetTextSize(chartData.labelXaxis, fontSize.large, 'bold').width 
     };
 
     yAxisLabelSize = {
-      height: GetTextSize(chartData.labelYaxis, 14, 'bold').width,
-      width: GetTextSize(chartData.labelYaxis, 14, 'bold').height 
+      height: GetTextSize(chartData.labelYaxis, fontSize.large, 'bold').width,
+      width: GetTextSize(chartData.labelYaxis, fontSize.large, 'bold').height 
     };
 
     cardsSize = {
@@ -540,13 +578,15 @@ function Heatmap() {
     };
   }
 
-  function SetDimensions() {
+  this.SetDimensions = function() {
+    $('#' + this.MainContainerID()).height(mainContainerSize.height);
+
     svgSelection
       .attr('height', svgSize.height)
       .attr('width', svgSize.width);
   }
 
-  function UpdateScale() {
+  this.UpdateScale = function() {
     colorScale
       .domain([0, d3.max(chartData.data, (floorData) => d3.max(floorData.items, (d) => (d.Yaxis)))]);
   }
@@ -558,6 +598,4 @@ function Heatmap() {
     DrawChart();
     DrawLegend();
   });
-
-  return chart;
 }
