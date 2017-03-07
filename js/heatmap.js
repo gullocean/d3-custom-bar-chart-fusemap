@@ -1,13 +1,15 @@
 function Heatmap() {
   // input data
-  var legendLabel = '';
   var chartTitle = '';
   var isPercent = false;
   var showCardLabel = false;
   var mainContainer = null;
   var dataset = {};
   var colorRange = ['#EBF1F1','#43AEA8'];
+  var labelLegend = '';
+  var labelXaxis = '';
   var labelYaxis = '';
+  var xAxisDateFormat = '';
   // global
   var _this = this;
   // data
@@ -135,8 +137,8 @@ function Heatmap() {
    *  label of legend
    */
   this.LegendLabel = function(value) {
-    if (!arguments.length) return legendLabel;
-    legendLabel = value;
+    if (!arguments.length) return labelLegend;
+    labelLegend = value;
   }
 
   /*
@@ -145,6 +147,22 @@ function Heatmap() {
   this.ChartTitle = function(value) {
     if (!arguments.length) return chartTitle;
     chartTitle = value;
+  }
+
+  /*
+   *  text of x-axis
+   */
+  this.LabelXaxis = function(value) {
+    if (!arguments.length) return labelXaxis;
+    labelXaxis = value;
+  }
+
+  /*
+   *  format of x-axis date
+   */
+  this.XAxisDateFormat = function(value) {
+    if (!arguments.length) return xAxisDateFormat;
+    xAxisDateFormat = value;
   }
 
   /*
@@ -178,47 +196,42 @@ function Heatmap() {
   this.GetHeatmapData = function(data) {
     if (!data) return null;
 
+    if (data.length === 0) {
+      console.log('There is no GraphPointsList!');
+      return;
+    }
+
     var dataset = {
       formatXaxis: '',
       labelXaxis: '',
       labelYaxis: '',
       xAxisKeys: [],
       yAxisKeys: [],
-      data: []
+      data: data
     };
 
-    dataset.formatXaxis = data.xAxisDateFormat;
-    dataset.labelXaxis = data.XaxisText;
-    dataset.labelYaxis = data.YaxisText === '0' ? labelYaxis : data.YaxisText;
-    dataset.legendTitle = legendLabel;
+    dataset.formatXaxis = xAxisDateFormat;
+    dataset.labelXaxis = labelXaxis;
+    dataset.labelYaxis = labelYaxis;
+    dataset.legendTitle = labelLegend;
     dataset.chartTitle = chartTitle;
 
-    if (data.GraphPointsList.length === 0) {
-      console.log('There is no GraphPointsList!');
-      return;
-    }
+    // data.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
+    //   dataset.data.push({
+    //     itemName: graphPointsList.ItemName,
+    //     items: []
+    //   });
 
-    if (data.GraphPointsList[0].GraphPointList.length === 0) {
-      console.log('There is no GraphPointList!');
-      return;
-    }
-
-    data.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
-      dataset.data.push({
-        itemName: graphPointsList.ItemName,
-        items: []
-      });
-
-      graphPointsList.GraphPointList.forEach(function(graphPoint) {
-        if (graphPoint.Yaxis !== null) {
-          dataset.data[floorIndex].items.push({
-            itemName: dataset.data[floorIndex].itemName,
-            Xaxis: new Date(graphPoint.Xaxis),
-            Yaxis: +graphPoint.Yaxis
-          });
-        }
-      });
-    });
+    //   graphPointsList.GraphPointList.forEach(function(graphPoint) {
+    //     if (graphPoint.Yaxis !== null) {
+    //       dataset.data[floorIndex].items.push({
+    //         itemName: dataset.data[floorIndex].itemName,
+    //         Xaxis: new Date(graphPoint.Xaxis),
+    //         Yaxis: +graphPoint.Yaxis
+    //       });
+    //     }
+    //   });
+    // });
 
     dataset.xAxisKeys = dataset.data[0].items.map((d) => d.Xaxis);
     dataset.yAxisKeys = dataset.data.map((d) => d.itemName);
@@ -289,7 +302,6 @@ function Heatmap() {
 
     yAxisTextsMergedEnterUpdateSelection
       .attr('y', (d, i) => ((i + 0.5) * cardSize.height))
-      .attr('dx', -2)
       .text((d) => d);
   }
 
@@ -592,10 +604,10 @@ function Heatmap() {
   }
 
   $(window).on('resize', function() {
-    GetDimensions();
-    SetDimensions();
-    UpdateScale();
-    DrawChart();
-    DrawLegend();
+    _this.GetDimensions();
+    _this.SetDimensions();
+    _this.UpdateScale();
+    _this.DrawChart();
+    _this.DrawLegend();
   });
 }

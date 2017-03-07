@@ -1,3 +1,5 @@
+const weekdayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
 function GetTextSize(text, fontSize, fontWeight) {
   const bodySelection = d3.select('body')
     .append('svg');
@@ -43,3 +45,29 @@ function getScrollBarWidth () {
 
   return (w1 - w2);
 };
+
+function Find(values, tagName, tagValue) {
+  if (!values.length) return null;
+
+  for (var i = 0; i < values.length; i ++)
+    if (values[i][tagName] === tagValue) return values[i];
+
+  return null;
+}
+
+function FindAll(values, tagName, tagValue) {
+  if (!values.length) return null;
+
+  var retVal = [];
+
+  for (var i = 0; i < values.length; i ++)
+    if (values[i][tagName] === tagValue) retVal.push(values[i]);
+
+  return retVal;
+}
+
+function Weekday2Date(weekdayName) {
+  var weekdayNo = weekdayNames.indexOf(weekdayName.toLowerCase());
+
+  return moment().add(weekdayNo - moment().day(), 'days').toDate();
+}

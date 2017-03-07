@@ -18,8 +18,8 @@
 </head>
 <body>
 
-<!-- <div id="plugloadsGraph-barchart"></div> -->
-<div id="plugloadsGraph-heatmap"></div>
+<div id="plugloadsGraph-barchart"></div>
+<!-- <div id="plugloadsGraph-heatmap"></div> -->
 <!-- <div id="mapbox"></div> -->
 
 <script type="text/javascript" src="./js/app.js"></script>
@@ -28,27 +28,87 @@
 <script type="text/javascript" src="./js/map.js"></script>
 
 <script>
-  // var barChart = new BarChart();
-  var heatmap = new Heatmap();
+  var barChart = new BarChart();
+  // var heatmap = new Heatmap();
   // var map = Map();
 
   d3.json('data/sample_data_Occupancy.json', function(chartData) {
-    // const mainContainerBarchart = d3.select('#plugloadsGraph-barchart');
-    // barChart.MainContainer(mainContainerBarchart);
-    // barChart.Dataset(chartData);
+    var formatedData = [];
 
-    // barChart.chart();
+    if (chartData.GraphPointsList.length === 0) {
+      console.log('There is no GraphPointsList!');
+      return;
+    }
 
-    heatmap.MainContainerID('plugloadsGraph-heatmap');
-    heatmap.ColorRange(['#FFF9BF','#7F0026']);
-    heatmap.Dataset(chartData);
-    heatmap.ShowCardLabel(true);
-    heatmap.IsPercent(false);
-    heatmap.LegendLabel('OCC');
-    heatmap.ChartTitle('Occupancy by seat and week day : PTPP33');
-    heatmap.LabelYaxis('seat');
+    if (chartData.GraphPointsList[0].GraphPointList.length === 0) {
+      console.log('There is no GraphPointList!');
+      return;
+    }
 
-    heatmap.chart();
+    itemNames = chartData.GraphPointsList.map((d) => d.ItemName);
+    xAxisKeys = chartData.GraphPointsList[0].GraphPointList.map((d) => new Date(d.Xaxis));
+
+    formatedData = new Array(xAxisKeys.length);
+
+    xAxisKeys.forEach(function(xAxisKey, index) {
+      formatedData[index] = {};
+      formatedData[index].itemName = new Date(xAxisKey.getTime());
+      formatedData[index].items = [];
+    });
+
+    chartData.GraphPointsList.forEach(function(point, floorIndex) {
+      point.GraphPointList.forEach(function(graphPoint, dayIndex) {
+        if (graphPoint.Yaxis !== null && +graphPoint.Yaxis !== 0)
+          formatedData[dayIndex].items.push({
+            Xaxis: 0,
+            Yaxis: +graphPoint.Yaxis,
+            itemName: point.ItemName
+          });
+      });
+    });
+
+    barChart.MainContainerID('plugloadsGraph-barchart');
+    barChart.Dataset(formatedData);
+    barChart.LegendLabel('OCC');
+    barChart.LabelYaxis('seat');
+    barChart.LabelXaxis('days');
+    barChart.XAxisDateFormat('%A');
+    barChart.XAxisKeys(xAxisKeys);
+    barChart.ItemNames(itemNames);
+
+    barChart.chart();
+
+    // var formatedData = [];
+
+    // chartData.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
+    //   formatedData.push({
+    //     itemName: graphPointsList.ItemName,
+    //     items: []
+    //   });
+
+    //   graphPointsList.GraphPointList.forEach(function(graphPoint) {
+    //     if (graphPoint.Yaxis !== null) {
+    //       formatedData[floorIndex].items.push({
+    //         itemName: formatedData[floorIndex].itemName,
+    //         Xaxis: new Date(graphPoint.Xaxis),
+    //         Yaxis: +graphPoint.Yaxis
+    //       });
+    //     }
+    //   });
+    // });
+
+    // heatmap.MainContainerID('plugloadsGraph-heatmap');
+    // heatmap.ColorRange(['#FFF9BF','#7F0026']);
+    // heatmap.Dataset(formatedData);
+    // heatmap.ShowCardLabel(true);
+    // heatmap.IsPercent(false);
+    // heatmap.LegendLabel('OCC');
+    // heatmap.ChartTitle('Occupancy by seat and week day : PTPP33');
+    // heatmap.LabelYaxis('seat');
+    // heatmap.LabelXaxis('days');
+    // heatmap.XAxisDateFormat('%A')
+
+    // heatmap.chart();
   });
 
   // d3.json('data/sample_data_map.json', function(geojson) {
@@ -59,6 +119,91 @@
   //   map.geojson(geojson)
 
   //   map();
+  // });
+  // d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
+    // var xTag = 'seat';
+    // var yTag = 'occ';
+    // var itemNameTag = 'day';
+    // var formatedData = [];
+    // var xAxisKeys = [];
+    // var itemNames = [];
+    // chartData.forEach(function(d) {
+    //   if ($.inArray(d[xTag], itemNames) === -1) itemNames.push(d[xTag]);
+    //   if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
+      
+    //   xAxisKeys.push(Weekday2Date(d[itemNameTag]));
+      
+    //   var items = FindAll(chartData, itemNameTag, d[itemNameTag]);
+    //   var formatedItem = {};
+    //   formatedItem.itemName = d[itemNameTag];
+    //   formatedItem.items = [];
+    //   items.forEach(function(item) {
+    //     if (item[yTag] !== null && (+item[yTag]) !== 0) {
+    //       formatedItem.items.push({
+    //         Xaxis: 1,
+    //         Yaxis: +item[yTag],
+    //         itemName: item[xTag]
+    //       });
+    //     }
+    //   });
+    //   formatedData.push(formatedItem);
+    // });
+    // formatedData.forEach(function(d) {
+    //   d.itemName = Weekday2Date(d.itemName);
+    // });
+    // formatedData.sort(function(a, b) {
+    //   return moment(a.itemName).day() > moment(b.itemName).day();
+    // });
+    // xAxisKeys.sort(function(a, b) {
+    //   return moment(a).day() > moment(b).day();
+    // });
+
+    // barChart.MainContainerID('plugloadsGraph-barchart');
+    // barChart.Dataset(formatedData);
+    // barChart.LegendLabel('OCC');
+    // barChart.LabelYaxis('seat');
+    // barChart.LabelXaxis('days');
+    // barChart.XAxisDateFormat('%A');
+    // barChart.XAxisKeys(xAxisKeys);
+    // barChart.ItemNames(itemNames);
+
+    // barChart.chart();
+
+    // var xTag = 'day';
+    // var yTag = 'occ';
+    // var itemNameTag = 'seat';
+    // var formatedData = [];
+    // chartData.forEach(function(d) {
+    //   if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
+    //   var items = FindAll(chartData, itemNameTag, d[itemNameTag]);
+    //   var formatedItem = {};
+    //   formatedItem.itemName = d[itemNameTag];
+    //   formatedItem.items = [];
+    //   items.forEach(function(item) {
+    //     formatedItem.items.push({
+    //       Xaxis: Weekday2Date(item[xTag]),
+    //       Yaxis: +item[yTag],
+    //       itemName: d[itemNameTag]
+    //     });
+    //   });
+    //   formatedItem.items.sort(function(a, b) {
+    //     return moment(a.Xaxis).day() > moment(b.Xaxis).day();
+    //   });
+    //   formatedData.push(formatedItem);
+    // });
+
+    // heatmap.MainContainerID('plugloadsGraph-heatmap');
+    // heatmap.ColorRange(['#FFF9BF','#7F0026']);
+    // heatmap.Dataset(formatedData);
+    // heatmap.ShowCardLabel(true);
+    // heatmap.IsPercent(false);
+    // heatmap.LegendLabel('OCC');
+    // heatmap.ChartTitle('Occupancy by seat and week day : PTPP33');
+    // heatmap.LabelYaxis('seat');
+    // heatmap.LabelXaxis('days');
+    // heatmap.XAxisDateFormat('%A');
+
+    // heatmap.chart();
   // });
 </script>
 </body>

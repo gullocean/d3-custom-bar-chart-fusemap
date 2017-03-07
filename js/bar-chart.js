@@ -13,6 +13,12 @@ function BarChart() {
   // input data
   var mainContainer = null;
   var dataset = {};
+  var labelLegend = '';
+  var labelXaxis = '';
+  var labelYaxis = '';
+  var xAxisDateFormat = '';
+  var itemNames = [];
+  var xAxisKeys = [];
   // data
   var chartData = {};
   var itemNames = [];
@@ -101,79 +107,90 @@ function BarChart() {
     dataset = value;
   }
 
-  this.MainContainer = function(value) {
-    if (!arguments.length) return mainContainer;
-    mainContainer = value;
+  this.MainContainerID = function(value) {
+    if (!arguments.length) {
+      if (mainContainer === null) return null;
+      return mainContainer.attr('id');
+    }
+    mainContainer = d3.select('#' + value);
+  }
+
+  /*
+   *  label of legend
+   */
+  this.LegendLabel = function(value) {
+    if (!arguments.length) return labelLegend;
+    labelLegend = value;
+  }
+
+  /*
+   *  text of x-axis
+   */
+  this.LabelXaxis = function(value) {
+    if (!arguments.length) return labelXaxis;
+    labelXaxis = value;
+  }
+
+  /*
+   *  label of y-axis
+   */
+  this.LabelYaxis = function(value) {
+    if (!arguments.length) return labelYaxis;
+    labelYaxis = value;
+  }
+
+  /*
+   *  format of x-axis date
+   */
+  this.XAxisDateFormat = function(value) {
+    if (!arguments.length) return xAxisDateFormat;
+    xAxisDateFormat = value;
+  }
+
+  /*
+   *  item names
+   */
+  this.ItemNames = function(value) {
+    if (!arguments.length) return itemNames;
+    itemNames = value;
+  }
+
+  /*
+   *  keys of x-axis values
+   */
+  this.XAxisKeys = function(value) {
+    if (!arguments.length) return xAxisKeys;
+    xAxisKeys = value;
   }
 
   this.GetBarChartData = function(data) {
     if (!data) return null;
 
-    var dataset = {
-      formatXaxis: '',
-      labelXaxis: '',
-      labelYaxis: '',
-      data: []
-    };
-
-    dataset.formatXaxis = data.xAxisDateFormat;
-    dataset.labelXaxis = data.XaxisText;
-    dataset.labelYaxis = data.YaxisText === '0' ? 'kWh' : data.YaxisText;
-    dataset.legendTitle = 'FloorName';
-
-    if (data.GraphPointsList.length === 0) {
+    if (data.length === 0) {
       console.log('There is no GraphPointsList!');
       return;
     }
 
-    if (data.GraphPointsList[0].GraphPointList.length === 0) {
-      console.log('There is no GraphPointList!');
-      return;
-    }
+    var dataset = {
+      formatXaxis: '',
+      labelXaxis: '',
+      labelYaxis: '',
+      data: data
+    };
 
-    data.GraphPointsList.forEach(function(graphPointsList) {
-      graphPointsList.GraphPointList.forEach(function(graphPoint) {
-        if (graphPoint.Yaxis !== null) graphPoint.Yaxis = +graphPoint.Yaxis;
-        graphPoint.Xaxis = new Date(graphPoint.Xaxis);
+    dataset.formatXaxis = xAxisDateFormat;
+    dataset.labelXaxis = labelXaxis;
+    dataset.labelYaxis = labelYaxis;
+    dataset.legendTitle = labelLegend;
+
+    dataset.data.forEach(function(d) {
+      if (d.items.length <= 0) return;
+      d.items.forEach(function(item) {
+        item.Xaxis = itemNames.length / d.items.length;
       });
-    });
-
-    itemNames = data.GraphPointsList.map((d) => d.ItemName);
-    xAxisKeys = data.GraphPointsList[0].GraphPointList.map((d) => d.Xaxis);
-
-    xAxisKeys.forEach((xAxisKey) => {
-      var item = {key: null};
-      item.key = xAxisKey;
-      data.GraphPointsList.forEach((graphPoints) => {
-        for (var i = 0; i < graphPoints.GraphPointList.length; i ++) {
-          
-          if (moment(graphPoints.GraphPointList[i].Xaxis).isSame(xAxisKey) &&
-            !(graphPoints.GraphPointList[i].Yaxis === 0 ||
-              graphPoints.GraphPointList[i].Yaxis === null)) {
-            item[graphPoints.ItemName] = {};
-            item[graphPoints.ItemName].Yaxis = graphPoints.GraphPointList[i].Yaxis;
-            item[graphPoints.ItemName].Xaxis = 1;
-            break;
-          }
-        }
-      });
-
-      var groupItemNames = this.GetGroupItemNames(item);
-
-      groupItemNames.forEach((itemName) => {
-        item[itemName].Xaxis = itemNames.length / groupItemNames.length;
-      })
-
-      if (groupItemNames.length > 0) dataset.data.push(item);
     });
 
     return dataset;
-  }
-
-  this.GetGroupItemNames = function(data) {
-    let keys = Object.keys(data);
-    keys.splice(keys.indexOf('key'), 1);
-    return keys;
   }
 
   this.Init = function() {
@@ -237,10 +254,8 @@ function BarChart() {
 
     barUpdateSelection = barGroupMergedEnterUpdateSelection
       .selectAll('.bar')
-      .data((d) => {
-        let groupItemNames = this.GetGroupItemNames(d);
-        return groupItemNames.map((itemName) => ({key: itemName, value: d[itemName]}));
-      });
+      .data((d) => d.items);
+
     barEnterSelection = barUpdateSelection.enter();
     barExitSelection = barUpdateSelection.exit();
 
@@ -312,13 +327,14 @@ function BarChart() {
 
     colorScale = d3.scaleOrdinal()
       .range(['#F8766D', '#A3A500', '#00BF7D', '#00B0F6', '#E76BF3', '#F7C049']);
+
+    xScale = d3.scaleBand()
+      .domain(xAxisKeys)
+      .paddingInner(0.05)
+      .paddingOuter(0.05);
+    yScale = d3.scaleLinear();
     xBarGroupeScale = d3.scaleBand()
       .domain(itemNames);
-    xScale = d3.scaleBand()
-      .domain(chartData.data.map((datum) => datum.key))
-      .paddingInner(0.1)
-      .paddingOuter(0.1);
-    yScale = d3.scaleLinear();
   }
 
   this.GetDimensions = function() {
@@ -434,12 +450,9 @@ function BarChart() {
     xGridsSelection
       .attr('transform', 'translate(0,' + (chartSize.height + chartMargin.bottom) + ')');
     xAxisLabelSelection
-      // .attr('transform', 'translate(' + chartSize.width / 2 + ',' + (chartSVGSize.height - xAxisSelection.node().getBBox().height) + ')')
       .attr('transform', 'translate(' + xAxisLabelTranslate.x + ',' + xAxisLabelTranslate.y + ')')
       .text(chartData.labelXaxis);
     yAxisLabelSelection
-      // .attr('dy', -5)
-      // .attr('transform', 'translate(' + (-yAxisSelection.node().getBBox().width) + ',' + chartSize.height / 2 + '), rotate(-90)')
       .attr('transform', 'translate(' + yAxisLabelTranslate.x + ',' + yAxisLabelTranslate.y + '), rotate(-90)')
       .text(chartData.labelYaxis);
   }
@@ -449,13 +462,10 @@ function BarChart() {
       .rangeRound([xPanning, xPanning + chartSize.width * xScaleFactor]);
     yScale
       .rangeRound([chartSize.height, 0])
-      .domain([0, d3.max(chartData.data, (d) => {
-        let groupItemNames = this.GetGroupItemNames(d);
-        return d3.max(groupItemNames, (itemName) => d[itemName].Yaxis);
-      })])
+      .domain([0, d3.max(chartData.data, (d) => d3.max(d.items, (item) => item.Yaxis))])
       .nice();
     xBarGroupeScale
-      .rangeRound([0, xScale.bandwidth()]);
+      .range([0, xScale.bandwidth()]);
   }
 
   this.DrawChart = function() {
@@ -474,14 +484,14 @@ function BarChart() {
         .tickSize(chartSize.width));
 
     barGroupMergedEnterUpdateSelection
-      .attr('transform', (d) => ('translate(' + xScale(d.key) + ',0)'));
+      .attr('transform', (d) => ('translate(' + xScale(d.itemName) + ',0)'));
 
     barMergedEnterUpdateSelection
-      .attr('x', (d, i) => (xBarGroupeScale.step() * d.value.Xaxis * i))
-      .attr('y', (d) => yScale(d.value.Yaxis))
-      .attr('width', (d) => (xBarGroupeScale.bandwidth() * d.value.Xaxis))
-      .attr('height', (d) => (chartSize.height - yScale(d.value.Yaxis)))
-      .attr('fill', (d) => colorScale(d.key))
+      .attr('x', (d, i) => (xBarGroupeScale.bandwidth() * d.Xaxis * i))
+      .attr('y', (d) => yScale(d.Yaxis))
+      .attr('width', (d) => (xBarGroupeScale.bandwidth() * d.Xaxis))
+      .attr('height', (d) => (chartSize.height - yScale(d.Yaxis)))
+      .attr('fill', (d) => colorScale(d.itemName))
 
     zoomLayerSelection
       .call(zoom);
