@@ -22,6 +22,7 @@
   font-size: 12px;
   font-weight: bold;
   text-anchor: middle;
+  text-transform: capitalize;
   alignment-baseline: after-edge;
 }
 
@@ -30,6 +31,7 @@
   font-size: 12px;
   font-weight: bold;
   text-anchor: middle;
+  text-transform: capitalize;
   alignment-baseline: before-edge;
 }
 

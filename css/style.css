@@ -5,3 +5,41 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.toolTip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #5AB0EE;
+  padding: 5px;
+  transform: translateX(-50%) translateY(calc(-5px - 50%)) ;
+  text-align: center;
+}
+
+.toolTip::after {
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: #FFFFFF transparent transparent transparent;
+  content: '';
+  height: 0;
+  position: absolute;
+  right: 50%;
+  top: 100%;
+  transform: translateX(50%);
+  width: 0;
+}
+
+.toolTip::before {
+  border-style: solid;
+  border-width: 11px 11px 0 11px;
+  border-color: #5AB0EE transparent transparent transparent;
+  content: '';
+  height: 0;
+  position: absolute;
+  right: 50%;
+  top: 100%;
+  transform: translateX(50%);
+  width: 0;
+}

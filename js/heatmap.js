@@ -89,13 +89,10 @@ function Heatmap() {
   var yAxisTextsSelection = null;
   var yAxisTextsMergedEnterUpdateSelection = null;
   var yAxisTextsUpdateSelection = null;
-
   // scales
   var colorScale = null;
-
   // tooltip
   var tooltip = null;
-
   // format
   numberFormat = (d) => (Math.round(d * 100) / 100 + (isPercent ? '%' : ''));
 
@@ -270,7 +267,16 @@ function Heatmap() {
       cardLabelsMergedEnterUpdateSelection
         .attr('x', (d, i) => ((i + 0.5) * cardSize.width))
         .attr('y', 0.5 * cardSize.height)
-        .text((d) => numberFormat(d.Yaxis));
+        .text((d) => numberFormat(d.Yaxis))
+        .on('mousemove', function(d){
+          tooltip
+            .style('left', (d3.event.pageX) + 'px')
+            .style('top', (d3.event.pageY - 30) + 'px')
+            .style('display', 'inline-block')
+            .html('<div><span>' + d3.timeFormat(chartData.formatXaxis)(d.Xaxis) + '</span>' + 
+              '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
+        })
+        .on('mouseout', function(d){ tooltip.style('display', 'none');});
     }
 
     xAxisTextsSelection

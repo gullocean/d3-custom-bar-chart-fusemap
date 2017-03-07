@@ -77,16 +77,19 @@ function BarChart() {
   var yAxisLabelSelection = null;
   var yAxisSelection = null;
   var yGridsSelection = null;
-  var zoomLayerSelection = null;
   // scales
   var colorScale = null;
   var xBarGroupeScale = null;
   var xScale = null;
   var yScale = null;
+  // tooltip
+  var tooltip = null;
   // events
   var zoom = null;
   // time format
   const parseDate = d3.timeParse('%A, %B %d, %Y %I:%M:%S %p');
+  // format
+  const numberFormat = (d) => (Math.round(d * 100) / 100);
 
   this.chart = function() {
     if (!dataset || !mainContainer) return;
@@ -194,6 +197,10 @@ function BarChart() {
   }
 
   this.Init = function() {
+    tooltip = d3.select('body')
+      .append('div')
+      .attr('class', 'toolTip');
+
     zoom = d3.zoom()
       .scaleExtent([1, 10])
       .on('zoom', function() {
@@ -321,10 +328,6 @@ function BarChart() {
         .attr('class', 'legend-text')
       .merge(legendsMergedEnterUpdateSelection);
 
-    zoomLayerSelection = svgChartSelection
-      .append('rect')
-        .attr('class', 'zoom-layer');
-
     colorScale = d3.scaleOrdinal()
       .range(['#F8766D', '#A3A500', '#00BF7D', '#00B0F6', '#E76BF3', '#F7C049']);
 
@@ -421,7 +424,8 @@ function BarChart() {
     
     svgChartSelection
       .attr('height', chartSVGSize.height)
-      .attr('width', chartSVGSize.width);
+      .attr('width', chartSVGSize.width)
+      .call(zoom);
     svgLegendSelection
       .attr('height', legendSVGSize.height)
       .attr('width', legendSVGSize.width);
@@ -429,10 +433,6 @@ function BarChart() {
       .attr('height', backgroundRectSize.height)
       .attr('width', backgroundRectSize.width)
       .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + (chartMargin.top + chartPadding.top) + ')');
-    zoomLayerSelection
-      .attr('height', backgroundRectSize.height)
-      .attr('width', backgroundRectSize.width)
-      .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + chartMargin.top + ')');
     barChartSelection
       .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + chartMargin.top + ')');
     xAxisLeftCoverRectSelection
@@ -492,9 +492,15 @@ function BarChart() {
       .attr('width', (d) => (xBarGroupeScale.bandwidth() * d.Xaxis))
       .attr('height', (d) => (chartSize.height - yScale(d.Yaxis)))
       .attr('fill', (d) => colorScale(d.itemName))
-
-    zoomLayerSelection
-      .call(zoom);
+      .on('mousemove', function(d){
+        tooltip
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY - 30) + 'px')
+          .style('display', 'inline-block')
+          .html('<div><span>' + d3.timeFormat(chartData.formatXaxis)(d.Xaxis) + '</span>' + 
+            '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
+      })
+      .on('mouseout', function(d){ tooltip.style('display', 'none');});
   } 
 
   this.DrawLegend = function() {
