@@ -33,39 +33,7 @@
   // var map = Map();
 
   d3.json('data/sample_data_Occupancy.json', function(chartData) {
-    var formatedData = [];
-
-    if (chartData.GraphPointsList.length === 0) {
-      console.log('There is no GraphPointsList!');
-      return;
-    }
-
-    if (chartData.GraphPointsList[0].GraphPointList.length === 0) {
-      console.log('There is no GraphPointList!');
-      return;
-    }
-
-    itemNames = chartData.GraphPointsList.map((d) => d.ItemName);
-    xAxisKeys = chartData.GraphPointsList[0].GraphPointList.map((d) => new Date(d.Xaxis));
-
-    formatedData = new Array(xAxisKeys.length);
-
-    xAxisKeys.forEach(function(xAxisKey, index) {
-      formatedData[index] = {};
-      formatedData[index].itemName = new Date(xAxisKey.getTime());
-      formatedData[index].items = [];
-    });
-
-    chartData.GraphPointsList.forEach(function(point, floorIndex) {
-      point.GraphPointList.forEach(function(graphPoint, dayIndex) {
-        if (graphPoint.Yaxis !== null && +graphPoint.Yaxis !== 0)
-          formatedData[dayIndex].items.push({
-            Xaxis: 0,
-            Yaxis: +graphPoint.Yaxis,
-            itemName: point.ItemName
-          });
-      });
-    });
+    var formatedData = FormatJsonForBarchart(chartData);
 
     barChart.MainContainerID('plugloadsGraph-barchart');
     barChart.Dataset(formatedData);
@@ -73,8 +41,6 @@
     barChart.LabelYaxis('seat');
     barChart.LabelXaxis('days');
     barChart.XAxisDateFormat('%A');
-    barChart.XAxisKeys(xAxisKeys);
-    barChart.ItemNames(itemNames);
 
     barChart.chart();
 

@@ -71,3 +71,53 @@ function Weekday2Date(weekdayName) {
 
   return moment().add(weekdayNo - moment().day(), 'days').toDate();
 }
+
+function FormatJsonForBarchart(json) {
+  var formatedData = [];
+
+  if (json.GraphPointsList.length === 0) {
+    console.log('There is no GraphPointsList!');
+    return null;
+  }
+
+  if (json.GraphPointsList[0].GraphPointList.length === 0) {
+    console.log('There is no GraphPointList!');
+    return null;
+  }
+
+  var itemNames = json.GraphPointsList.map((d) => d.ItemName);
+  var xAxisKeys = json.GraphPointsList[0].GraphPointList.map((d) => new Date(d.Xaxis));
+
+  formatedData = new Array(xAxisKeys.length);
+
+  xAxisKeys.forEach(function(xAxisKey, index) {
+    formatedData[index] = {};
+    formatedData[index].itemName = new Date(xAxisKey.getTime());
+    formatedData[index].items = [];
+  });
+
+  json.GraphPointsList.forEach(function(point, floorIndex) {
+    point.GraphPointList.forEach(function(graphPoint, dayIndex) {
+      // if (graphPoint.Yaxis !== null && +graphPoint.Yaxis !== 0)
+        formatedData[dayIndex].items.push({
+          Xaxis: 0,
+          Yaxis: +graphPoint.Yaxis,
+          itemName: point.ItemName
+        });
+    });
+  });
+
+  return formatedData;
+}
+
+function FormatJsonForHeatmap(json) {
+  // 
+}
+
+function FormatCSVForBarchart(csv) {
+  // 
+}
+
+function FormatCSVForHeatmap(csv) {
+  // 
+}

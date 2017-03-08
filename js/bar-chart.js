@@ -12,7 +12,7 @@ function BarChart() {
   const legendWidth = 100;
   // input data
   var mainContainer = null;
-  var dataset = {};
+  var dataset = [];
   var labelLegend = '';
   var labelXaxis = '';
   var labelYaxis = '';
@@ -21,8 +21,6 @@ function BarChart() {
   var xAxisKeys = [];
   // data
   var chartData = {};
-  var itemNames = [];
-  var xAxisKeys = [];
   // dimensions
   var backgroundRectSize = {};
   var chartContainerSize = {};
@@ -107,7 +105,18 @@ function BarChart() {
 
   this.Dataset = function(value) {
     if (!arguments.length) return dataset;
-    dataset = value;
+    xAxisKeys = value.map((d) => d.itemName);
+    itemNames = value[0].items.map((d) => d.itemName);
+    value.forEach(function(d, i) {
+      dataset.push({
+        itemName: d.itemName,
+        items: []
+      });
+      d.items.forEach(function(item, index) {
+        if (item.Yaxis !== 0)
+          dataset[i].items.push(item);
+      });
+    });
   }
 
   this.MainContainerID = function(value) {
@@ -153,18 +162,18 @@ function BarChart() {
   /*
    *  item names
    */
-  this.ItemNames = function(value) {
-    if (!arguments.length) return itemNames;
-    itemNames = value;
-  }
+  // this.ItemNames = function(value) {
+  //   if (!arguments.length) return itemNames;
+  //   itemNames = value;
+  // }
 
   /*
    *  keys of x-axis values
    */
-  this.XAxisKeys = function(value) {
-    if (!arguments.length) return xAxisKeys;
-    xAxisKeys = value;
-  }
+  // this.XAxisKeys = function(value) {
+  //   if (!arguments.length) return xAxisKeys;
+  //   xAxisKeys = value;
+  // }
 
   this.GetBarChartData = function(data) {
     if (!data) return null;
@@ -246,6 +255,7 @@ function BarChart() {
     barsSelection = barChartSelection
       .append('g')
         .attr('class', 'bars');
+
     barGroupUpdateSelection = barsSelection
       .selectAll('.bar-group')
       .data(chartData.data);
