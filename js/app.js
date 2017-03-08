@@ -68,6 +68,7 @@ function FindAll(values, tagName, tagValue) {
 
 function Weekday2Date(weekdayName) {
   var weekdayNo = weekdayNames.indexOf(weekdayName.toLowerCase());
+  if (weekdayNo < 0) return weekdayName;
 
   return moment().add(weekdayNo - moment().day(), 'days').toDate();
 }
@@ -163,6 +164,7 @@ function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag) {
     d.itemName = Weekday2Date(d.itemName);
   });
   formatedData.sort(function(a, b) {
+    if ((typeof a.itemName) === 'string') return false;
     return moment(a.itemName).day() > moment(b.itemName).day();
   });
 
@@ -179,15 +181,15 @@ function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag) {
     formatedItem.items = [];
     items.forEach(function(item) {
       formatedItem.items.push({
-        // Xaxis: Weekday2Date(item[xTag]),
-        Xaxis: item[xTag],
+        Xaxis: Weekday2Date(item[xTag]),
         Yaxis: +item[yTag],
         itemName: d[itemNameTag]
       });
     });
-    // formatedItem.items.sort(function(a, b) {
-    //   return moment(a.Xaxis).day() < moment(b.Xaxis).day();
-    // });
+    formatedItem.items.sort(function(a, b) {
+      if ((typeof a.Xaxis) === 'string') return false;
+      return moment(a.Xaxis).day() < moment(b.Xaxis).day();
+    });
     formatedData.push(formatedItem);
   });
   return formatedData;

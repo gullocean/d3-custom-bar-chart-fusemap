@@ -105,6 +105,7 @@ function BarChart() {
 
   this.Dataset = function(value) {
     if (!arguments.length) return dataset;
+
     xAxisKeys = value.map((d) => d.itemName);
     itemNames = value[0].items.map((d) => d.itemName);
     value.forEach(function(d, i) {
@@ -158,22 +159,6 @@ function BarChart() {
     if (!arguments.length) return xAxisDateFormat;
     xAxisDateFormat = value;
   }
-
-  /*
-   *  item names
-   */
-  // this.ItemNames = function(value) {
-  //   if (!arguments.length) return itemNames;
-  //   itemNames = value;
-  // }
-
-  /*
-   *  keys of x-axis values
-   */
-  // this.XAxisKeys = function(value) {
-  //   if (!arguments.length) return xAxisKeys;
-  //   xAxisKeys = value;
-  // }
 
   this.GetBarChartData = function(data) {
     if (!data) return null;
@@ -484,7 +469,7 @@ function BarChart() {
   this.DrawChart = function() {
     xAxisSelection
       .call(d3.axisBottom(xScale)
-        .tickFormat(d3.timeFormat(chartData.formatXaxis)));
+        .tickFormat(chartData.formatXaxis === '' ? null : d3.timeFormat(chartData.formatXaxis)));
     yAxisSelection
       .call(d3.axisLeft(yScale));
     xGridsSelection
@@ -510,11 +495,11 @@ function BarChart() {
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY - 30) + 'px')
           .style('display', 'inline-block')
-          .html('<div><span>' + d3.timeFormat(chartData.formatXaxis)(d.Xaxis) + '</span>' + 
+          .html('<div><span>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
             '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});
-  } 
+  }
 
   this.DrawLegend = function() {
     legendsMergedEnterUpdateSelection

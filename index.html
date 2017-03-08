@@ -18,7 +18,7 @@
 </head>
 <body>
 
-<!-- <div class="bar-charts" style="width: 100%;">
+<div class="bar-charts" style="width: 100%;">
   <div style="width: 100%; height: 300px;">
     <div id="plugloadsGraph-barchart-json" class="bar-chart"></div>
   </div>
@@ -34,15 +34,21 @@
   <div>
     <div id="plugloadsGraph-heatmap-json" class="heatmap"></div>
   </div>
-</div> -->
+</div>
 
 <!-- start adding of occ heatmaps according to the floor -->
-<div id="occ-heatmap-container" style="width: 100%;">
+<div id="occ-heatmap-container" style="width: 100%; display: inline-block;">
   <div style="width: 50%; height: 500px; float: left;" id="PTPP31" class="heatmap"></div>
   <div style="width: 50%; height: 500px; float: left;" id="PTPP32" class="heatmap"></div>
   <div style="width: 50%; height: 500px; float: left;" id="PTPP33" class="heatmap"></div>
 </div>
 <!-- end adding of occ heatmaps according to the floor -->
+
+<!-- start adding of occ bar-chart according to weekday -->
+<div id="occ-bar-chart-by-weekday-container" style="width: 100%; display: inline-block;">
+  <div style="width: 100%; height: 500px;" id="occ-bar-chart-by-weekday" class="bar-chart"></div>
+</div>
+<!-- end adding of occ bar-chart according to weekday -->
 
 <!-- <div id="mapbox"></div> -->
 
@@ -51,15 +57,11 @@
 <script type="text/javascript" src="./js/heatmap.js"></script>
 <script type="text/javascript" src="./js/map.js"></script>
 
-<!-- <script>
-  var barChart_csv = new BarChart();
-  var barChart_json = new BarChart();
-  var heatmap_csv = new Heatmap();
-  var heatmap_json = new Heatmap();
-  // var map = Map();
-
+<script>
   d3.json('data/sample_data.json', function(chartData) {
     var formatedData = FormatJsonForBarchart(chartData);
+    
+    var barChart_json = new BarChart();
 
     barChart_json.MainContainerID('plugloadsGraph-barchart-json');
     barChart_json.Dataset(formatedData);
@@ -70,9 +72,12 @@
 
     barChart_json.chart();
   });
-
+</script>
+<script>
   d3.json('data/sample_data.json', function(chartData) {
     var formatedData = FormatJsonForHeatmap(chartData);
+
+    var heatmap_json = new Heatmap();
 
     heatmap_json.MainContainerID('plugloadsGraph-heatmap-json');
     heatmap_json.ColorRange(['#FFF9BF','#7F0026']);
@@ -87,9 +92,12 @@
 
     heatmap_json.chart();
   });
-
+</script>
+<script>
   d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
     var formatedData = FormatCSVForBarchart(chartData, 'seat', 'occ', 'day');
+
+    var barChart_csv = new BarChart();
 
     barChart_csv.MainContainerID('plugloadsGraph-barchart-csv');
     barChart_csv.Dataset(formatedData);
@@ -100,9 +108,12 @@
 
     barChart_csv.chart();
   });
-
+</script>
+<script>
   d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
     var formatedData = FormatCSVForHeatmap(chartData, 'day', 'occ', 'seat');
+
+    var heatmap_csv = new Heatmap();
 
     heatmap_csv.MainContainerID('plugloadsGraph-heatmap-csv');
     heatmap_csv.ColorRange(['#FFF9BF','#7F0026']);
@@ -117,8 +128,10 @@
 
     heatmap_csv.chart();
   });
-
+</script>
+<script>
   // d3.json('data/sample_data_map.json', function(geojson) {
+  // var map = Map();
   //   map.accessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
   //   map.containerID('mapbox');
   //   map.viewCenter([38.8929, -77.0252]);
@@ -127,7 +140,8 @@
 
   //   map();
   // });
-</script> -->
+</script>
+
 <!-- start adding of occ heatmaps according to the floor -->
 <script>
   const floorNames = ['PTPP31', 'PTPP32', 'PTPP33'];
@@ -151,5 +165,24 @@
   });
 </script>
 <!-- end adding of occ heatmaps according to the floor -->
+
+<!-- start adding of occ bar-chart according to weekday -->
+<script>
+  d3.csv('data/occ_by_weekday.csv', function(chartData) {
+    var formatedData = FormatCSVForBarchart(chartData, 'day.of.week', 'occ', 'hour');
+
+    var barChart_occ_weekday = new BarChart();
+
+    barChart_occ_weekday.MainContainerID('occ-bar-chart-by-weekday');
+    barChart_occ_weekday.Dataset(formatedData);
+    barChart_occ_weekday.LegendLabel('OCC');
+    barChart_occ_weekday.LabelYaxis('seat');
+    barChart_occ_weekday.LabelXaxis('days');
+    barChart_occ_weekday.XAxisDateFormat('');
+
+    barChart_occ_weekday.chart();
+  });
+</script>
+<!-- end adding of occ bar-chart according to weekday -->
 </body>
 </html>
