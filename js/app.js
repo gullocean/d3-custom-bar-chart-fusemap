@@ -114,8 +114,35 @@ function FormatJsonForHeatmap(json) {
   // 
 }
 
-function FormatCSVForBarchart(csv) {
-  // 
+function FormatCSVForBarchart(csv, xTag, yTag, itemNameTag) {
+  var formatedData = [];
+
+  csv.forEach(function(d) {
+    if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
+    
+    var items = FindAll(csv, itemNameTag, d[itemNameTag]);
+    var formatedItem = {};
+    formatedItem.itemName = d[itemNameTag];
+    formatedItem.items = [];
+    items.forEach(function(item) {
+      if (item[yTag] !== null && (+item[yTag]) !== 0) {
+        formatedItem.items.push({
+          Xaxis: 1,
+          Yaxis: +item[yTag],
+          itemName: item[xTag]
+        });
+      }
+    });
+    formatedData.push(formatedItem);
+  });
+  formatedData.forEach(function(d) {
+    d.itemName = Weekday2Date(d.itemName);
+  });
+  formatedData.sort(function(a, b) {
+    return moment(a.itemName).day() > moment(b.itemName).day();
+  });
+
+  return formatedData;
 }
 
 function FormatCSVForHeatmap(csv) {

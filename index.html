@@ -33,16 +33,16 @@
   // var map = Map();
 
   d3.json('data/sample_data_Occupancy.json', function(chartData) {
-    var formatedData = FormatJsonForBarchart(chartData);
+    // var formatedData = FormatJsonForBarchart(chartData);
 
-    barChart.MainContainerID('plugloadsGraph-barchart');
-    barChart.Dataset(formatedData);
-    barChart.LegendLabel('OCC');
-    barChart.LabelYaxis('seat');
-    barChart.LabelXaxis('days');
-    barChart.XAxisDateFormat('%A');
+    // barChart.MainContainerID('plugloadsGraph-barchart');
+    // barChart.Dataset(formatedData);
+    // barChart.LegendLabel('OCC');
+    // barChart.LabelYaxis('seat');
+    // barChart.LabelXaxis('days');
+    // barChart.XAxisDateFormat('%A');
 
-    barChart.chart();
+    // barChart.chart();
 
     // var formatedData = [];
 
@@ -86,54 +86,17 @@
 
   //   map();
   // });
-  // d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
-    // var xTag = 'seat';
-    // var yTag = 'occ';
-    // var itemNameTag = 'day';
-    // var formatedData = [];
-    // var xAxisKeys = [];
-    // var itemNames = [];
-    // chartData.forEach(function(d) {
-    //   if ($.inArray(d[xTag], itemNames) === -1) itemNames.push(d[xTag]);
-    //   if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
-      
-    //   xAxisKeys.push(Weekday2Date(d[itemNameTag]));
-      
-    //   var items = FindAll(chartData, itemNameTag, d[itemNameTag]);
-    //   var formatedItem = {};
-    //   formatedItem.itemName = d[itemNameTag];
-    //   formatedItem.items = [];
-    //   items.forEach(function(item) {
-    //     if (item[yTag] !== null && (+item[yTag]) !== 0) {
-    //       formatedItem.items.push({
-    //         Xaxis: 1,
-    //         Yaxis: +item[yTag],
-    //         itemName: item[xTag]
-    //       });
-    //     }
-    //   });
-    //   formatedData.push(formatedItem);
-    // });
-    // formatedData.forEach(function(d) {
-    //   d.itemName = Weekday2Date(d.itemName);
-    // });
-    // formatedData.sort(function(a, b) {
-    //   return moment(a.itemName).day() > moment(b.itemName).day();
-    // });
-    // xAxisKeys.sort(function(a, b) {
-    //   return moment(a).day() > moment(b).day();
-    // });
+  d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
+    var formatedData = FormatCSVForBarchart(chartData, 'seat', 'occ', 'day');
 
-    // barChart.MainContainerID('plugloadsGraph-barchart');
-    // barChart.Dataset(formatedData);
-    // barChart.LegendLabel('OCC');
-    // barChart.LabelYaxis('seat');
-    // barChart.LabelXaxis('days');
-    // barChart.XAxisDateFormat('%A');
-    // barChart.XAxisKeys(xAxisKeys);
-    // barChart.ItemNames(itemNames);
+    barChart.MainContainerID('plugloadsGraph-barchart');
+    barChart.Dataset(formatedData);
+    barChart.LegendLabel('OCC');
+    barChart.LabelYaxis('seat');
+    barChart.LabelXaxis('days');
+    barChart.XAxisDateFormat('%A');
 
-    // barChart.chart();
+    barChart.chart();
 
     // var xTag = 'day';
     // var yTag = 'occ';
@@ -170,7 +133,7 @@
     // heatmap.XAxisDateFormat('%A');
 
     // heatmap.chart();
-  // });
+  });
 </script>
 </body>
 </html>
