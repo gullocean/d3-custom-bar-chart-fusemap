@@ -86,24 +86,30 @@ function FormatJsonForBarchart(json) {
   }
 
   var itemNames = json.GraphPointsList.map((d) => d.ItemName);
-  var xAxisKeys = json.GraphPointsList[0].GraphPointList.map((d) => new Date(d.Xaxis));
+  var xAxisKeys = [];
+  json.GraphPointsList[0].GraphPointList.forEach((d) =>{
+    if (d.Yaxis !== null)
+      xAxisKeys.push(new Date(d.Xaxis));
+  });
 
   formatedData = new Array(xAxisKeys.length);
 
   xAxisKeys.forEach(function(xAxisKey, index) {
     formatedData[index] = {};
-    formatedData[index].itemName = new Date(xAxisKey.getTime());
+    formatedData[index].itemName = xAxisKey;
     formatedData[index].items = [];
   });
 
   json.GraphPointsList.forEach(function(point, floorIndex) {
     point.GraphPointList.forEach(function(graphPoint, dayIndex) {
-      // if (graphPoint.Yaxis !== null && +graphPoint.Yaxis !== 0)
+      if (graphPoint.Yaxis !== null) {
         formatedData[dayIndex].items.push({
-          Xaxis: 0,
+          Xaxis: new Date(graphPoint.Xaxis),
           Yaxis: +graphPoint.Yaxis,
-          itemName: point.ItemName
+          itemName: point.ItemName,
+          barWidthFactor: 0
         });
+      }
     });
   });
 
@@ -144,9 +150,10 @@ function FormatCSVForBarchart(csv, xTag, yTag, itemNameTag) {
     items.forEach(function(item) {
       if (item[yTag] !== null && (+item[yTag]) !== 0) {
         formatedItem.items.push({
-          Xaxis: 1,
+          Xaxis: Weekday2Date(item[itemNameTag]),
           Yaxis: +item[yTag],
-          itemName: item[xTag]
+          itemName: item[xTag],
+          barWidthFactor: 0
         });
       }
     });

@@ -198,7 +198,7 @@ function BarChart() {
     dataset.data.forEach(function(d) {
       if (d.items.length <= 0) return;
       d.items.forEach(function(item) {
-        item.Xaxis = itemNames.length / d.items.length;
+        item.barWidthFactor = itemNames.length / d.items.length;
       });
     });
 
@@ -241,7 +241,7 @@ function BarChart() {
 
     barChartSelection = svgChartSelection
       .append('g')
-        .attr('class', 'bar-chart');
+        .attr('class', 'chart');
     xGridsSelection = barChartSelection
       .append('g')
         .attr('class', 'grids-x');
@@ -366,6 +366,9 @@ function BarChart() {
       height: GetTextSize('A', 12, 'normal').height + legendPaddingBottom,
       width: legendRectSize.width + legendTextMaringLeft + d3.max(itemNames, (itemName) => (GetTextSize(itemName, 12, 'normal').width))
     };
+
+    if (itemNames.length * legendSize.height > mainContainerSize.height - chartMargin.bottom - chartMargin.top - legendTitleMarginBottom)
+      legendSize.width += getScrollBarWidth();
 
     legendContainerSize = {
       height: mainContainerSize.height - chartMargin.bottom - chartMargin.top - legendTitleMarginBottom,
@@ -497,9 +500,9 @@ function BarChart() {
       .attr('transform', (d) => ('translate(' + xScale(d.itemName) + ',0)'));
 
     barMergedEnterUpdateSelection
-      .attr('x', (d, i) => (xBarGroupeScale.bandwidth() * d.Xaxis * i))
+      .attr('x', (d, i) => (xBarGroupeScale.bandwidth() * d.barWidthFactor * i))
       .attr('y', (d) => yScale(d.Yaxis))
-      .attr('width', (d) => (xBarGroupeScale.bandwidth() * d.Xaxis))
+      .attr('width', (d) => (xBarGroupeScale.bandwidth() * d.barWidthFactor))
       .attr('height', (d) => (chartSize.height - yScale(d.Yaxis)))
       .attr('fill', (d) => colorScale(d.itemName))
       .on('mousemove', function(d){

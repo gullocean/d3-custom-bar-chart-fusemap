@@ -1,23 +1,22 @@
-#plugloadsGraph-barchart {
-  height: 300px;
+.bar-chart {
+  height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 
-#plugloadsGraph-barchart .bar-chart .axis-x path,
-#plugloadsGraph-barchart .bar-chart .axis-y path,
-#plugloadsGraph-barchart .bar-chart .grids-x path,
-#plugloadsGraph-barchart .bar-chart .grids-y path,
-#plugloadsGraph-barchart .bar-chart .grids-x .tick line,
-#plugloadsGraph-barchart .bar-chart .grids-y .tick line {
+.bar-chart .chart .axis-x path,
+.bar-chart .chart .axis-y path,
+.bar-chart .chart .grids-x path,
+.bar-chart .chart .grids-y path,
+.bar-chart .chart .grids-x .tick line,
+.bar-chart .chart .grids-y .tick line {
   stroke: #FFFFFF;
 }
 
-#plugloadsGraph-barchart .bar-chart .cover-x {
+.bar-chart .chart .cover-x {
   fill: #FFFFFF;
 }
 
-#plugloadsGraph-barchart .bar-chart .label-x {
+.bar-chart .chart .label-x {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
@@ -26,7 +25,7 @@
   alignment-baseline: after-edge;
 }
 
-#plugloadsGraph-barchart .bar-chart .label-y {
+.bar-chart .chart .label-y {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
@@ -35,49 +34,49 @@
   alignment-baseline: before-edge;
 }
 
-#plugloadsGraph-barchart .chart-container {
+.bar-chart .chart-container {
   float: left;
 }
 
-#plugloadsGraph-barchart .legend-container {
+.bar-chart .legend-container {
   float: left;
   font-size: 12px;
   font-weight: bold;
   text-anchor: start;
 }
 
-#plugloadsGraph-barchart .chart-container .chart-background {
+.bar-chart .chart-container .chart-background {
   fill: #EBEBEB;
 }
 
-#plugloadsGraph-barchart .chart-container .zoom-layer {
+.bar-chart .chart-container .zoom-layer {
   fill: transparent;
 }
 
-#plugloadsGraph-barchart .axis-label {
+.bar-chart .axis-label {
   fill: #000000;
   font-size: 12px;
   font-weight: bold;
   text-anchor: middle;
 }
 
-#plugloadsGraph-barchart .bar-group text {
+.bar-chart .bar-group text {
   fill: #000000;
   font-size: 4px;
   font-weight: normal;
   text-anchor: middle;
 }
 
-#plugloadsGraph-barchart .legend-container .legend-title-container {
+.bar-chart .legend-container .legend-title-container {
   width: 100%;
 }
 
-#plugloadsGraph-barchart .legend-container .legend-content-container {
+.bar-chart .legend-container .legend-content-container {
   overflow: auto;
   width: 100%;
 }
 
-#plugloadsGraph-barchart .legend-container .legend-content-container .legends .legend .legend-text {
+.bar-chart .legend-container .legend-content-container .legends .legend .legend-text {
   fill: #000000;
   font-weight: normal;
   text-anchor: start;

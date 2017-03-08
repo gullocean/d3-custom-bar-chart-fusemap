@@ -18,8 +18,24 @@
 </head>
 <body>
 
-<!-- <div id="plugloadsGraph-barchart"></div> -->
-<div id="plugloadsGraph-heatmap"></div>
+<div class="bar-charts" style="width: 100%;">
+  <div style="width: 100%; height: 300px;">
+    <div id="plugloadsGraph-barchart-json" class="bar-chart"></div>
+  </div>
+  <div style="width: 100%; height: 300px;">
+    <div id="plugloadsGraph-barchart-csv" class="bar-chart"></div>
+  </div>
+</div>
+
+<div class="heatmaps" style="width: 100%; display: block;">
+  <div>
+    <div id="plugloadsGraph-heatmap-csv" class="heatmap"></div>
+  </div>
+  <div>
+    <div id="plugloadsGraph-heatmap-json" class="heatmap"></div>
+  </div>
+</div>
+
 <!-- <div id="mapbox"></div> -->
 
 <script type="text/javascript" src="./js/app.js"></script>
@@ -28,36 +44,70 @@
 <script type="text/javascript" src="./js/map.js"></script>
 
 <script>
-  // var barChart = new BarChart();
-  var heatmap = new Heatmap();
+  var barChart_csv = new BarChart();
+  var barChart_json = new BarChart();
+  var heatmap_csv = new Heatmap();
+  var heatmap_json = new Heatmap();
   // var map = Map();
 
-  d3.json('data/sample_data_Occupancy.json', function(chartData) {
-    // var formatedData = FormatJsonForBarchart(chartData);
+  d3.json('data/sample_data.json', function(chartData) {
+    var formatedData = FormatJsonForBarchart(chartData);
 
-    // barChart.MainContainerID('plugloadsGraph-barchart');
-    // barChart.Dataset(formatedData);
-    // barChart.LegendLabel('OCC');
-    // barChart.LabelYaxis('seat');
-    // barChart.LabelXaxis('days');
-    // barChart.XAxisDateFormat('%A');
+    barChart_json.MainContainerID('plugloadsGraph-barchart-json');
+    barChart_json.Dataset(formatedData);
+    barChart_json.LegendLabel('Floor');
+    barChart_json.LabelYaxis('seat');
+    barChart_json.LabelXaxis(chartData.XaxisText);
+    barChart_json.XAxisDateFormat(chartData.xAxisDateFormat);
 
-    // barChart.chart();
+    barChart_json.chart();
+  });
 
-    // var formatedData = FormatJsonForHeatmap(chartData);
+  d3.json('data/sample_data.json', function(chartData) {
+    var formatedData = FormatJsonForHeatmap(chartData);
 
-    // heatmap.MainContainerID('plugloadsGraph-heatmap');
-    // heatmap.ColorRange(['#FFF9BF','#7F0026']);
-    // heatmap.Dataset(formatedData);
-    // heatmap.ShowCardLabel(true);
-    // heatmap.IsPercent(false);
-    // heatmap.LegendLabel('OCC');
-    // heatmap.ChartTitle('Occupancy by seat and week day : PTPP33');
-    // heatmap.LabelYaxis('seat');
-    // heatmap.LabelXaxis('days');
-    // heatmap.XAxisDateFormat('%A')
+    heatmap_json.MainContainerID('plugloadsGraph-heatmap-json');
+    heatmap_json.ColorRange(['#FFF9BF','#7F0026']);
+    heatmap_json.Dataset(formatedData);
+    heatmap_json.ShowCardLabel(true);
+    heatmap_json.IsPercent(false);
+    heatmap_json.LegendLabel('OCC');
+    heatmap_json.ChartTitle('Occupancy by seat and week day : PTPP33');
+    heatmap_json.LabelYaxis('seat');
+    heatmap_json.LabelXaxis(chartData.XaxisText);
+    heatmap_json.XAxisDateFormat(chartData.xAxisDateFormat)
 
-    // heatmap.chart();
+    heatmap_json.chart();
+  });
+
+  d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
+    var formatedData = FormatCSVForBarchart(chartData, 'seat', 'occ', 'day');
+
+    barChart_csv.MainContainerID('plugloadsGraph-barchart-csv');
+    barChart_csv.Dataset(formatedData);
+    barChart_csv.LegendLabel('OCC');
+    barChart_csv.LabelYaxis('seat');
+    barChart_csv.LabelXaxis('days');
+    barChart_csv.XAxisDateFormat('%A');
+
+    barChart_csv.chart();
+  });
+
+  d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
+    var formatedData = FormatCSVForHeatmap(chartData, 'day', 'occ', 'seat');
+
+    heatmap_csv.MainContainerID('plugloadsGraph-heatmap-csv');
+    heatmap_csv.ColorRange(['#FFF9BF','#7F0026']);
+    heatmap_csv.Dataset(formatedData);
+    heatmap_csv.ShowCardLabel(true);
+    heatmap_csv.IsPercent(false);
+    heatmap_csv.LegendLabel('OCC');
+    heatmap_csv.ChartTitle('Occupancy by seat and week day : PTPP31');
+    heatmap_csv.LabelYaxis('seat');
+    heatmap_csv.LabelXaxis('days');
+    heatmap_csv.XAxisDateFormat('%A');
+
+    heatmap_csv.chart();
   });
 
   // d3.json('data/sample_data_map.json', function(geojson) {
@@ -69,33 +119,6 @@
 
   //   map();
   // });
-  d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
-    // var formatedData = FormatCSVForBarchart(chartData, 'seat', 'occ', 'day');
-
-    // barChart.MainContainerID('plugloadsGraph-barchart');
-    // barChart.Dataset(formatedData);
-    // barChart.LegendLabel('OCC');
-    // barChart.LabelYaxis('seat');
-    // barChart.LabelXaxis('days');
-    // barChart.XAxisDateFormat('%A');
-
-    // barChart.chart();
-
-    var formatedData = FormatCSVForHeatmap(chartData, 'day', 'occ', 'seat');
-
-    heatmap.MainContainerID('plugloadsGraph-heatmap');
-    heatmap.ColorRange(['#FFF9BF','#7F0026']);
-    heatmap.Dataset(formatedData);
-    heatmap.ShowCardLabel(true);
-    heatmap.IsPercent(false);
-    heatmap.LegendLabel('OCC');
-    heatmap.ChartTitle('Occupancy by seat and week day : PTPP33');
-    heatmap.LabelYaxis('seat');
-    heatmap.LabelXaxis('days');
-    heatmap.XAxisDateFormat('%A');
-
-    heatmap.chart();
-  });
 </script>
 </body>
 </html>
