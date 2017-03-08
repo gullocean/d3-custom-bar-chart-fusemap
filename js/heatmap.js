@@ -14,9 +14,7 @@ function Heatmap() {
   var _this = this;
   // data
   var chartData = {};
-  var chartDataExtent = [];
   var legendData = [];
-
   // dimensions
   const chartMargin = { bottom: 10, left: 10, right: 10, top: 10 };
   const chartPadding = { bottom: 10, left: 0, right: 10, top: 0 };
@@ -175,7 +173,7 @@ function Heatmap() {
 
     chartData = this.GetHeatmapData(dataset);
     
-    chartDataExtent = [d3.min(chartData.data, (d) => (d3.min(d.items, (item) => item.Yaxis))),
+    var chartDataExtent = [d3.min(chartData.data, (d) => (d3.min(d.items, (item) => item.Yaxis))),
                       d3.max(chartData.data, (d) => (d3.max(d.items, (item) => item.Yaxis)))];
     
     for (var i = 0; i < legendsCNT; i ++) {
@@ -213,23 +211,6 @@ function Heatmap() {
     dataset.legendTitle = labelLegend;
     dataset.chartTitle = chartTitle;
 
-    // data.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
-    //   dataset.data.push({
-    //     itemName: graphPointsList.ItemName,
-    //     items: []
-    //   });
-
-    //   graphPointsList.GraphPointList.forEach(function(graphPoint) {
-    //     if (graphPoint.Yaxis !== null) {
-    //       dataset.data[floorIndex].items.push({
-    //         itemName: dataset.data[floorIndex].itemName,
-    //         Xaxis: new Date(graphPoint.Xaxis),
-    //         Yaxis: +graphPoint.Yaxis
-    //       });
-    //     }
-    //   });
-    // });
-
     dataset.xAxisKeys = dataset.data[0].items.map((d) => d.Xaxis);
     dataset.yAxisKeys = dataset.data.map((d) => d.itemName);
 
@@ -258,7 +239,7 @@ function Heatmap() {
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY - 30) + 'px')
           .style('display', 'inline-block')
-          .html('<div><span>' + d3.timeFormat(chartData.formatXaxis)(d.Xaxis) + '</span>' + 
+          .html('<div><span>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
             '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});
@@ -273,7 +254,7 @@ function Heatmap() {
             .style('left', (d3.event.pageX) + 'px')
             .style('top', (d3.event.pageY - 30) + 'px')
             .style('display', 'inline-block')
-            .html('<div><span>' + d3.timeFormat(chartData.formatXaxis)(d.Xaxis) + '</span>' + 
+            .html('<div><span>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
               '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
         })
         .on('mouseout', function(d){ tooltip.style('display', 'none');});
@@ -285,7 +266,7 @@ function Heatmap() {
     xAxisTextsMergedEnterUpdateSelection
       .attr('x', (d, i) => ((i + 0.5) * cardSize.width))
       .attr('dy', axisTicksize.height)
-      .text((d) => d3.timeFormat(chartData.formatXaxis)(d));
+      .text((d) => chartData.formatXaxis === '' ? d : d3.timeFormat(chartData.formatXaxis)(d));
 
     chartTitleSelection
       .attr('transform', 'translate(' + chartTitleTranslate.x + ',' + chartTitleTranslate.y + ')')

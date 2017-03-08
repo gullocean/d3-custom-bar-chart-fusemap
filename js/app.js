@@ -72,22 +72,22 @@ function Weekday2Date(weekdayName) {
   return moment().add(weekdayNo - moment().day(), 'days').toDate();
 }
 
-function FormatJsonForBarchart(json) {
+function FormatJsonForBarchart(jsonData) {
   var formatedData = [];
 
-  if (json.GraphPointsList.length === 0) {
+  if (jsonData.GraphPointsList.length === 0) {
     console.log('There is no GraphPointsList!');
     return null;
   }
 
-  if (json.GraphPointsList[0].GraphPointList.length === 0) {
+  if (jsonData.GraphPointsList[0].GraphPointList.length === 0) {
     console.log('There is no GraphPointList!');
     return null;
   }
 
-  var itemNames = json.GraphPointsList.map((d) => d.ItemName);
+  var itemNames = jsonData.GraphPointsList.map((d) => d.ItemName);
   var xAxisKeys = [];
-  json.GraphPointsList[0].GraphPointList.forEach((d) =>{
+  jsonData.GraphPointsList[0].GraphPointList.forEach((d) =>{
     if (d.Yaxis !== null)
       xAxisKeys.push(new Date(d.Xaxis));
   });
@@ -100,7 +100,7 @@ function FormatJsonForBarchart(json) {
     formatedData[index].items = [];
   });
 
-  json.GraphPointsList.forEach(function(point, floorIndex) {
+  jsonData.GraphPointsList.forEach(function(point, floorIndex) {
     point.GraphPointList.forEach(function(graphPoint, dayIndex) {
       if (graphPoint.Yaxis !== null) {
         formatedData[dayIndex].items.push({
@@ -116,9 +116,9 @@ function FormatJsonForBarchart(json) {
   return formatedData;
 }
 
-function FormatJsonForHeatmap(json) {
+function FormatJsonForHeatmap(jsonData) {
   var formatedData = [];
-  json.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
+  jsonData.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
     formatedData.push({
       itemName: graphPointsList.ItemName,
       items: []
@@ -137,13 +137,13 @@ function FormatJsonForHeatmap(json) {
   return formatedData;
 }
 
-function FormatCSVForBarchart(csv, xTag, yTag, itemNameTag) {
+function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag) {
   var formatedData = [];
 
-  csv.forEach(function(d) {
+  csvData.forEach(function(d) {
     if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
     
-    var items = FindAll(csv, itemNameTag, d[itemNameTag]);
+    var items = FindAll(csvData, itemNameTag, d[itemNameTag]);
     var formatedItem = {};
     formatedItem.itemName = d[itemNameTag];
     formatedItem.items = [];
@@ -169,24 +169,25 @@ function FormatCSVForBarchart(csv, xTag, yTag, itemNameTag) {
   return formatedData;
 }
 
-function FormatCSVForHeatmap(csv, xTag, yTag, itemNameTag) {
+function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag) {
   var formatedData = [];
-  csv.forEach(function(d) {
+  csvData.forEach(function(d) {
     if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
-    var items = FindAll(csv, itemNameTag, d[itemNameTag]);
+    var items = FindAll(csvData, itemNameTag, d[itemNameTag]);
     var formatedItem = {};
     formatedItem.itemName = d[itemNameTag];
     formatedItem.items = [];
     items.forEach(function(item) {
       formatedItem.items.push({
-        Xaxis: Weekday2Date(item[xTag]),
+        // Xaxis: Weekday2Date(item[xTag]),
+        Xaxis: item[xTag],
         Yaxis: +item[yTag],
         itemName: d[itemNameTag]
       });
     });
-    formatedItem.items.sort(function(a, b) {
-      return moment(a.Xaxis).day() > moment(b.Xaxis).day();
-    });
+    // formatedItem.items.sort(function(a, b) {
+    //   return moment(a.Xaxis).day() < moment(b.Xaxis).day();
+    // });
     formatedData.push(formatedItem);
   });
   return formatedData;

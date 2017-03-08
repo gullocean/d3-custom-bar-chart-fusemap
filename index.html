@@ -18,7 +18,7 @@
 </head>
 <body>
 
-<div class="bar-charts" style="width: 100%;">
+<!-- <div class="bar-charts" style="width: 100%;">
   <div style="width: 100%; height: 300px;">
     <div id="plugloadsGraph-barchart-json" class="bar-chart"></div>
   </div>
@@ -34,7 +34,15 @@
   <div>
     <div id="plugloadsGraph-heatmap-json" class="heatmap"></div>
   </div>
+</div> -->
+
+<!-- start adding of occ heatmaps according to the floor -->
+<div id="occ-heatmap-container" style="width: 100%;">
+  <div style="width: 50%; height: 500px; float: left;" id="PTPP31" class="heatmap"></div>
+  <div style="width: 50%; height: 500px; float: left;" id="PTPP32" class="heatmap"></div>
+  <div style="width: 50%; height: 500px; float: left;" id="PTPP33" class="heatmap"></div>
 </div>
+<!-- end adding of occ heatmaps according to the floor -->
 
 <!-- <div id="mapbox"></div> -->
 
@@ -43,7 +51,7 @@
 <script type="text/javascript" src="./js/heatmap.js"></script>
 <script type="text/javascript" src="./js/map.js"></script>
 
-<script>
+<!-- <script>
   var barChart_csv = new BarChart();
   var barChart_json = new BarChart();
   var heatmap_csv = new Heatmap();
@@ -119,6 +127,29 @@
 
   //   map();
   // });
+</script> -->
+<!-- start adding of occ heatmaps according to the floor -->
+<script>
+  const floorNames = ['PTPP31', 'PTPP32', 'PTPP33'];
+  floorNames.forEach(function(floorName, index) {
+    d3.csv('data/occ_week/' + floorName + '.csv', function(chartData) {
+      var heatmap_csv = new Heatmap();
+      var formatedData = FormatCSVForHeatmap(chartData, 'interval', 'occ', 'day');
+      heatmap_csv.MainContainerID(floorName);
+      heatmap_csv.ColorRange(['#FFF9BF','#7F0026']);
+      heatmap_csv.Dataset(formatedData);
+      heatmap_csv.ShowCardLabel(true);
+      heatmap_csv.IsPercent(true);
+      heatmap_csv.LegendLabel('OCC');
+      heatmap_csv.ChartTitle('Occupancy by week day -- ' + floorName);
+      heatmap_csv.LabelYaxis('day of week');
+      heatmap_csv.LabelXaxis('interval');
+      heatmap_csv.XAxisDateFormat('');
+
+      heatmap_csv.chart();
+    });
+  });
 </script>
+<!-- end adding of occ heatmaps according to the floor -->
 </body>
 </html>
