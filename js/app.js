@@ -111,7 +111,24 @@ function FormatJsonForBarchart(json) {
 }
 
 function FormatJsonForHeatmap(json) {
-  // 
+  var formatedData = [];
+  json.GraphPointsList.forEach(function(graphPointsList, floorIndex) {
+    formatedData.push({
+      itemName: graphPointsList.ItemName,
+      items: []
+    });
+
+    graphPointsList.GraphPointList.forEach(function(graphPoint) {
+      if (graphPoint.Yaxis !== null) {
+        formatedData[floorIndex].items.push({
+          itemName: formatedData[floorIndex].itemName,
+          Xaxis: new Date(graphPoint.Xaxis),
+          Yaxis: +graphPoint.Yaxis
+        });
+      }
+    });
+  });
+  return formatedData;
 }
 
 function FormatCSVForBarchart(csv, xTag, yTag, itemNameTag) {
@@ -145,6 +162,25 @@ function FormatCSVForBarchart(csv, xTag, yTag, itemNameTag) {
   return formatedData;
 }
 
-function FormatCSVForHeatmap(csv) {
-  // 
+function FormatCSVForHeatmap(csv, xTag, yTag, itemNameTag) {
+  var formatedData = [];
+  csv.forEach(function(d) {
+    if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
+    var items = FindAll(csv, itemNameTag, d[itemNameTag]);
+    var formatedItem = {};
+    formatedItem.itemName = d[itemNameTag];
+    formatedItem.items = [];
+    items.forEach(function(item) {
+      formatedItem.items.push({
+        Xaxis: Weekday2Date(item[xTag]),
+        Yaxis: +item[yTag],
+        itemName: d[itemNameTag]
+      });
+    });
+    formatedItem.items.sort(function(a, b) {
+      return moment(a.Xaxis).day() > moment(b.Xaxis).day();
+    });
+    formatedData.push(formatedItem);
+  });
+  return formatedData;
 }
