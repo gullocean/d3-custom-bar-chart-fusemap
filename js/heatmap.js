@@ -15,7 +15,7 @@ function Heatmap() {
   // data
   var chartData = {};
   var legendData = [];
-  // dimensions
+  // constants
   const chartMargin = { bottom: 10, left: 10, right: 10, top: 10 };
   const chartPadding = { bottom: 10, left: 0, right: 10, top: 0 };
   const legendSize = { height: 20, width: 20 };
@@ -27,7 +27,7 @@ function Heatmap() {
     large: 18
   };
   const minCardHeight = 30;
-
+  // dimensions
   var axisTicksize = {};
   var cardSize = {};
   var cardsSize = {};
@@ -39,7 +39,7 @@ function Heatmap() {
   var legendLabelSize = {};
   var legendRectSize = {};
   var legendTitleTextSize = {};
-  var legendTranslate = {};
+  var legendsTranslate = {};
   var mainContainerSize = {};
   var svgSize = {};
   var xAxisLabelSize = {height: 0, width: 0};
@@ -48,7 +48,6 @@ function Heatmap() {
   var yAxisLabelSize = {};
   var yAxisLabelTranslate = {};
   var yAxisTranslate = {};
-
   // selections
   var cardLabelsEnterSelection = null;
   var cardLabelsExitSelection = null;
@@ -173,8 +172,7 @@ function Heatmap() {
 
     chartData = this.GetHeatmapData(dataset);
     
-    var chartDataExtent = [d3.min(chartData.data, (d) => (d3.min(d.items, (item) => item.Yaxis))),
-                      d3.max(chartData.data, (d) => (d3.max(d.items, (item) => item.Yaxis)))];
+    var chartDataExtent = [0, d3.max(chartData.data, (d) => (d3.max(d.items, (item) => item.Yaxis)))];
     
     for (var i = 0; i < legendsCNT; i ++) {
       legendData.push(chartDataExtent[0] + i * (chartDataExtent[1] - chartDataExtent[0]) / legendsCNT);
@@ -182,6 +180,7 @@ function Heatmap() {
 
     this.Init();
     this.GetDimensions();
+    this.GetTranslations();
     this.SetDimensions();
     this.UpdateScale();
     this.DrawChart();
@@ -294,7 +293,7 @@ function Heatmap() {
 
   this.DrawLegend = function() {
     legendsSelection
-      .attr('transform', 'translate(' + legendTranslate.x + ',' + legendTranslate.y + ')');
+      .attr('transform', 'translate(' + legendsTranslate.x + ',' + legendsTranslate.y + ')');
 
     legendRectSelection
       .attr('height', legendRectSize.height)
@@ -310,7 +309,6 @@ function Heatmap() {
 
     legendTitleTextSelection
       .attr('x', legendRectSize.width)
-      .attr('dx', 2)
       .text(chartData.legendTitle);
   }
 
@@ -456,7 +454,7 @@ function Heatmap() {
 
     mainContainerSize = {
       height: d3.max([mainContainerSize.height, minCardHeight * chartData.yAxisKeys.length]),
-      width: mainContainerSize.width - getScrollBarWidth()
+      width: mainContainerSize.width
     };
 
     svgSize = {
@@ -471,11 +469,6 @@ function Heatmap() {
 
     chartTitleSize = GetTextSize(chartData.chartTitle, fontSize.large, 'bold');
 
-    chartTranslate = {
-      x: chartMargin.left,
-      y: chartMargin.top
-    };
-
     legendTitleTextSize = {
       height: GetTextSize(chartData.legendTitle, fontSize.normal, 'bold').height,
       width: GetTextSize(chartData.legendTitle, fontSize.normal, 'bold').width
@@ -488,12 +481,7 @@ function Heatmap() {
 
     chartSize = {
       height: svgSize.height - chartMargin.bottom - chartMargin.top,
-      width: svgSize.width - chartMargin.left - chartMargin.right - legendSize.width - legendLabelSize.width
-    };
-
-    chartTitleTranslate = {
-      x: chartTranslate.x + chartSize.width / 2,
-      y: chartTranslate.y
+      width: svgSize.width - chartMargin.left - chartMargin.right - legendSize.width - d3.max([legendTitleTextSize.width, legendLabelSize.width])
     };
 
     xAxisSize = {
@@ -518,32 +506,7 @@ function Heatmap() {
 
     cardsSize = {
       height: chartSize.height - xAxisSize.height - xAxisLabelSize.height - chartTitleSize.height,
-      width: chartSize.width - yAxisSize.width - yAxisLabelSize.width
-    };
-
-    cardsTranslate = {
-      x: yAxisLabelSize.width + axisTicksize.width,
-      y: chartTitleSize.height
-    };
-
-    xAxisTranslate = {
-      x: cardsTranslate.x,
-      y: cardsTranslate.y + cardsSize.height
-    };
-
-    yAxisTranslate = {
-      x: yAxisLabelSize.width,
-      y: cardsTranslate.y
-    };
-
-    xAxisLabelTranslate = {
-      x: chartTranslate.x + chartSize.width / 2,
-      y: chartTranslate.y + xAxisTranslate.y + xAxisLabelSize.height
-    };
-
-    yAxisLabelTranslate = {
-      x: 0,
-      y: chartSize.height / 2
+      width: chartSize.width - yAxisSize.width - yAxisLabelSize.width - chartPadding.right
     };
 
     if (chartData.data.length === 0) {
@@ -558,7 +521,7 @@ function Heatmap() {
 
     cardSize = {
       height: cardsSize.height / chartData.data.length,
-      width: (cardsSize.width - chartPadding.right) / chartData.data[0].items.length
+      width: cardsSize.width / chartData.data[0].items.length
     };
 
     legendsSize = {
@@ -570,10 +533,47 @@ function Heatmap() {
       height: legendsSize.height / legendsCNT,
       width: legendSize.width
     };
+  }
 
-    legendTranslate = {
-      x: chartTranslate.x + cardsTranslate.x + cardsSize.width,
-      y: chartTranslate.y + cardsTranslate.y
+  this.GetTranslations = function() {
+    chartTranslate = {
+      x: chartMargin.left,
+      y: chartMargin.top
+    };
+
+    chartTitleTranslate = {
+      x: chartTranslate.x + chartSize.width / 2,
+      y: chartTranslate.y
+    };
+
+    yAxisTranslate = {
+      x: yAxisLabelSize.width,
+      y: chartTitleSize.height
+    };
+
+    cardsTranslate = {
+      x: yAxisTranslate.x + axisTicksize.width,
+      y: yAxisTranslate.y
+    };
+
+    xAxisTranslate = {
+      x: cardsTranslate.x,
+      y: cardsTranslate.y + cardsSize.height
+    };
+
+    xAxisLabelTranslate = {
+      x: chartTranslate.x + chartSize.width / 2,
+      y: chartTranslate.y + xAxisTranslate.y + xAxisLabelSize.height
+    };
+
+    yAxisLabelTranslate = {
+      x: 0,
+      y: chartSize.height / 2
+    };
+
+    legendsTranslate = {
+      x: chartTranslate.x + chartSize.width,
+      y: chartTranslate.y + chartTitleSize.height
     };
   }
 
@@ -592,6 +592,7 @@ function Heatmap() {
 
   $(window).on('resize', function() {
     _this.GetDimensions();
+    _this.GetTranslations();
     _this.SetDimensions();
     _this.UpdateScale();
     _this.DrawChart();

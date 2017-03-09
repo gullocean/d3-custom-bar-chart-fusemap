@@ -19,10 +19,10 @@
 <body>
 
 <div class="bar-charts" style="width: 100%;">
-  <div style="width: 100%; height: 300px;">
+  <div style="width: 100%; height: 500px;">
     <div id="plugloadsGraph-barchart-json" class="bar-chart"></div>
   </div>
-  <div style="width: 100%; height: 300px;">
+  <div style="width: 100%; height: 500px;">
     <div id="plugloadsGraph-barchart-csv" class="bar-chart"></div>
   </div>
 </div>
@@ -37,7 +37,7 @@
 </div>
 
 <!-- start adding of occ heatmaps according to the floor -->
-<div id="occ-heatmap-container" style="width: 100%; display: inline-block;">
+<div style="width: 100%; display: inline-block;">
   <div style="width: 50%; height: 500px; float: left;" id="PTPP31" class="heatmap"></div>
   <div style="width: 50%; height: 500px; float: left;" id="PTPP32" class="heatmap"></div>
   <div style="width: 50%; height: 500px; float: left;" id="PTPP33" class="heatmap"></div>
@@ -45,10 +45,28 @@
 <!-- end adding of occ heatmaps according to the floor -->
 
 <!-- start adding of occ bar-chart according to weekday -->
-<div id="occ-bar-chart-by-weekday-container" style="width: 100%; display: inline-block;">
+<div style="width: 100%; display: inline-block;">
   <div style="width: 100%; height: 500px;" id="occ-bar-chart-by-weekday" class="bar-chart"></div>
 </div>
 <!-- end adding of occ bar-chart according to weekday -->
+
+<!-- start adding of occ(percent) bar-chart according to weekday -->
+<div style="width: 100%; display: inline-block;">
+  <div style="width: 100%; height: 500px;" id="occ-bar-chart-by-weekday-percent" class="bar-chart"></div>
+</div>
+<!-- end adding of occ(percent) bar-chart according to weekday -->
+
+<!-- start adding of Occupancy Rates heatmap -->
+<div style="width: 100%; display: inline-block;">
+  <div style="width: 50%; height: 500px; margin-left: auto; margin-right: auto;" id="occupancy-rates" class="heatmap"></div>
+</div>
+<!-- end adding of Occupancy Rates heatmap -->
+
+<!-- start adding of Occupancy Pattern heatmap -->
+<div style="width: 100%; display: inline-block;">
+  <div style="width: 50%; height: 500px; margin-left: auto; margin-right: auto;" id="occupancy-pattern" class="heatmap"></div>
+</div>
+<!-- end adding of Occupancy Pattern heatmap -->
 
 <!-- <div id="mapbox"></div> -->
 
@@ -64,6 +82,7 @@
     var barChart_json = new BarChart();
 
     barChart_json.MainContainerID('plugloadsGraph-barchart-json');
+    barChart_json.ChartTitle('bar-chart using json sample data');
     barChart_json.Dataset(formatedData);
     barChart_json.LegendLabel('Floor');
     barChart_json.LabelYaxis('seat');
@@ -95,11 +114,12 @@
 </script>
 <script>
   d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
-    var formatedData = FormatCSVForBarchart(chartData, 'seat', 'occ', 'day');
+    var formatedData = FormatCSVForBarchart(chartData, 'seat', 'occ', 'day', false);
 
     var barChart_csv = new BarChart();
 
     barChart_csv.MainContainerID('plugloadsGraph-barchart-csv');
+    barChart_csv.ChartTitle('bar-chart using csv sample data');
     barChart_csv.Dataset(formatedData);
     barChart_csv.LegendLabel('OCC');
     barChart_csv.LabelYaxis('seat');
@@ -111,7 +131,7 @@
 </script>
 <script>
   d3.csv('data/sample_data/occ_by_seat_Floor1.csv', function(chartData) {
-    var formatedData = FormatCSVForHeatmap(chartData, 'day', 'occ', 'seat');
+    var formatedData = FormatCSVForHeatmap(chartData, 'day', 'occ', 'seat', false);
 
     var heatmap_csv = new Heatmap();
 
@@ -148,7 +168,7 @@
   floorNames.forEach(function(floorName, index) {
     d3.csv('data/occ_week/' + floorName + '.csv', function(chartData) {
       var heatmap_csv = new Heatmap();
-      var formatedData = FormatCSVForHeatmap(chartData, 'interval', 'occ', 'day');
+      var formatedData = FormatCSVForHeatmap(chartData, 'interval', 'occ', 'day', true);
       heatmap_csv.MainContainerID(floorName);
       heatmap_csv.ColorRange(['#FFF9BF','#7F0026']);
       heatmap_csv.Dataset(formatedData);
@@ -169,20 +189,83 @@
 <!-- start adding of occ bar-chart according to weekday -->
 <script>
   d3.csv('data/occ_by_weekday.csv', function(chartData) {
-    var formatedData = FormatCSVForBarchart(chartData, 'day.of.week', 'occ', 'hour');
+    var formatedData = FormatCSVForBarchart(chartData, 'day.of.week', 'occ', 'hour', true);
 
     var barChart_occ_weekday = new BarChart();
 
     barChart_occ_weekday.MainContainerID('occ-bar-chart-by-weekday');
+    barChart_occ_weekday.ChartTitle('Occupancy by weekday');
     barChart_occ_weekday.Dataset(formatedData);
-    barChart_occ_weekday.LegendLabel('OCC');
-    barChart_occ_weekday.LabelYaxis('seat');
-    barChart_occ_weekday.LabelXaxis('days');
+    barChart_occ_weekday.LegendLabel('day.of.week');
+    barChart_occ_weekday.LabelYaxis('Occupancy');
+    barChart_occ_weekday.LabelXaxis('Hour');
     barChart_occ_weekday.XAxisDateFormat('');
 
     barChart_occ_weekday.chart();
   });
 </script>
 <!-- end adding of occ bar-chart according to weekday -->
+
+<!-- start adding of occ(percent) bar-chart according to weekday -->
+<script>
+  d3.csv('data/occ_by_weekday_percent.csv', function(chartData) {
+    var formatedData = FormatCSVForBarchart(chartData, 'day.of.week', 'occ', 'hour', true);
+
+    var barChart_occ_weekday = new BarChart();
+
+    barChart_occ_weekday.MainContainerID('occ-bar-chart-by-weekday-percent');
+    barChart_occ_weekday.ChartTitle('Occupancy % by weekday');
+    barChart_occ_weekday.Dataset(formatedData);
+    barChart_occ_weekday.LegendLabel('day.of.week');
+    barChart_occ_weekday.LabelYaxis('Occupancy, %');
+    barChart_occ_weekday.LabelXaxis('Hour');
+    barChart_occ_weekday.XAxisDateFormat('');
+
+    barChart_occ_weekday.chart();
+  });
+</script>
+<!-- end adding of occ(percent) bar-chart according to weekday -->
+
+<!-- start adding of Occupancy Rates heatmap -->
+<script>
+  d3.csv('data/Occupancy Rates.csv', function(chartData) {
+    var heatmap_csv = new Heatmap();
+    var formatedData = FormatCSVForHeatmap(chartData, 'Interval', 'occ', 'day.of.week', true);
+    heatmap_csv.MainContainerID('occupancy-rates');
+    heatmap_csv.ColorRange(['#FFF9BF','#7F0026']);
+    heatmap_csv.Dataset(formatedData);
+    heatmap_csv.ShowCardLabel(true);
+    heatmap_csv.IsPercent(true);
+    heatmap_csv.LegendLabel('OCC');
+    heatmap_csv.ChartTitle('Occupancy Rates');
+    heatmap_csv.LabelYaxis('day.of.week');
+    heatmap_csv.LabelXaxis('interval');
+    heatmap_csv.XAxisDateFormat('');
+
+    heatmap_csv.chart();
+  });
+</script>
+<!-- end adding of Occupancy Rates heatmap -->
+
+<!-- start adding of Occupancy Rates heatmap -->
+<script>
+  d3.csv('data/Occupancy Pattern.csv', function(chartData) {
+    var heatmap_csv = new Heatmap();
+    var formatedData = FormatCSVForHeatmap(chartData, 'Day', 'Number', 'Cat', true);
+    heatmap_csv.MainContainerID('occupancy-pattern');
+    heatmap_csv.ColorRange(['#FFF9BF','#7F0026']);
+    heatmap_csv.Dataset(formatedData);
+    heatmap_csv.ShowCardLabel(true);
+    heatmap_csv.IsPercent(false);
+    heatmap_csv.LegendLabel('Number');
+    heatmap_csv.ChartTitle('Occupancy Pattern');
+    heatmap_csv.LabelYaxis('Cat');
+    heatmap_csv.LabelXaxis('Day');
+    heatmap_csv.XAxisDateFormat('%A');
+
+    heatmap_csv.chart();
+  });
+</script>
+<!-- end adding of Occupancy Rates heatmap -->
 </body>
 </html>

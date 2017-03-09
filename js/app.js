@@ -138,7 +138,7 @@ function FormatJsonForHeatmap(jsonData) {
   return formatedData;
 }
 
-function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag) {
+function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag, sortFlag) {
   var formatedData = [];
 
   csvData.forEach(function(d) {
@@ -149,7 +149,7 @@ function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag) {
     formatedItem.itemName = d[itemNameTag];
     formatedItem.items = [];
     items.forEach(function(item) {
-      if (item[yTag] !== null && (+item[yTag]) !== 0) {
+      if (item[yTag] !== null) {
         formatedItem.items.push({
           Xaxis: Weekday2Date(item[itemNameTag]),
           Yaxis: +item[yTag],
@@ -158,20 +158,23 @@ function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag) {
         });
       }
     });
+    if (sortFlag) {
+      formatedItem.items.sort(function(a, b) {
+        if ((typeof a.itemName) === 'string')
+          return weekdayNames.indexOf(a.itemName.toLowerCase()) > weekdayNames.indexOf(b.itemName.toLowerCase());
+        return moment(a.itemName).day() < moment(b.itemName).day();
+      });
+    }
     formatedData.push(formatedItem);
   });
   formatedData.forEach(function(d) {
     d.itemName = Weekday2Date(d.itemName);
   });
-  formatedData.sort(function(a, b) {
-    if ((typeof a.itemName) === 'string') return false;
-    return moment(a.itemName).day() > moment(b.itemName).day();
-  });
 
   return formatedData;
 }
 
-function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag) {
+function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag, sortFlag) {
   var formatedData = [];
   csvData.forEach(function(d) {
     if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
@@ -186,11 +189,22 @@ function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag) {
         itemName: d[itemNameTag]
       });
     });
-    formatedItem.items.sort(function(a, b) {
-      if ((typeof a.Xaxis) === 'string') return false;
-      return moment(a.Xaxis).day() < moment(b.Xaxis).day();
-    });
+    if (sortFlag) {
+      formatedItem.items.sort(function(a, b) {
+        if ((typeof a.Xaxis) === 'string')
+          return weekdayNames.indexOf(a.Xaxis.toLowerCase()) < weekdayNames.indexOf(b.Xaxis.toLowerCase());
+        return moment(a.Xaxis).day() > moment(b.Xaxis).day();
+      });
+    }
     formatedData.push(formatedItem);
   });
+  if (sortFlag) {
+    formatedData.sort(function(a, b) {
+      if ((typeof a.itemName) === 'string') {
+        return weekdayNames.indexOf(a.itemName.toLowerCase()) > weekdayNames.indexOf(b.itemName.toLowerCase());
+      }
+      return moment(a.itemName).day() < moment(b.itemName).day();
+    });
+  }
   return formatedData;
 }

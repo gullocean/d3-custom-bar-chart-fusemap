@@ -10,6 +10,10 @@ function BarChart() {
   const legendTextMaringLeft = 3;
   const legendTitleMarginBottom = 5;
   const legendWidth = 100;
+  const fontSize = {
+    normal: 16,
+    large: 18
+  };
   // input data
   var mainContainer = null;
   var dataset = [];
@@ -19,6 +23,7 @@ function BarChart() {
   var xAxisDateFormat = '';
   var itemNames = [];
   var xAxisKeys = [];
+  var chartTitle = '';
   // data
   var chartData = {};
   // dimensions
@@ -35,15 +40,22 @@ function BarChart() {
   var mainContainerSize = {};
   var xPanning = 0;
   var xScaleFactor = 1;
+  var chartTitleSize = {};
   // translations
+  var barsTranslate = {};
   var chartTranslate = {};
+  var chartBackgroundTranslation = {};
+  var chartTitleTranslate = {};
   var legendTranslate = {};
   var xAxisTranslate = {};
   var yAxisTranslate = {};
+  var xAxisGridTranslate = {};
+  var yAxisGridTranslate = {};
   var xAxisLabelTranslate = {};
   var yAxisLabelTranslate = {};
   // containers
-  var barChartSelection = null;
+  var chartSelection = null;
+  var chartTitleSelection = null;
   var barGroupEnterSelection = null;
   var barGroupExitSelection = null;
   var barGroupMergedEnterUpdateSelection = null;
@@ -160,6 +172,14 @@ function BarChart() {
     xAxisDateFormat = value;
   }
 
+  /*
+   *  title of chart
+   */
+  this.ChartTitle = function(value) {
+    if (!arguments.length) return chartTitle;
+    chartTitle = value;
+  }
+
   this.GetBarChartData = function(data) {
     if (!data) return null;
 
@@ -179,6 +199,7 @@ function BarChart() {
     dataset.labelXaxis = labelXaxis;
     dataset.labelYaxis = labelYaxis;
     dataset.legendTitle = labelLegend;
+    dataset.chartTitle = chartTitle;
 
     dataset.data.forEach(function(d) {
       if (d.items.length <= 0) return;
@@ -220,24 +241,23 @@ function BarChart() {
     svgChartSelection = chartContainer
       .append('svg');
 
-    chartBackgroundSelection = svgChartSelection
-      .append('rect')
-        .attr('class', 'chart-background');
-
-    barChartSelection = svgChartSelection
+    chartSelection = svgChartSelection
       .append('g')
         .attr('class', 'chart');
-    xGridsSelection = barChartSelection
+    chartBackgroundSelection = chartSelection
+      .append('rect')
+        .attr('class', 'chart-background');
+    xGridsSelection = chartSelection
       .append('g')
         .attr('class', 'grids-x');
-    yGridsSelection = barChartSelection
+    yGridsSelection = chartSelection
       .append('g')
         .attr('class', 'grids-y');
-    xAxisSelection = barChartSelection
+    xAxisSelection = chartSelection
       .append('g')
         .attr('class', 'axis-x');
     
-    barsSelection = barChartSelection
+    barsSelection = chartSelection
       .append('g')
         .attr('class', 'bars');
 
@@ -268,22 +288,25 @@ function BarChart() {
         .attr('class', 'bar')
       .merge(barEnterSelection);
 
-    xAxisLeftCoverRectSelection = barChartSelection
+    xAxisLeftCoverRectSelection = chartSelection
       .append('rect')
         .attr('class', 'cover-x');
-    xAxisRightCoverRectSelection = barChartSelection
+    xAxisRightCoverRectSelection = chartSelection
       .append('rect')
         .attr('class', 'cover-x');
-    yAxisSelection = barChartSelection
+    yAxisSelection = chartSelection
       .append('g')
         .attr('class', 'axis-y');
 
-    xAxisLabelSelection = barChartSelection
+    xAxisLabelSelection = chartSelection
       .append('text')
         .attr('class', 'label-x');
-    yAxisLabelSelection = barChartSelection
+    yAxisLabelSelection = chartSelection
       .append('text')
         .attr('class', 'label-y');
+    chartTitleSelection = chartSelection
+      .append('text')
+        .attr('class', 'chart-title');
 
     legendContainer = mainContainer
       .append('div')
@@ -340,12 +363,14 @@ function BarChart() {
       .node()
       .getBoundingClientRect();
 
+    chartTitleSize = GetTextSize(chartData.chartTitle, fontSize.large, 'bold');
+
     mainContainerSize = {
       height: mainContainerSize.height - mainContainerPadding.bottom - mainContainerPadding.top,
       width: mainContainerSize.width - mainContainerPadding.left - mainContainerPadding.right,
     };
 
-    // calculation legend width
+    // calculation size of legend
     legendTitleSize = GetTextSize(chartData.legendTitle, 12, 'bold');
     legendSize = {
       height: GetTextSize('A', 12, 'normal').height + legendPaddingBottom,
@@ -362,14 +387,14 @@ function BarChart() {
 
     chartContainerSize = {
       height: mainContainerSize.height,
-      width: mainContainerSize.width - legendContainerSize.width * 1.2
+      width: mainContainerSize.width - legendContainerSize.width
     };
     chartSVGSize = {
       height: chartContainerSize.height,
       width: chartContainerSize.width
     };
     chartSize = {
-      height: chartSVGSize.height - chartMargin.bottom - chartMargin.top - chartPadding.bottom - chartPadding.top,
+      height: chartSVGSize.height - chartMargin.bottom - chartMargin.top - chartPadding.bottom - chartPadding.top - chartTitleSize.height,
       width: chartSVGSize.width - chartMargin.left - chartMargin.right - chartPadding.left - chartPadding.right
     };
     backgroundRectSize = {
@@ -389,13 +414,37 @@ function BarChart() {
   }
 
   this.GetTranslations = function() {
+    chartTranslate = {
+      x: chartMargin.left + chartPadding.left,
+      y: chartMargin.top
+    };
+    chartTitleTranslate = {
+      x: chartSize.width / 2,
+      y: 0
+    };
+    chartBackgroundTranslation = {
+      x: 0,
+      y: chartTitleTranslate.y + chartTitleSize.height
+    };
+    barsTranslate = {
+      x: 0,
+      y: chartBackgroundTranslation.y
+    };
     xAxisTranslate = {
       x: 0,
-      y: backgroundRectSize.height
+      y: chartBackgroundTranslation.y + backgroundRectSize.height
     };
     yAxisTranslate = {
       x: 0,
-      y: 0
+      y: chartBackgroundTranslation.y
+    };
+    xAxisGridTranslate = {
+      x: 0,
+      y: yAxisTranslate.y + chartSize.height + chartMargin.bottom
+    };
+    yAxisGridTranslate = {
+      x: 0,
+      y: yAxisTranslate.y
     };
     xAxisLabelTranslate = {
       x: chartSize.width / 2,
@@ -410,9 +459,7 @@ function BarChart() {
   this.SetDimensions = function() {
     chartContainer
       .style('height', chartContainerSize.height + 'px')
-      .style('width', chartContainerSize.width + 'px')
-      .style('margin-left', mainContainerPadding.left + 'px')
-      .style('margin-top', mainContainerPadding.top + 'px');
+      .style('width', chartContainerSize.width + 'px');
     legendContainer
       .style('margin-top', legendContainerMarginTop + 'px');
     legendContentContainer
@@ -427,12 +474,14 @@ function BarChart() {
     svgLegendSelection
       .attr('height', legendSVGSize.height)
       .attr('width', legendSVGSize.width);
+    chartSelection
+      .attr('transform', 'translate(' + chartTranslate.x + ',' + chartTranslate.y + ')');
     chartBackgroundSelection
       .attr('height', backgroundRectSize.height)
       .attr('width', backgroundRectSize.width)
-      .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + (chartMargin.top + chartPadding.top) + ')');
-    barChartSelection
-      .attr('transform', 'translate(' + (chartMargin.left + chartPadding.left) + ',' + chartMargin.top + ')');
+      .attr('transform', 'translate(' + chartBackgroundTranslation.x + ',' + chartBackgroundTranslation.y + ')');
+    barsSelection
+      .attr('transform', 'translate(' + barsTranslate.x + ',' + barsTranslate.y + ')');
     xAxisLeftCoverRectSelection
       .attr('width', chartMargin.left + chartPadding.left)
       .attr('height', chartSVGSize.height)
@@ -446,13 +495,22 @@ function BarChart() {
     yAxisSelection
       .attr('transform', 'translate(' + yAxisTranslate.x + ',' + yAxisTranslate.y + ')');
     xGridsSelection
-      .attr('transform', 'translate(0,' + (chartSize.height + chartMargin.bottom) + ')');
+      .attr('transform', 'translate(' + xAxisGridTranslate.x + ',' + xAxisGridTranslate.y + ')');
+    yGridsSelection
+      .attr('transform', 'translate(' + yAxisGridTranslate.x + ',' + yAxisGridTranslate.y + ')');
     xAxisLabelSelection
       .attr('transform', 'translate(' + xAxisLabelTranslate.x + ',' + xAxisLabelTranslate.y + ')')
       .text(chartData.labelXaxis);
     yAxisLabelSelection
       .attr('transform', 'translate(' + yAxisLabelTranslate.x + ',' + yAxisLabelTranslate.y + '), rotate(-90)')
       .text(chartData.labelYaxis);
+    chartTitleSelection
+      .attr('transform', 'translate(' + chartTitleTranslate.x + ',' + chartTitleTranslate.y + ')')
+      .style('font-size', fontSize.large + 'px')
+      .style('font-weight', 'bold')
+      .style('text-anchor', 'middle')
+      .style('alignment-baseline', 'central')
+      .text(chartData.chartTitle);
   }
 
   this.UpdateScale = function() {
