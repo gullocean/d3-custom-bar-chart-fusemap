@@ -208,3 +208,7 @@ function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag, sortFlag) {
   }
   return formatedData;
 }
+
+function FormatJsonForOccupancy(occupancyData) {
+  return occupancyData;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>fusemap-occupancy</title>
+
+  <script src="./bower_components/d3/d3.min.js"></script>
+</head>
+<body>
+<div>
+  <a href="./">home</a>
+</div>
+<div>
+  <canvas id="floorCanvasView"></canvas>
+</div>
+
+<script src="./js/app.js"></script>
+<script src="./js/occupancy.js"></script>
+
+<script>
+  d3.json('data/occupancy/occupancy.json', function(data) {
+    var formatedData = FormatJsonForOccupancy(data);
+
+    var occupancy = new Occupancy();
+
+    occupancy.FloorCanvasID('floorCanvasView');
+    occupancy.ColorRange(['#008000','#FF0000']);
+    occupancy.Dataset(formatedData);
+
+    occupancy.Init();
+  })
+</script>
+</body>
+</html>
