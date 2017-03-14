@@ -235,11 +235,11 @@ function Heatmap() {
       .attr('fill', (d) => colorScale(d.Yaxis))
       .on('mousemove', function(d){
         tooltip
-          .style('left', (d3.event.pageX) + 'px')
-          .style('top', (d3.event.pageY - 30) + 'px')
+          .style('left', d3.event.pageX + 'px')
+          .style('top', d3.event.pageY + 'px')
           .style('display', 'inline-block')
-          .html('<div><span>' + chartData.labelXaxis + ' : ' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
-            '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
+          .html('<table><tbody><tr><td>' + chartData.labelXaxis + '<span> : </span></td><td>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</td></tr>' + 
+            '<tr><td>' + d.itemName + '<span> : </span></td><td>' + numberFormat(d.Yaxis) + '</td></tr></tbody></table>');
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});
 
@@ -248,15 +248,15 @@ function Heatmap() {
         .attr('x', (d, i) => ((i + 0.5) * cardSize.width))
         .attr('y', 0.5 * cardSize.height)
         .text((d) => numberFormat(d.Yaxis))
-        .on('mousemove', function(d){
-          tooltip
-            .style('left', (d3.event.pageX) + 'px')
-            .style('top', (d3.event.pageY - 30) + 'px')
-            .style('display', 'inline-block')
-            .html('<div><span>' + chartData.labelXaxis + ' : ' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
-              '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
-        })
-        .on('mouseout', function(d){ tooltip.style('display', 'none');});
+      .on('mousemove', function(d){
+        tooltip
+          .style('left', d3.event.pageX + 'px')
+          .style('top', d3.event.pageY + 'px')
+          .style('display', 'inline-block')
+          .html('<table><tbody><tr><td>' + chartData.labelXaxis + '<span> : </span></td><td>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</td></tr>' + 
+            '<tr><td>' + d.itemName + '<span> : </span></td><td>' + numberFormat(d.Yaxis) + '</td></tr></tbody></table>');
+      })
+      .on('mouseout', function(d){ tooltip.style('display', 'none');});
     }
 
     xAxisTextsSelection

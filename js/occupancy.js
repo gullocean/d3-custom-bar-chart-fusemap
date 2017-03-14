@@ -253,12 +253,12 @@ function Occupancy() {
       .style('cursor', 'pointer')
       .on('mousemove', function(d){
         tooltip
-          .style('left', (d3.event.pageX) + 'px')
-          .style('top', (d3.event.pageY - 40) + 'px')
+          .style('left', d3.event.pageX + 'px')
+          .style('top', d3.event.pageY + 'px')
           .style('display', 'inline-block')
-          .html('<div><span class="item-name">' + 'Seat : </span><span>' + d.SeatName + '</span>' + 
-            '<br><span class="item-name">' + 'Device : </span><span>' + d.ApplianceName + '</span>' +
-            '<br><span class="item-name">' + 'User : </span><span>' + (d.IsAssigned ? d.UserFullName : 'Not Assigned') + '</span></div>');
+          .html('<table><tbody><tr><td>Seat<span> : </span></td><td>' + d.SeatName + '</td></tr>' + 
+            '<tr><td>Device<span> : </span></td><td>' + d.ApplianceName + '</td></tr>' +
+            '<tr><td>User<span> : </span></td><td>' + (d.IsAssigned ? d.UserFullName : 'Not Assigned') + '</td></tr></tbody></table>');
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});;
   }

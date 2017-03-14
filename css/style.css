@@ -20,7 +20,7 @@ text {
   opacity: 0.75;
   border-radius: 5px;
   padding: 5px;
-  transform: translateX(-50%) translateY(calc(-5px - 50%)) ;
+  transform: translateX(-50%) translateY(calc(-12px - 100%)) ;
 }
 
 .toolTip::before {
@@ -37,10 +37,5 @@ text {
 }
 
 .toolTip span {
-  float: left;
-}
-
-.toolTip .item-name {
-  display: block;
-  width: 60px;
+  float: right;
 }
