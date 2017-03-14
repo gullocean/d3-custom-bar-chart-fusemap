@@ -238,7 +238,7 @@ function Heatmap() {
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY - 30) + 'px')
           .style('display', 'inline-block')
-          .html('<div><span>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
+          .html('<div><span>' + chartData.labelXaxis + ' : ' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
             '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
       })
       .on('mouseout', function(d){ tooltip.style('display', 'none');});
@@ -253,7 +253,7 @@ function Heatmap() {
             .style('left', (d3.event.pageX) + 'px')
             .style('top', (d3.event.pageY - 30) + 'px')
             .style('display', 'inline-block')
-            .html('<div><span>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
+            .html('<div><span>' + chartData.labelXaxis + ' : ' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</span>' + 
               '<br><span>' + d.itemName + ' : ' + numberFormat(d.Yaxis) + '</span></div>');
         })
         .on('mouseout', function(d){ tooltip.style('display', 'none');});

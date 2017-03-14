@@ -1,11 +1,14 @@
 function Occupancy() {
   // constants
   const zoomExtent = [1, 3];
+  const legendsCNT = 5;
+  const legendRectSize = { height: 30, width: 20 };
   // input data
   var dataset = {};
+  var legendTitle = '';
   // global
   var _this = this;
-  // canvas
+  // selections
   var floorCanvasSelection = null;
   var floorCanvasContextSelection = null;
   var floorCanvasContainerSelection = null;
@@ -32,12 +35,16 @@ function Occupancy() {
   var floorImageInitPosition = {};
   var d3Transform = {};
   var deviceCircleRadius = 7;
+  var legendsTranslate = {};
   // flags
   var flagInit = false;
   // scale
   var colorScale = null;
   var colorRange = ['#008000','#FF0000'];
   var devicePositionScale = {};
+  var heatmapExtent = [];
+  // tooltip
+  var tooltip = null;
   /*
    *  color range of color scale for heatmap
    */
@@ -71,9 +78,15 @@ function Occupancy() {
       return;
     }
   }
+  /*
+   *  title of legend
+   */
+  this.LegendTitle = function(value) {
+    if (!arguments.length) return legendTitle;
+    legendTitle = value;
+  }
 
   this.Init = function() {
-    console.log(dataset);
     if (dataset === null || !dataset) {
       console.error('There is no data for floor!');
       return;
@@ -91,6 +104,10 @@ function Occupancy() {
       return;
     }
 
+    tooltip = d3.select('body')
+      .append('div')
+      .attr('class', 'toolTip');
+
     colorScale = d3.scaleLinear()
       .range(colorRange);
 
@@ -107,6 +124,11 @@ function Occupancy() {
 
     canvasSize = floorCanvasContainerSelection.node().getBoundingClientRect();
 
+    legendsTranslate = {
+      x: canvasSize.width - 100,
+      y: (canvasSize.height - legendsCNT * legendRectSize.height) / 2
+    };
+
     floorCanvasSelection
       .attr('height', canvasSize.height)
       .attr('width', canvasSize.width);
@@ -120,6 +142,7 @@ function Occupancy() {
         .style('position', 'absolute')
         .style('top', 0)
         .style('left', 0)
+        .style('cursor', 'move')
         .call(
           d3.zoom()
           .scaleExtent(zoomExtent)
@@ -145,6 +168,40 @@ function Occupancy() {
 
     deviceCircleMergedUpdateSelection = deviceMergedEnterUpdateSelection
       .append('circle');
+
+    legendsSelection = svgSelection
+      .append('g')
+        .attr('class', 'legends');
+
+    var legendData = [];
+    heatmapExtent = [d3.min(dataset.SeatScheduleList, (d) => (+d.PowerUsage)),
+                    d3.max(dataset.SeatScheduleList, (d) => (+d.PowerUsage))];
+    
+    for (var i = 0; i < legendsCNT; i ++) {
+      legendData.push(heatmapExtent[0] + i * (heatmapExtent[1] - heatmapExtent[0]) / legendsCNT);
+    }
+
+    legendUpdateSelection = legendsSelection
+      .selectAll('.legend')
+      .data(legendData);
+    legendEnterSelection = legendUpdateSelection.enter();
+    legendExitSelection = legendUpdateSelection.exit();
+
+    legendExitSelection.remove();
+
+    legendMergedEnterUpdateSelection = legendEnterSelection
+      .append('g')
+        .attr('class', 'legend')
+      .merge(legendUpdateSelection);
+
+    legendRectSelection = legendMergedEnterUpdateSelection
+      .append('rect');
+    legendTextSelection = legendMergedEnterUpdateSelection
+      .append('text');
+
+    legendTitleTextSelection = legendsSelection
+      .append('text')
+        .attr('class', 'legend-title');
 
     flagInit = true;
   }
@@ -181,6 +238,7 @@ function Occupancy() {
     
     _this.UpdateScale();
     _this.DrawDevices();
+    _this.DrawLegend();
   }
 
   this.DrawDevices = function() {
@@ -191,17 +249,50 @@ function Occupancy() {
     deviceCircleMergedUpdateSelection
       .attr('r', deviceCircleRadius)
       .attr('stroke', 'black')
-      .attr('fill', (d) => colorScale(+d.PowerUsage));
+      .attr('fill', (d) => colorScale(+d.PowerUsage))
+      .style('cursor', 'pointer')
+      .on('mousemove', function(d){
+        tooltip
+          .style('left', (d3.event.pageX) + 'px')
+          .style('top', (d3.event.pageY - 40) + 'px')
+          .style('display', 'inline-block')
+          .html('<div><span class="item-name">' + 'Seat : </span><span>' + d.SeatName + '</span>' + 
+            '<br><span class="item-name">' + 'Device : </span><span>' + d.ApplianceName + '</span>' +
+            '<br><span class="item-name">' + 'User : </span><span>' + (d.IsAssigned ? d.UserFullName : 'Not Assigned') + '</span></div>');
+      })
+      .on('mouseout', function(d){ tooltip.style('display', 'none');});;
   }
 
   this.UpdateScale = function() {
     let d3Transform = d3.event === null ? { x: 0, y: 0, k: 1 } : d3.event.transform;
     colorScale
-      .domain([d3.min(dataset.SeatScheduleList, (d) => +d.PowerUsage),
-        d3.max(dataset.SeatScheduleList, (d) => +d.PowerUsage)]);
+      .domain(heatmapExtent);
     devicePositionScale = {
       x: (x) => (d3Transform.x + d3Transform.k * floorImageSize.width / floorImageOriginSize.width * x),
       y: (y) => (d3Transform.y + d3Transform.k * floorImageSize.height / floorImageOriginSize.height * y)
     };
+  }
+
+  this.numberFormat = (d) => (Math.round(d * 10000) / 10000);
+
+  this.DrawLegend = function() {
+    legendsSelection
+      .attr('transform', 'translate(' + legendsTranslate.x + ',' + legendsTranslate.y + ')');
+
+    legendRectSelection
+      .attr('height', legendRectSize.height)
+      .attr('width', legendRectSize.width)
+      .attr('y', (d, i) => ((legendsCNT - i - 1) * legendRectSize.height))
+      .attr('fill', (d) => colorScale(d));
+
+    legendTextSelection
+      .attr('x', legendRectSize.width)
+      .attr('y', (d, i) => ((legendsCNT - i) * legendRectSize.height))
+      .attr('dx', 2)
+      .text((d) => _this.numberFormat(d));
+
+    legendTitleTextSelection
+      .attr('dy', -5)
+      .text(legendTitle);
   }
 }
