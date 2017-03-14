@@ -3,6 +3,7 @@ function Occupancy() {
   const zoomExtent = [1, 3];
   const legendsCNT = 5;
   const legendRectSize = { height: 30, width: 20 };
+  const timelineSliderPadding = { left: 50, right: 50 };
   // input data
   var dataset = {};
   var legendTitle = '';
@@ -28,6 +29,9 @@ function Occupancy() {
   var legendRectSelection = null;
   var legendUpdateSelection = null;
   var legendsSelection = null;
+  var timelineSliderSVGSelection = null;
+  var timelineSliderSelection = null;
+  var timelineSliderHandleSelection = null;
   // dimensions
   var canvasSize = { height: 600, width: 1336 };
   var floorImageSize = {};
@@ -36,6 +40,7 @@ function Occupancy() {
   var d3Transform = {};
   var deviceCircleRadius = 7;
   var legendsTranslate = {};
+  var timelineSliderSize = { height: 50, width: 0 };
   // flags
   var flagInit = false;
   // scale
@@ -43,6 +48,7 @@ function Occupancy() {
   var colorRange = ['#008000','#FF0000'];
   var devicePositionScale = {};
   var heatmapExtent = [];
+  var timelineSliderScale = null;
   // tooltip
   var tooltip = null;
   /*
@@ -117,12 +123,16 @@ function Occupancy() {
 
     floorCanvasContainerSelection
       .style('position', 'relative')
-      .style('height', canvasSize.height + 'px')
+      .style('height', (canvasSize.height + timelineSliderSize.height) + 'px')
       .style('width', '100%')
       .style('margin-left', 'auto')
       .style('margin-right', 'auto');
 
-    canvasSize = floorCanvasContainerSelection.node().getBoundingClientRect();
+    canvasSize = {
+      height: floorCanvasContainerSelection.node().getBoundingClientRect().height,
+      width: floorCanvasContainerSelection.node().getBoundingClientRect().width,
+    };
+    canvasSize.height = canvasSize.height - timelineSliderSize.height;
 
     legendsTranslate = {
       x: canvasSize.width - 100,
@@ -202,6 +212,78 @@ function Occupancy() {
     legendTitleTextSelection = legendsSelection
       .append('text')
         .attr('class', 'legend-title');
+
+    timelineSliderSize.width = canvasSize.width;
+
+    timelineSliderSVGSelection = floorCanvasContainerSelection
+      .append('svg')
+        .attr('class', 'svg-timeline')
+        .attr('height', timelineSliderSize.height)
+        .attr('width', timelineSliderSize.width);
+
+    timelineSliderScale = d3.scaleLinear()
+      .domain([0, 180])
+      .range([timelineSliderPadding.left, timelineSliderSize.width - timelineSliderPadding.left - 2 * timelineSliderPadding.right])
+      .clamp(true);
+
+    timelineSliderSelection = timelineSliderSVGSelection
+      .append('g')
+        .attr('class', 'timeline-slider')
+        .attr('transform', 'translate(' + timelineSliderPadding.left + ',' + (timelineSliderSize.height / 2) + ')');
+
+    timelineSliderSelection
+      .append('line')
+        .attr('class', 'track')
+        .style('stroke-linecap', 'round')
+        .style('stroke', '#000')
+        .style('stroke-opacity', '0.3')
+        .style('stroke-width', '10px')
+        .attr('x1', timelineSliderScale.range()[0])
+        .attr('x2', timelineSliderScale.range()[1])
+      .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+        .attr('class', 'track-inset')
+        .style('stroke-linecap', 'round')
+        .style('stroke', '#ddd')
+        .style('stroke-width', '8px')
+      .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+        .attr('class', 'track-overlay')
+        .style('stroke-linecap', 'round')
+        .style('pointer-events', 'stroke')
+        .style('stroke-width', '50px')
+        .style('cursor', 'crosshair')
+        .call(d3.drag()
+          .on('start.interrupt', (d) => timelineSliderSelection.interrupt())
+          .on('start drag', (d) => _this.changeTimeline(timelineSliderScale.invert(d3.event.x))));
+
+    timelineSliderSelection
+      .insert('g', '.track-overlay')
+        .attr('class', 'ticks')
+        .attr('transform', 'translate(0,' + 18 + ')')
+        .style('font', '10px sans-serif')
+      .selectAll('text')
+      .data(timelineSliderScale.ticks(10))
+      .enter()
+        .append('text')
+          .attr('x', timelineSliderScale)
+          .attr('text-anchor', 'middle')
+          .text((d) => d);
+
+    timelineSliderHandleSelection = timelineSliderSelection
+      .insert('circle', '.track-overlay')
+        .attr('class', 'handle')
+        .attr('r', 9)
+        .style('fill', '#fff')
+        .style('stroke', '#000')
+        .style('stroke-opacity', '0.5')
+        .style('stroke-width', '1.25px');
+
+    timelineSliderSelection
+      .transition()
+        .duration(200)
+        .tween('hue', function() {
+          var i = d3.interpolate(0, 0);
+          return function(t) { _this.changeTimeline(i(t)); }
+        });
 
     flagInit = true;
   }
@@ -294,5 +376,9 @@ function Occupancy() {
     legendTitleTextSelection
       .attr('dy', -5)
       .text(legendTitle);
+  }
+
+  this.changeTimeline = function(xOffset) {
+    timelineSliderHandleSelection.attr('cx', timelineSliderScale(xOffset));
   }
 }
