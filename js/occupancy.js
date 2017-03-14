@@ -2,6 +2,7 @@ function Occupancy() {
   // constants
   const zoomExtent = [1, 3];
   const legendsCNT = 5;
+  const deviceCircleRadius = 15;
   const legendRectSize = { height: 30, width: 20 };
   const timelineSliderPadding = { left: 50, right: 50 };
   // input data
@@ -26,29 +27,37 @@ function Occupancy() {
   var legendMergedEnterUpdateSelection = null;
   var legendTextSelection = null;
   var legendTitleTextSelection = null;
-  var legendRectSelection = null;
+  var legendInnerCircleSelection = null;
+  var legendOuterCircleSelection = null;
   var legendUpdateSelection = null;
   var legendsSelection = null;
   var timelineSliderSVGSelection = null;
   var timelineSliderSelection = null;
   var timelineSliderHandleSelection = null;
+  var defsSelection = null;
+  var defRadialGradientUpdateSelection = null;
+  var defRadialGradientEnterSelection = null;
+  var defRadialGradientExitSelection = null;
+  var defRadialGradientMergedUpdateSelection = null;
+  var defRadialGradientStop0Selection = null;
+  var defRadialGradientStop100Selection = null;
   // dimensions
   var canvasSize = { height: 600, width: 1336 };
   var floorImageSize = {};
   var floorImageOriginSize = {};
   var floorImageInitPosition = {};
   var d3Transform = {};
-  var deviceCircleRadius = 7;
   var legendsTranslate = {};
   var timelineSliderSize = { height: 50, width: 0 };
   // flags
   var flagInit = false;
   // scale
   var colorScale = null;
-  var colorRange = ['#008000','#FF0000'];
+  var colorRange = ['#008000', '#FFF200', '#FF0000'];
   var devicePositionScale = {};
   var heatmapExtent = [];
   var timelineSliderScale = null;
+  var d3Transform = {};
   // tooltip
   var tooltip = null;
   /*
@@ -136,7 +145,7 @@ function Occupancy() {
 
     legendsTranslate = {
       x: canvasSize.width - 100,
-      y: (canvasSize.height - legendsCNT * legendRectSize.height) / 2
+      y: (canvasSize.height - (legendsCNT - 1) * legendRectSize.height) / 2
     };
 
     floorCanvasSelection
@@ -158,6 +167,32 @@ function Occupancy() {
           .scaleExtent(zoomExtent)
           .on('zoom', this.zoom)
         );
+
+    defsSelection = svgSelection
+      .append('defs');
+
+    defRadialGradientUpdateSelection = defsSelection
+      .selectAll('radialGradient')
+      .data(dataset.SeatScheduleList);
+    defRadialGradientEnterSelection = defRadialGradientUpdateSelection.enter();
+    defRadialGradientExitSelection = defRadialGradientUpdateSelection.exit();
+
+    defRadialGradientExitSelection.remove();
+
+    defRadialGradientMergedUpdateSelection = defRadialGradientEnterSelection
+      .append('radialGradient')
+        .attr('id', (d, i) => ('radial-gradient' + i));
+
+    defRadialGradientStop0Selection = defRadialGradientMergedUpdateSelection
+      .append('stop')
+        .attr('offset', '0%')
+        .attr('stop-opacity', 1);
+
+    defRadialGradientStop100Selection = defRadialGradientMergedUpdateSelection
+      .append('stop')
+        .attr('offset', '100%')
+        // .attr('stop-color', '#FFFFFF')
+        .attr('stop-opacity', 0);
 
     devicesSelection = svgSelection
       .append('g')
@@ -185,10 +220,12 @@ function Occupancy() {
 
     var legendData = [];
     heatmapExtent = [d3.min(dataset.SeatScheduleList, (d) => (+d.PowerUsage)),
+                    (d3.min(dataset.SeatScheduleList, (d) => (+d.PowerUsage)) + 
+                      d3.max(dataset.SeatScheduleList, (d) => (+d.PowerUsage))) / 2,
                     d3.max(dataset.SeatScheduleList, (d) => (+d.PowerUsage))];
     
     for (var i = 0; i < legendsCNT; i ++) {
-      legendData.push(heatmapExtent[0] + i * (heatmapExtent[1] - heatmapExtent[0]) / legendsCNT);
+      legendData.push(heatmapExtent[0] + i * (heatmapExtent[2] - heatmapExtent[0]) / (legendsCNT - 1));
     }
 
     legendUpdateSelection = legendsSelection
@@ -204,8 +241,10 @@ function Occupancy() {
         .attr('class', 'legend')
       .merge(legendUpdateSelection);
 
-    legendRectSelection = legendMergedEnterUpdateSelection
-      .append('rect');
+    legendInnerCircleSelection = legendMergedEnterUpdateSelection
+      .append('circle');
+    legendOuterCircleSelection = legendMergedEnterUpdateSelection
+      .append('circle');
     legendTextSelection = legendMergedEnterUpdateSelection
       .append('text');
 
@@ -325,14 +364,18 @@ function Occupancy() {
   }
 
   this.DrawDevices = function() {
+    defRadialGradientStop0Selection
+      .attr('stop-color', (d) => colorScale(+d.PowerUsage));
+    defRadialGradientStop100Selection
+      .attr('stop-color', (d) => colorScale(+d.PowerUsage));
     devicesSelection
       .attr('transform', ('translate(' + floorImageInitPosition.x + ',' + floorImageInitPosition.y + ')'));
     deviceMergedEnterUpdateSelection
       .attr('transform', (d) => ('translate(' + devicePositionScale.x(d.XYCoordinate.x) + ',' + devicePositionScale.y(d.XYCoordinate.y) + ')'));
     deviceCircleMergedUpdateSelection
-      .attr('r', deviceCircleRadius)
-      .attr('stroke', 'black')
-      .attr('fill', (d) => colorScale(+d.PowerUsage))
+      .attr('r', d3Transform.k * deviceCircleRadius)
+      // .attr('fill', (d) => colorScale(+d.PowerUsage))
+      .attr('fill', (d, i) => 'url(#radial-gradient' + i + ')')
       .style('cursor', 'pointer')
       .on('mousemove', function(d){
         tooltip
@@ -347,7 +390,7 @@ function Occupancy() {
   }
 
   this.UpdateScale = function() {
-    let d3Transform = d3.event === null ? { x: 0, y: 0, k: 1 } : d3.event.transform;
+    d3Transform = d3.event === null ? { x: 0, y: 0, k: 1 } : d3.event.transform;
     colorScale
       .domain(heatmapExtent);
     devicePositionScale = {
@@ -362,20 +405,30 @@ function Occupancy() {
     legendsSelection
       .attr('transform', 'translate(' + legendsTranslate.x + ',' + legendsTranslate.y + ')');
 
-    legendRectSelection
+    legendMergedEnterUpdateSelection
+      .attr('transform', (d, i) => 'translate(0,' + (i * legendRectSize.height + 5) + ')');
+
+    legendInnerCircleSelection
       .attr('height', legendRectSize.height)
       .attr('width', legendRectSize.width)
-      .attr('y', (d, i) => ((legendsCNT - i - 1) * legendRectSize.height))
+      .attr('r', 10)
       .attr('fill', (d) => colorScale(d));
+
+    legendOuterCircleSelection
+      .attr('height', legendRectSize.height)
+      .attr('width', legendRectSize.width)
+      .attr('r', 12)
+      .attr('fill', 'transparent')
+      .attr('stroke', '#E2E2E2')
+      .attr('stroke-width', 2);
 
     legendTextSelection
       .attr('x', legendRectSize.width)
-      .attr('y', (d, i) => ((legendsCNT - i) * legendRectSize.height))
-      .attr('dx', 2)
+      .attr('dy', 5)
       .text((d) => _this.numberFormat(d));
 
     legendTitleTextSelection
-      .attr('dy', -5)
+      .attr('transform', 'translate(-15, -15)')
       .text(legendTitle);
   }
 

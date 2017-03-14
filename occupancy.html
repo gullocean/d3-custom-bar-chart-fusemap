@@ -3,20 +3,20 @@
 <head>
   <title>fusemap-occupancy</title>
 
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel='stylesheet' href='./css/style.css'>
 
-  <script src="./bower_components/d3/d3.min.js"></script>
+  <script src='./bower_components/d3/d3.min.js'></script>
 </head>
 <body>
 <div>
-  <a href="./">home</a>
+  <a href='./'>home</a>
 </div>
 <div>
-  <canvas id="floorCanvasView"></canvas>
+  <canvas id='floorCanvasView'></canvas>
 </div>
 
-<script src="./js/app.js"></script>
-<script src="./js/occupancy.js"></script>
+<script src='./js/app.js'></script>
+<script src='./js/occupancy.js'></script>
 
 <script>
   d3.json('data/occupancy/occupancy.json', function(data) {
@@ -25,7 +25,7 @@
     var occupancy = new Occupancy();
 
     occupancy.FloorCanvasID('floorCanvasView');
-    occupancy.ColorRange(['#008000','#FF0000']);
+    occupancy.ColorRange(['#008000', '#FFF200', '#FF0000']);
     occupancy.Dataset(formatedData);
     occupancy.LegendTitle('Power Usage');
 
