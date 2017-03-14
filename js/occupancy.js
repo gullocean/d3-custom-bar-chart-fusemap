@@ -253,7 +253,8 @@ function Occupancy() {
         .style('cursor', 'crosshair')
         .call(d3.drag()
           .on('start.interrupt', (d) => timelineSliderSelection.interrupt())
-          .on('start drag', (d) => _this.changeTimeline(timelineSliderScale.invert(d3.event.x))));
+          .on('start drag', (d) => _this.changingTimeline(timelineSliderScale.invert(d3.event.x)))
+          .on('end', (d) => _this.changedTimeline(timelineSliderScale.invert(d3.event.x))));
 
     timelineSliderSelection
       .insert('g', '.track-overlay')
@@ -282,7 +283,7 @@ function Occupancy() {
         .duration(200)
         .tween('hue', function() {
           var i = d3.interpolate(0, 0);
-          return function(t) { _this.changeTimeline(i(t)); }
+          return function(t) { _this.changingTimeline(i(t)); }
         });
 
     flagInit = true;
@@ -378,7 +379,11 @@ function Occupancy() {
       .text(legendTitle);
   }
 
-  this.changeTimeline = function(xOffset) {
+  this.changingTimeline = function(xOffset) {
     timelineSliderHandleSelection.attr('cx', timelineSliderScale(xOffset));
+  }
+
+  this.changedTimeline = function(xOffset) {
+    console.log(xOffset);
   }
 }
