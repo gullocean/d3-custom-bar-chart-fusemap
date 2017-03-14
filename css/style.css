@@ -20,6 +20,7 @@ text {
   opacity: 0.75;
   border-radius: 5px;
   padding: 5px;
+  text-transform: uppercase;
   transform: translateX(-50%) translateY(calc(-12px - 100%)) ;
 }
 
