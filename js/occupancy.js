@@ -2,12 +2,13 @@ function Occupancy() {
   // constants
   const zoomExtent = [1, 3];
   const legendsCNT = 5;
-  const deviceCircleRadius = 15;
+  const deviceCircleRadius = 10;
   const legendRectSize = { height: 30, width: 20 };
   const timelineSliderPadding = { left: 50, right: 50 };
   // input data
   var dataset = {};
   var legendTitle = '';
+  var isPercent = false;
   // global
   var _this = this;
   // selections
@@ -100,6 +101,15 @@ function Occupancy() {
     if (!arguments.length) return legendTitle;
     legendTitle = value;
   }
+  /*
+   *  flag : true if Yaxis is a value of percent
+   */
+  this.IsPercent = function(value) {
+    if (!arguments.length) return isPercent;
+    isPercent = value;
+  }
+
+  this.numberFormat = (d) => (Math.round(d * 10000) / 10000 + (isPercent ? '%' : ''));
 
   this.Init = function() {
     if (dataset === null || !dataset) {
@@ -185,13 +195,13 @@ function Occupancy() {
 
     defRadialGradientStop0Selection = defRadialGradientMergedUpdateSelection
       .append('stop')
-        .attr('offset', '0%')
+        .attr('offset', '80%')
         .attr('stop-opacity', 1);
 
     defRadialGradientStop100Selection = defRadialGradientMergedUpdateSelection
       .append('stop')
         .attr('offset', '100%')
-        // .attr('stop-color', '#FFFFFF')
+        .attr('stop-color', '#FFFFFF')
         .attr('stop-opacity', 0);
 
     devicesSelection = svgSelection
@@ -366,8 +376,8 @@ function Occupancy() {
   this.DrawDevices = function() {
     defRadialGradientStop0Selection
       .attr('stop-color', (d) => colorScale(+d.PowerUsage));
-    defRadialGradientStop100Selection
-      .attr('stop-color', (d) => colorScale(+d.PowerUsage));
+    // defRadialGradientStop100Selection
+    //   .attr('stop-color', (d) => colorScale(+d.PowerUsage));
     devicesSelection
       .attr('transform', ('translate(' + floorImageInitPosition.x + ',' + floorImageInitPosition.y + ')'));
     deviceMergedEnterUpdateSelection
@@ -398,8 +408,6 @@ function Occupancy() {
       y: (y) => (d3Transform.y + d3Transform.k * floorImageSize.height / floorImageOriginSize.height * y)
     };
   }
-
-  this.numberFormat = (d) => (Math.round(d * 10000) / 10000);
 
   this.DrawLegend = function() {
     legendsSelection
