@@ -56,11 +56,16 @@ function Occupancy() {
   var colorScale = null;
   var colorRange = ['#008000', '#FFF200', '#FF0000'];
   var devicePositionScale = {};
-  var heatmapExtent = [];
   var timelineSliderScale = null;
   var d3Transform = {};
   // tooltip
   var tooltip = null;
+  // data
+  var heatmapExtent = [];
+  var legendData = [];
+  var timelineOffset = 0;
+  // callback
+  var callbackTimelineChanged = function() {};
   /*
    *  color range of color scale for heatmap
    */
@@ -74,6 +79,9 @@ function Occupancy() {
   this.Dataset = function(value) {
     if (!arguments.length) return dataset;
     dataset = value;
+
+    heatmapExtent = GetHeatmapExtent(dataset.SeatScheduleList, 'PowerUsage');
+    legendData = GetLegendData(heatmapExtent, legendsCNT);
   }
   /*
    * canvas id
@@ -112,6 +120,9 @@ function Occupancy() {
   this.numberFormat = (d) => (Math.round(d * 10000) / 10000 + (isPercent ? '%' : ''));
 
   this.Init = function() {
+    if (arguments.length === 1) {
+      callbackTimelineChanged = arguments[0];
+    }
     if (dataset === null || !dataset) {
       console.error('There is no data for floor!');
       return;
@@ -164,6 +175,10 @@ function Occupancy() {
     floorCanvasContextSelection = floorCanvasSelection
       .node().getContext('2d');
 
+    floorCanvasContainerSelection
+      .selectAll('svg')
+      .remove();
+
     svgSelection = floorCanvasContainerSelection
       .append('svg')
         .attr('height', canvasSize.height)
@@ -180,6 +195,58 @@ function Occupancy() {
 
     defsSelection = svgSelection
       .append('defs');
+
+    devicesSelection = svgSelection
+      .append('g')
+        .attr('class', 'devices');
+
+    legendsSelection = svgSelection
+      .append('g')
+        .attr('class', 'legends');
+
+    flagInit = true;
+  }
+
+  this.zoom = function() {
+    floorCanvasContextSelection.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    _this.DrawFloorImage();
+  }
+
+  this.DrawFloorImage = function() {
+    let d3Transform = d3.event.transform;
+    floorCanvasContextSelection.drawImage(floorImage, d3Transform.x + floorImageInitPosition.x, d3Transform.y + floorImageInitPosition.y, d3Transform.k * floorImageSize.width, d3Transform.k * floorImageSize.height);
+    UpdateScale();
+    DrawDevices();
+  }
+
+  this.FloorImageLoaded = function() {
+    floorImageOriginSize = {
+      height: this.height,
+      width: this.width
+    };
+
+    floorImageSize = {
+      height: canvasSize.height,
+      width: canvasSize.height * floorImageOriginSize.width / floorImageOriginSize.height
+    };
+
+    floorImageInitPosition = {
+      x: (canvasSize.width - floorImageSize.width) / 2,
+      y: (canvasSize.height - floorImageSize.height) / 2
+    };
+
+    floorCanvasContextSelection.drawImage(this, floorImageInitPosition.x, floorImageInitPosition.y, floorImageSize.width, floorImageSize.height);
+    
+    UpdateScale();
+    DrawDevices();
+    DrawLegend();
+    DrawTimeline();
+  }
+
+  function DrawDevices() {
+    defsSelection
+      .selectAll('*')
+      .remove();
 
     defRadialGradientUpdateSelection = defsSelection
       .selectAll('radialGradient')
@@ -204,9 +271,9 @@ function Occupancy() {
         .attr('stop-color', '#FFFFFF')
         .attr('stop-opacity', 0);
 
-    devicesSelection = svgSelection
-      .append('g')
-        .attr('class', 'devices');
+    devicesSelection
+      .selectAll('*')
+      .remove();
 
     deviceUpdateSelection = devicesSelection
       .selectAll('.device')
@@ -224,19 +291,45 @@ function Occupancy() {
     deviceCircleMergedUpdateSelection = deviceMergedEnterUpdateSelection
       .append('circle');
 
-    legendsSelection = svgSelection
-      .append('g')
-        .attr('class', 'legends');
+    defRadialGradientStop0Selection
+      .attr('stop-color', (d) => colorScale(+d.PowerUsage));
+    // defRadialGradientStop100Selection
+    //   .attr('stop-color', (d) => colorScale(+d.PowerUsage));
+    devicesSelection
+      .attr('transform', ('translate(' + floorImageInitPosition.x + ',' + floorImageInitPosition.y + ')'));
+    deviceMergedEnterUpdateSelection
+      .attr('transform', (d) => ('translate(' + devicePositionScale.x(d.XYCoordinate.x) + ',' + devicePositionScale.y(d.XYCoordinate.y) + ')'));
+    deviceCircleMergedUpdateSelection
+      .attr('r', d3Transform.k * deviceCircleRadius)
+      // .attr('fill', (d) => colorScale(+d.PowerUsage))
+      .attr('fill', (d, i) => 'url(#radial-gradient' + i + ')')
+      .style('cursor', 'pointer')
+      .on('mousemove', function(d){
+        tooltip
+          .style('left', d3.event.pageX + 'px')
+          .style('top', d3.event.pageY + 'px')
+          .style('display', 'inline-block')
+          .html('<table><tbody><tr><td>Seat<span> : </span></td><td>' + d.SeatName + '</td></tr>' + 
+            '<tr><td>Device<span> : </span></td><td>' + d.ApplianceName + '</td></tr>' +
+            '<tr><td>User<span> : </span></td><td>' + (d.IsAssigned ? d.UserFullName : 'Not Assigned') + '</td></tr></tbody></table>');
+      })
+      .on('mouseout', function(d){ tooltip.style('display', 'none');});;
+  }
 
-    var legendData = [];
-    heatmapExtent = [d3.min(dataset.SeatScheduleList, (d) => (+d.PowerUsage)),
-                    (d3.min(dataset.SeatScheduleList, (d) => (+d.PowerUsage)) + 
-                      d3.max(dataset.SeatScheduleList, (d) => (+d.PowerUsage))) / 2,
-                    d3.max(dataset.SeatScheduleList, (d) => (+d.PowerUsage))];
-    
-    for (var i = 0; i < legendsCNT; i ++) {
-      legendData.push(heatmapExtent[0] + i * (heatmapExtent[2] - heatmapExtent[0]) / (legendsCNT - 1));
-    }
+  function UpdateScale() {
+    d3Transform = d3.event === null ? { x: 0, y: 0, k: 1 } : d3.event.transform;
+    colorScale
+      .domain(heatmapExtent);
+    devicePositionScale = {
+      x: (x) => (d3Transform.x + d3Transform.k * floorImageSize.width / floorImageOriginSize.width * x),
+      y: (y) => (d3Transform.y + d3Transform.k * floorImageSize.height / floorImageOriginSize.height * y)
+    };
+  }
+
+  function DrawLegend() {
+    legendsSelection
+      .selectAll('*')
+      .remove();
 
     legendUpdateSelection = legendsSelection
       .selectAll('.legend')
@@ -262,6 +355,37 @@ function Occupancy() {
       .append('text')
         .attr('class', 'legend-title');
 
+    legendsSelection
+      .attr('transform', 'translate(' + legendsTranslate.x + ',' + legendsTranslate.y + ')');
+
+    legendMergedEnterUpdateSelection
+      .attr('transform', (d, i) => 'translate(0,' + (i * legendRectSize.height + 5) + ')');
+
+    legendInnerCircleSelection
+      .attr('height', legendRectSize.height)
+      .attr('width', legendRectSize.width)
+      .attr('r', 10)
+      .attr('fill', (d) => colorScale(d));
+
+    legendOuterCircleSelection
+      .attr('height', legendRectSize.height)
+      .attr('width', legendRectSize.width)
+      .attr('r', 12)
+      .attr('fill', 'transparent')
+      .attr('stroke', '#E2E2E2')
+      .attr('stroke-width', 2);
+
+    legendTextSelection
+      .attr('x', legendRectSize.width)
+      .attr('dy', 5)
+      .text((d) => _this.numberFormat(d));
+
+    legendTitleTextSelection
+      .attr('transform', 'translate(-15, -15)')
+      .text(legendTitle);
+  }
+
+  function DrawTimeline() {
     timelineSliderSize.width = canvasSize.width;
 
     timelineSliderSVGSelection = floorCanvasContainerSelection
@@ -331,113 +455,9 @@ function Occupancy() {
       .transition()
         .duration(200)
         .tween('hue', function() {
-          var i = d3.interpolate(0, 0);
+          var i = d3.interpolate(timelineOffset, timelineOffset);
           return function(t) { _this.changingTimeline(i(t)); }
         });
-
-    flagInit = true;
-  }
-
-  this.zoom = function() {
-    floorCanvasContextSelection.clearRect(0, 0, canvasSize.width, canvasSize.height);
-    _this.DrawFloorImage();
-  }
-
-  this.DrawFloorImage = function() {
-    let d3Transform = d3.event.transform;
-    floorCanvasContextSelection.drawImage(floorImage, d3Transform.x + floorImageInitPosition.x, d3Transform.y + floorImageInitPosition.y, d3Transform.k * floorImageSize.width, d3Transform.k * floorImageSize.height);
-    _this.UpdateScale();
-    _this.DrawDevices();
-  }
-
-  this.FloorImageLoaded = function() {
-    floorImageOriginSize = {
-      height: this.height,
-      width: this.width
-    };
-
-    floorImageSize = {
-      height: canvasSize.height,
-      width: canvasSize.height * floorImageOriginSize.width / floorImageOriginSize.height
-    };
-
-    floorImageInitPosition = {
-      x: (canvasSize.width - floorImageSize.width) / 2,
-      y: (canvasSize.height - floorImageSize.height) / 2
-    };
-
-    floorCanvasContextSelection.drawImage(this, floorImageInitPosition.x, floorImageInitPosition.y, floorImageSize.width, floorImageSize.height);
-    
-    _this.UpdateScale();
-    _this.DrawDevices();
-    _this.DrawLegend();
-  }
-
-  this.DrawDevices = function() {
-    defRadialGradientStop0Selection
-      .attr('stop-color', (d) => colorScale(+d.PowerUsage));
-    // defRadialGradientStop100Selection
-    //   .attr('stop-color', (d) => colorScale(+d.PowerUsage));
-    devicesSelection
-      .attr('transform', ('translate(' + floorImageInitPosition.x + ',' + floorImageInitPosition.y + ')'));
-    deviceMergedEnterUpdateSelection
-      .attr('transform', (d) => ('translate(' + devicePositionScale.x(d.XYCoordinate.x) + ',' + devicePositionScale.y(d.XYCoordinate.y) + ')'));
-    deviceCircleMergedUpdateSelection
-      .attr('r', d3Transform.k * deviceCircleRadius)
-      // .attr('fill', (d) => colorScale(+d.PowerUsage))
-      .attr('fill', (d, i) => 'url(#radial-gradient' + i + ')')
-      .style('cursor', 'pointer')
-      .on('mousemove', function(d){
-        tooltip
-          .style('left', d3.event.pageX + 'px')
-          .style('top', d3.event.pageY + 'px')
-          .style('display', 'inline-block')
-          .html('<table><tbody><tr><td>Seat<span> : </span></td><td>' + d.SeatName + '</td></tr>' + 
-            '<tr><td>Device<span> : </span></td><td>' + d.ApplianceName + '</td></tr>' +
-            '<tr><td>User<span> : </span></td><td>' + (d.IsAssigned ? d.UserFullName : 'Not Assigned') + '</td></tr></tbody></table>');
-      })
-      .on('mouseout', function(d){ tooltip.style('display', 'none');});;
-  }
-
-  this.UpdateScale = function() {
-    d3Transform = d3.event === null ? { x: 0, y: 0, k: 1 } : d3.event.transform;
-    colorScale
-      .domain(heatmapExtent);
-    devicePositionScale = {
-      x: (x) => (d3Transform.x + d3Transform.k * floorImageSize.width / floorImageOriginSize.width * x),
-      y: (y) => (d3Transform.y + d3Transform.k * floorImageSize.height / floorImageOriginSize.height * y)
-    };
-  }
-
-  this.DrawLegend = function() {
-    legendsSelection
-      .attr('transform', 'translate(' + legendsTranslate.x + ',' + legendsTranslate.y + ')');
-
-    legendMergedEnterUpdateSelection
-      .attr('transform', (d, i) => 'translate(0,' + (i * legendRectSize.height + 5) + ')');
-
-    legendInnerCircleSelection
-      .attr('height', legendRectSize.height)
-      .attr('width', legendRectSize.width)
-      .attr('r', 10)
-      .attr('fill', (d) => colorScale(d));
-
-    legendOuterCircleSelection
-      .attr('height', legendRectSize.height)
-      .attr('width', legendRectSize.width)
-      .attr('r', 12)
-      .attr('fill', 'transparent')
-      .attr('stroke', '#E2E2E2')
-      .attr('stroke-width', 2);
-
-    legendTextSelection
-      .attr('x', legendRectSize.width)
-      .attr('dy', 5)
-      .text((d) => _this.numberFormat(d));
-
-    legendTitleTextSelection
-      .attr('transform', 'translate(-15, -15)')
-      .text(legendTitle);
   }
 
   this.changingTimeline = function(xOffset) {
@@ -446,5 +466,38 @@ function Occupancy() {
 
   this.changedTimeline = function(xOffset) {
     console.log(xOffset);
+    callbackTimelineChanged(xOffset);
+  }
+
+  this.ReDraw = function() {
+    UpdateScale();
+    DrawDevices();
+    DrawLegend();
+  }
+
+  function GetHeatmapExtent(data, key) {
+    if (data === null || !data) {
+      console.error('Invalid heatmap data!')
+      return null;
+    }
+    if (!data[0].hasOwnProperty(key)) {
+      console.error('Invalid key!');
+      return null;
+    }
+    return [d3.min(data, (d) => (+d[key])),
+            (d3.min(data, (d) => (+d[key])) + d3.max(data, (d) => (+d[key]))) / 2,
+            d3.max(data, (d) => (+d[key]))];
+  }
+
+  function GetLegendData(heatmapExtent, legendsCNT) {
+    if (heatmapExtent === null || !heatmapExtent || heatmapExtent.length < 2) {
+      console.error('Invalid heatmap extent!');
+      return null;
+    }
+    var legendData = [];
+    for (var i = 0; i < legendsCNT; i ++) {
+      legendData.push(heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1));
+    }
+    return legendData;
   }
 }

@@ -19,10 +19,10 @@
 <script src='./js/occupancy.js'></script>
 
 <script>
+  var occupancy = new Occupancy();
+
   d3.json('data/occupancy/occupancy.json', function(data) {
     var formatedData = FormatJsonForOccupancy(data);
-
-    var occupancy = new Occupancy();
 
     occupancy.FloorCanvasID('floorCanvasView');
     occupancy.ColorRange(['#008000', '#FFF200', '#FF0000']);
@@ -30,8 +30,18 @@
     occupancy.LegendTitle('Power Usage');
     occupancy.IsPercent(false);
 
-    occupancy.Init();
-  })
+    occupancy.Init(test);
+  });
+
+  function test(value) {
+    console.log('callback : ', value);
+
+    d3.json('data/occupancy/occupancy2.json', function(data) {
+      var formatedData = FormatJsonForOccupancy(data);
+      occupancy.Dataset(formatedData);
+      occupancy.ReDraw(test);
+    });
+  }
 </script>
 </body>
 </html>
