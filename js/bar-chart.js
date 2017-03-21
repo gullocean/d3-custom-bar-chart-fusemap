@@ -314,6 +314,7 @@ function BarChart() {
     legendTitleContainer = legendContainer
       .append('div')
         .attr('class', 'legend-title-container')
+        .style('text-transform', 'capitalize')
         .text(chartData.legendTitle);
     legendContentContainer = legendContainer
       .append('div')

@@ -11,7 +11,7 @@
 <div>
   <a href='./'>home</a>
 </div>
-<div>
+<div class="canvas-wrapper">
   <canvas id='floorCanvasView'></canvas>
 </div>
 
@@ -24,8 +24,6 @@
   d3.json('data/occupancy/occupancy.json', function(data) {
     var formatedData = FormatJsonForOccupancy(data);
 
-    console.log(data);
-
     occupancy.FloorCanvasID('floorCanvasView');
     occupancy.ColorRange(['#008000', '#FFF200', '#FF0000']);
     occupancy.HeatmapType(HEATMAP_PERCENT); // HEATMAP_PERCENT HEATMAP_OCC_STATE
@@ -33,16 +31,16 @@
     occupancy.Dataset(formatedData);
     occupancy.LegendTitle('Power Usage');
 
-    occupancy.Init(test);
+    occupancy.Init(timelineChangedCallback);
   });
 
-  function test(value) {
+  function timelineChangedCallback(value) {
     console.log('callback : ', d3.timeFormat('%H:%M')(value));
 
     d3.json('data/occupancy/occupancy2.json', function(data) {
       var formatedData = FormatJsonForOccupancy(data);
       occupancy.Dataset(formatedData);
-      occupancy.ReDraw(test);
+      occupancy.ReDraw(timelineChangedCallback);
     });
   }
 </script>

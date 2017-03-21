@@ -142,18 +142,18 @@ function FormatCSVForBarchart(csvData, xTag, yTag, itemNameTag, sortFlag) {
   var formatedData = [];
 
   csvData.forEach(function(d) {
-    if (Find(formatedData, 'itemName', d[itemNameTag]) !== null) return;
+    if (Find(formatedData, 'itemName', d[xTag]) !== null) return;
     
-    var items = FindAll(csvData, itemNameTag, d[itemNameTag]);
+    var items = FindAll(csvData, xTag, d[xTag]);
     var formatedItem = {};
-    formatedItem.itemName = d[itemNameTag];
+    formatedItem.itemName = d[xTag];
     formatedItem.items = [];
     items.forEach(function(item) {
       if (item[yTag] !== null) {
         formatedItem.items.push({
-          Xaxis: Weekday2Date(item[itemNameTag]),
+          Xaxis: Weekday2Date(item[xTag]),
           Yaxis: +item[yTag],
-          itemName: item[xTag],
+          itemName: item[itemNameTag],
           barWidthFactor: 0
         });
       }

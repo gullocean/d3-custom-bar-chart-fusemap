@@ -309,6 +309,7 @@ function Heatmap() {
 
     legendTitleTextSelection
       .attr('x', legendRectSize.width)
+      .style('text-transform', 'capitalize')
       .text(chartData.legendTitle);
   }
 
