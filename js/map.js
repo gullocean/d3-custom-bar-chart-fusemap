@@ -2,7 +2,6 @@ function Map() {
   let accessToken = '';
   let containerID = '';
   let geojson = '';
-  let tilejson = '';
   let viewCenter = null;
   let zoomLevel = 1;
 
@@ -31,14 +30,6 @@ function Map() {
   }
 
   /*
-   *  tilejson data for map
-   */
-  this.Tilejson = function(value) {
-    if (!arguments.length) return tilejson;
-    tilejson = value;
-  }
-
-  /*
    *  center of view for map
    */
   this.ViewCenter = function(value) {
@@ -55,21 +46,26 @@ function Map() {
   }
 
   this.Init = function() {
-    tilejson = {
-      tiles: [ "https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=" + accessToken],
-      minzoom: 0,
-      maxzoom: zoomLevel + 12
-    };
-    
     L.mapbox.accessToken = accessToken;
-    var options = {
-      zoomControl: false
+
+    var map_options = {
+      attributionControl: false,
+      legendControl: true,
+      zoomControl: false,
+      minZoom: 0,
+      maxZoom: 18
     };
     
-    var map = L.mapbox.map(containerID, 'mapbox.streets', options)
+    var map = L.mapbox.map(containerID, null, map_options)
       .setView(viewCenter, zoomLevel);
+    map
+      .legendControl
+        .addLegend('<div class="heatmap-legend">test div</div>')
+        .setPosition('bottomleft');
 
-    var zoomControl = new L.control.zoom({position: 'topright'}).addTo(map);
+    var zoomControl = L.control.zoom({position: 'topright'}).addTo(map);
+
+    var styleLayer = L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v9').addTo(map);
 
     var positionLayer = L.mapbox.featureLayer().addTo(map);
 
