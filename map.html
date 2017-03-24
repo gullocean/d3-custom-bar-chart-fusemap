@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>fusemap-occupancy - map</title>
+
+  <link rel="stylesheet" type="text/css" href="./bower_components/mapbox.js/mapbox.css">
+
+  <link rel='stylesheet' href='./css/style.css'>
+  <link rel="stylesheet" type="text/css" href="./css/map.css">
+
+  <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="./bower_components/mapbox.js/mapbox.js"></script>
+</head>
+<body>
+<a href='./'>home</a>
+<div id="mapbox"></div>
+
+<script src='./js/map.js'></script>
+
+<script>
+  $.getJSON('data/map/sample_data_map.json', function(geojson) {
+    var map = new Map();
+    map.AccessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
+    map.ContainerID('mapbox');
+    map.ViewCenter([38.89784666877921, -77.0366048812866]);
+    map.ZoomLevel(24);
+    map.Geojson(geojson);
+
+    map.Init();
+  });
+</script>
+</body>
+</html>

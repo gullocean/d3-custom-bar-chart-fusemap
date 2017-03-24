@@ -1,123 +1,99 @@
 function Map() {
-  function map() {
-    Init();
-  }
+  let accessToken = '';
+  let containerID = '';
+  let geojson = '';
+  let tilejson = '';
+  let viewCenter = null;
+  let zoomLevel = 1;
 
   /*
    *  access token of developer
    */
-  map.accessToken = function(value) {
+  this.AccessToken = function(value) {
     if (!arguments.length) return accessToken;
     accessToken = value;
-    return map;
   }
 
   /*
    *  id of map-container
    */
-  map.containerID = function(value) {
+  this.ContainerID = function(value) {
     if (!arguments.length) return containerID;
     containerID = value;
-    return map;
   }
 
   /*
    *  geojson data for map
    */
-  map.geojson = function(value) {
+  this.Geojson = function(value) {
     if (!arguments.length) return geojson;
     geojson = value;
-    return map;
   }
 
   /*
    *  tilejson data for map
    */
-  map.tilejson = function(value) {
+  this.Tilejson = function(value) {
     if (!arguments.length) return tilejson;
     tilejson = value;
-    return map;
   }
 
   /*
    *  center of view for map
    */
-  map.viewCenter = function(value) {
+  this.ViewCenter = function(value) {
     if (!arguments.length) return viewCenter;
     viewCenter = value;
-    return map;
   }
 
   /*
    *  zoom level for map
    */
-  map.zoomLevel = function(value) {
+  this.ZoomLevel = function(value) {
     if (!arguments.length) return zoomLevel;
     zoomLevel = value;
-    return map;
   }
 
-  function Init() {
+  this.Init = function() {
     tilejson = {
       tiles: [ "https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=" + accessToken],
-      minzoom: zoomLevel - 2,
-      maxzoom: zoomLevel + 2
+      minzoom: 0,
+      maxzoom: zoomLevel + 12
     };
     
-    var map = L.mapbox.map(containerID, tilejson).setView(viewCenter, zoomLevel);
+    L.mapbox.accessToken = accessToken;
+    var options = {
+      zoomControl: false
+    };
+    
+    var map = L.mapbox.map(containerID, 'mapbox.streets', options)
+      .setView(viewCenter, zoomLevel);
 
-    var myLayer = L.mapbox.featureLayer(geojson, {
-      pointToLayer: function(feature, latlon) {
-        return L.circleMarker(latlon, {
-          fillColor: feature.color,
-          fillOpacity: 1,
-          stroke: false
-        });
-      },
-      onEachFeature: function(feature, layer) {
-        layer.bindPopup(feature.properties.show_on_map);
-      },
-      filter: function(feature, layer) {
-        return feature.properties.show_on_map;
-      }
-    })
-    // .bindPopup('<div>pop up</div>')
-    .addTo(map);
+    var zoomControl = new L.control.zoom({position: 'topright'}).addTo(map);
 
-    var popup = L.Popup({
-        closeButton: false,
-        closeOnClick: false
+    var positionLayer = L.mapbox.featureLayer().addTo(map);
+
+    positionLayer.on('layeradd', function(e) {
+      var marker = e.layer,
+        feature = marker.feature;
+      marker.setIcon(L.divIcon(feature.properties.icon));
+    });
+    positionLayer.setGeoJSON(geojson);
+
+    positionLayer.on('click', function(e) {
+      onClick(e.layer);
     });
 
-    myLayer.on('click', function(e) {
-      onClick(e.layer.feature);
-      var popup = L.popup()
-        .setLatLng(e.latlng)
-        .setContent('<div>' + e.layer.feature.color + '</div>')
-        .openOn(map);
+    positionLayer.on('mouseover', function(e) {
+      e.layer.openPopup();
     });
 
-    var popup = L.popup({
-      closeButton: false,
-      closeOnClick: false
-    });
-
-    myLayer.on('mousemove', function(e) {
-      if (!popup._isOpen)
-      popup
-        .setLatLng(e.layer._latlng)
-        .setContent('<div>' + e.layer.feature.color + '</div>')
-        .openOn(map);
-    });
-
-    myLayer.on('mouseout', function(e) {
-      map.closePopup();
+    positionLayer.on('mouseout', function(e) {
+      e.layer.closePopup();
     });
   }
 
   function onClick(feature) {
     console.log(feature);
   }
-
-  return map;
 }

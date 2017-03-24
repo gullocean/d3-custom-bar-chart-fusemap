@@ -11,7 +11,13 @@
         ]
       },
       "properties": {
-        "show_on_map": true
+        "icon": {
+          "className": "my-icon icon-dc",
+          "html": "<div class='inner-circle'></div>",
+          "iconSize": null
+        },
+        "show_on_map": true,
+        "description": "<div>test</div>"
       }
     }, {
       "type": "Feature",
@@ -24,7 +30,13 @@
         ]
       },
       "properties": {
-        "show_on_map": true
+        "icon": {
+          "className": "my-icon icon-dc",
+          "html": "<div class='inner-circle'></div>",
+          "iconSize": null
+        },
+        "show_on_map": true,
+        "description": "<div>test</div>"
       }
     }
   ]

@@ -4,17 +4,13 @@
   <title>d3 charts for fusemap</title>
   <meta charset="utf-8">
 
-  <link rel="stylesheet" type="text/css" href="./bower_components/mapbox.js/mapbox.css">
-
   <link rel="stylesheet" type="text/css" href="./css/style.css">
   <link rel="stylesheet" type="text/css" href="./css/bar-chart.css">
   <link rel="stylesheet" type="text/css" href="./css/heatmap.css">
-  <link rel="stylesheet" type="text/css" href="./css/map.css">
 
   <script src="./bower_components/jquery/dist/jquery.min.js"></script>
   <script src="./bower_components/d3/d3.min.js"></script>
   <script src="./bower_components/moment/min/moment.min.js"></script>
-  <script src="./bower_components/mapbox.js/mapbox.js"></script>
 </head>
 <body>
 <a href="./">home</a>
@@ -67,8 +63,6 @@
   <div style="width: 50%; height: 500px; margin-left: auto; margin-right: auto;" id="occupancy-pattern" class="heatmap"></div>
 </div>
 <!-- end adding of Occupancy Pattern heatmap -->
-
-<!-- <div id="mapbox"></div> -->
 
 <script src="./js/app.js"></script>
 <script src="./js/bar-chart.js"></script>
@@ -148,18 +142,6 @@
 
     heatmap_csv.chart();
   });
-</script>
-<script>
-  // d3.json('data/sample_data_map.json', function(geojson) {
-  // var map = Map();
-  //   map.accessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
-  //   map.containerID('mapbox');
-  //   map.viewCenter([38.8929, -77.0252]);
-  //   map.zoomLevel(14);
-  //   map.geojson(geojson)
-
-  //   map();
-  // });
 </script>
 
 <!-- start adding of occ heatmaps according to the floor -->

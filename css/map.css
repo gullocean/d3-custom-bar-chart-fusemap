@@ -2,3 +2,30 @@
   height: 100%;
   width: 100%;
 }
+
+.my-icon {
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  left: calc( -30px / 2 );
+}
+
+.icon-dc {
+  background: #fff;
+}
+
+.icon-sf {
+  background: #63b6e5;
+}
+
+.inner-circle {
+  width: 80%;
+  height: 80%;
+  border-radius: 100%;
+  background-color: red;
+  margin-top: 10%;
+  margin-left: 10%;
+}
