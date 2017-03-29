@@ -64,6 +64,7 @@ function Occupancy() {
   var timelineSliderScale = null;
   // tooltip
   var tooltip = null;
+  var tooltipSlider = null;
   // data
   var timelineOffset = 0;
   var legendData = [];
@@ -203,6 +204,10 @@ function Occupancy() {
     }
 
     tooltip = d3.select('body')
+      .append('div')
+      .attr('class', 'toolTip');
+
+    tooltipSlider = d3.select('body')
       .append('div')
       .attr('class', 'toolTip');
 
@@ -510,7 +515,7 @@ function Occupancy() {
         .call(d3.drag()
           .on('start.interrupt', (d) => timelineSliderSelection.interrupt())
           .on('start drag', (d) => _this.changingTimeline(timelineSliderScale.invert(d3.event.x)))
-          .on('end', (d) => (timelineType === TIMELINE_HOUR ? (_this.changedTimeline(timelineSliderScale.invert(d3.event.x))) : null)));
+          .on('end', (d) => (_this.changedTimeline(timelineSliderScale.invert(d3.event.x)))));
 
     timelineSliderSelection
       .insert('g', '.track-overlay')
@@ -556,7 +561,10 @@ function Occupancy() {
         .duration(200)
         .tween('hue', function() {
           var i = d3.interpolate(timelineOffset, timelineOffset);
-          return function(t) { _this.changingTimeline(i(t)); }
+          return function(t) {
+            _this.changingTimeline(i(t));
+            tooltipSlider.style('display', 'none');
+          }
         });
   }
 
@@ -573,12 +581,24 @@ function Occupancy() {
     }
     timelineSliderHandleSelection.attr('cx', timelineSliderScale(xOffset));
 
+    tooltipSlider
+      .style('left', (timelineSliderScale(xOffset) + 50) + 'px')
+      .style('bottom', '60px')
+      .style('display', 'inline-block')
+      .html((d) => {
+        var title = timelineType === TIMELINE_HOUR ? 'time' : 'percent';
+        var value = timelineType === TIMELINE_HOUR ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
+        return '<table><tbody><tr><td>' + title + '<span> : </span></td><td>' + value + '</td></tr></td></tr></tbody></table>';
+      });
+
     DrawDevices();
   }
 
   this.changedTimeline = function(xOffset) {
     console.log(xOffset);
-    callbackTimelineChanged(xOffset);
+    tooltipSlider.style('display', 'none');
+    if (timelineType === TIMELINE_HOUR)
+      callbackTimelineChanged(xOffset);
   }
 
   this.ReDraw = function() {
