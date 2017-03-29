@@ -374,7 +374,7 @@ function Occupancy() {
     deviceCircleMergedUpdateSelection
       .attr('r', d3Transform.k * deviceCircleRadius)
       // .attr('fill', (d) => colorScale(d.PowerUsage))
-      .attr('fill', (d) => ('url(#radial-gradient-' + ((d.show && (d.percent < timelineCurrentPercent)) ? d.index : '') + ')'))
+      .attr('fill', (d) => ('url(#radial-gradient-' + ((d.show && ((timelineType === TIMELINE_PERCENT && d.percent < timelineCurrentPercent) || (timelineType === TIMELINE_HOUR))) ? d.index : '') + ')'))
       .style('cursor', 'pointer')
       .on('mousemove', function(d){
         tooltip
