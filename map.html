@@ -3,13 +3,13 @@
 <head>
   <title>fusemap-occupancy - map</title>
 
-  <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
+  <link href="./bower_components/mapbox.js/mapbox.css" rel="stylesheet" />
 
-  <link rel='stylesheet' href='./css/style.css'>
+  <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" type="text/css" href="./css/map.css">
 
-  <script src="./bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js"></script>
+  <script src="./bower_components/d3/d3.min.js"></script>
+  <script src="./bower_components/mapbox.js/mapbox.js"></script>
 </head>
 <body>
 <a href='./'>home</a>
@@ -18,12 +18,75 @@
 <script src='./js/map.js'></script>
 
 <script>
-  $.getJSON('data/map/sample_data_map.json', function(geojson) {
+  // d3.json('data/map/sample_data_map.json', function(geojson) {
+  //   var map = new Map();
+  //   map.AccessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
+  //   map.ContainerID('mapbox');
+  //   map.ViewCenter([38.897698468597525, -77.0365545805983]);
+  //   map.ZoomLevel(18);
+  //   map.Geojson(geojson);
+
+  //   map.Init();
+  // });
+  const access_token = 'pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA';
+  const map_container_id = 'mapbox';
+  var building_cnt = 10;
+  var colorRange = ['#E7767C', '#FE8C2B', '#FEEC62'];
+  var initail_zoom_level = 5;
+  var initial_center = [39, -98];
+  var initial_center_point = L.point(initial_center);
+  var colorScale = d3.scaleLinear()
+    .range(colorRange);
+
+  d3.csv('data/map/PNC_Buildings.csv', function(buildingData) {
+    buildingData = buildingData.slice(0, building_cnt);
+
+    buildingData.forEach((d, i) => {
+      d['Seating Capacity'] = !(+d['Seating Capacity']) ? 0 : +d['Seating Capacity'];
+      d['Longitude'] = +d['Longitude'];
+      d['Latitude'] = +d['Latitude'];
+    });
+
+    colorScale.domain([
+      d3.min(buildingData, (d) => d['Seating Capacity']),
+      (d3.min(buildingData, (d) => d['Seating Capacity']) + d3.max(buildingData, (d) => d['Seating Capacity'])) / 2,
+      d3.max(buildingData, (d) => d['Seating Capacity'])
+    ]);
+    
+    var geojson = { features: [] };
+
+    buildingData.forEach((d, i) => {
+      if (i > building_cnt) return;
+
+      console.log(initial_center_point.distanceTo([d['Longitude'], d['Latitude']]));
+
+      var building = {
+        type: 'Feature',
+        color: 'red',
+        geometry: {
+          type: 'Point',
+          coordinates: [d['Longitude'], d['Latitude']]
+        },
+        value: d['Seating Capacity'],
+        properties: {
+          icon: {
+            className: 'building-marker',
+            html: '<div class=\'building-marker-inner\' style=\'background-color:' + colorScale(d['Seating Capacity']) + '\'></div>',
+            iconSize: null
+          },
+          show_on_map: true,
+          description: '<div>value:' + d['Seating Capacity'] + '</div>'
+        }
+      };
+      geojson.features.push(building);
+    });
+
     var map = new Map();
-    map.AccessToken('pk.eyJ1IjoiZ3VsbG9jZWFuIiwiYSI6ImNpenM2dWN3MDAwZnIyd2w5NGhkbTJvdTgifQ.Hsf1DaKu_R1xViZMM0X7LA');
-    map.ContainerID('mapbox');
-    map.ViewCenter([38.897698468597525, -77.0365545805983]);
-    map.ZoomLevel(15);
+    map.AccessToken(access_token);
+    map.ContainerID(map_container_id);
+    map.ViewCenter(initial_center);
+    map.ZoomLevel(initail_zoom_level);
+
     map.Geojson(geojson);
 
     map.Init();

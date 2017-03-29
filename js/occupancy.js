@@ -213,6 +213,8 @@ function Occupancy() {
     floorImage.src = dataset.FloorPlanURL;
     floorImage.onload = this.FloorImageLoaded;
 
+    startLoading();
+
     floorCanvasContainerSelection
       .style('position', 'relative')
       .style('height', (canvasSize.height + timelineSliderSize.height) + 'px')
@@ -305,6 +307,8 @@ function Occupancy() {
     DrawDevices();
     DrawLegend();
     DrawTimeline();
+
+    stopLoading();
   }
 
   function DrawDefs() {
@@ -433,7 +437,7 @@ function Occupancy() {
     legendInnerCircleSelection
       .attr('height', legendRectSize.height)
       .attr('width', legendRectSize.width)
-      .attr('r', 10)
+      .attr('r', 9)
       .attr('fill', (d) => (d.active ? colorScale(d.value) : 'transparent'));
 
     legendOuterCircleSelection

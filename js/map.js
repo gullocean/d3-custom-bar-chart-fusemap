@@ -1,4 +1,6 @@
 function Map() {
+  const colors = ['red', 'blue', 'MAROON', 'salmon', 'LIME', 'YELLOW'];
+  // input data
   let accessToken = '';
   let containerID = '';
   let geojson = '';
@@ -58,10 +60,16 @@ function Map() {
     
     var map = L.mapbox.map(containerID, null, map_options)
       .setView(viewCenter, zoomLevel);
+
     map
       .legendControl
         .addLegend('<div class="heatmap-legend">test div</div>')
         .setPosition('bottomleft');
+
+    map.on('zoomstart', (e) => { console.log('zoomstart', map.getCenter()); });
+    map.on('zoomend', (e) => { console.log('zoomend', map.getBounds()); });
+    map.on('dragstart', (e) => { console.log('dragstart', map.getCenter()); });
+    map.on('dragend', (e) => { console.log('dragend', map.getCenter()); });
 
     var zoomControl = L.control.zoom({position: 'topright'}).addTo(map);
 
@@ -74,10 +82,11 @@ function Map() {
         feature = marker.feature;
       marker.setIcon(L.divIcon(feature.properties.icon));
     });
+
     positionLayer.setGeoJSON(geojson);
 
     positionLayer.on('click', function(e) {
-      onClick(e.layer);
+      onClick(e.layer.feature);
     });
 
     positionLayer.on('mouseover', function(e) {

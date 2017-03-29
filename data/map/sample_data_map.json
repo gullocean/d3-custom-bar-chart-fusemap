@@ -5,15 +5,13 @@
       "color": "red",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -77.0365545805983,
-          38.897698468597525
-        ]
+        "coordinates": [-77.0365545805983, 38.897698468597525]
       },
+      "value": 1,
       "properties": {
         "icon": {
-          "className": "my-icon icon-dc",
-          "html": "<div class='inner-circle'></div>",
+          "className": "building-marker",
+          "html": "<div class='building-marker-inner'></div>",
           "iconSize": null
         },
         "show_on_map": true,
@@ -24,15 +22,13 @@
       "color": "blue",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -77.0256048812866,
-          38.89784666877921
-        ]
+        "coordinates": [-77.0355545805983, 38.897698468597525]
       },
+      "value": 2,
       "properties": {
         "icon": {
-          "className": "my-icon icon-dc",
-          "html": "<div class='inner-circle'></div>",
+          "className": "building-marker",
+          "html": "<div class='building-marker-inner'></div>",
           "iconSize": null
         },
         "show_on_map": true,
@@ -43,15 +39,13 @@
       "color": "blue",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -77.0452048812966,
-          38.89784666877821
-        ]
+        "coordinates": [-77.0375545805983, 38.897698468597525]
       },
+      "value": 3,
       "properties": {
         "icon": {
-          "className": "my-icon icon-dc",
-          "html": "<div class='inner-circle'></div>",
+          "className": "building-marker",
+          "html": "<div class='building-marker-inner'></div>",
           "iconSize": null
         },
         "show_on_map": true,
@@ -62,15 +56,13 @@
       "color": "blue",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -77.0346048812846,
-          38.89784666877931
-        ]
+        "coordinates": [-77.0365545805983, 38.898698468597525]
       },
+      "value": 4,
       "properties": {
         "icon": {
-          "className": "my-icon icon-dc",
-          "html": "<div class='inner-circle'></div>",
+          "className": "building-marker",
+          "html": "<div class='building-marker-inner'></div>",
           "iconSize": null
         },
         "show_on_map": true,
@@ -81,15 +73,13 @@
       "color": "blue",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -77.0296048812826,
-          38.89784666877981
-        ]
+        "coordinates": [-77.0365545805983, 38.896698468597525]
       },
+      "value": 5,
       "properties": {
         "icon": {
-          "className": "my-icon icon-dc",
-          "html": "<div class='inner-circle'></div>",
+          "className": "building-marker",
+          "html": "<div class='building-marker-inner'></div>",
           "iconSize": null
         },
         "show_on_map": true,

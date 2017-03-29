@@ -212,3 +212,11 @@ function FormatCSVForHeatmap(csvData, xTag, yTag, itemNameTag, sortFlag) {
 function FormatJsonForOccupancy(occupancyData) {
   return occupancyData;
 }
+
+function startLoading() {
+  $("body").addClass("loading");
+}
+
+function stopLoading() {
+  $("body").removeClass("loading");
+}
