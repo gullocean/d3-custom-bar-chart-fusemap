@@ -469,6 +469,7 @@ function Occupancy() {
     if (legendTitleTextSelection !== null) {
       legendTitleTextSelection
         .attr('transform', 'translate(-15, -15)')
+        .style('text-transform', 'capitalize')
         .text(legendTitle);
     }
   }
