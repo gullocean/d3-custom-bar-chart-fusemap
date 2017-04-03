@@ -168,7 +168,7 @@ function Occupancy() {
     else legendDirection = 'vertical';
   }
 
-  this.numberFormat = (d) => (Math.round(d * 10000) / 10000);
+  this.numberFormat = (d) => (Math.round(d * 100) / 100);
 
   this.Init = function() {
     if (arguments.length === 1) {
@@ -218,7 +218,7 @@ function Occupancy() {
       .append('div')
       .attr('class', 'toolTip');
 
-    tooltipSlider = d3.select('body')
+    tooltipSlider = floorCanvasContainerSelection
       .append('div')
       .attr('class', 'toolTip');
 
@@ -337,7 +337,7 @@ function Occupancy() {
 
   this.onClickZoom = function() {
     let zoomScale = +this.getAttribute('data-zoom');
-    
+
     console.log(zoomScale);
   }
 
@@ -646,12 +646,19 @@ function Occupancy() {
 
     tooltipSlider
       .style('left', (timelineSliderScale(xOffset) + 50) + 'px')
-      .style('bottom', '60px')
+      .style('bottom', 0)
       .style('display', 'inline-block')
+      .style('min-width', () => {
+        var title = timelineType === TIMELINE_HOUR ? 'time' : 'percent';
+        var value = timelineType === TIMELINE_HOUR ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
+        let tooltip_content = title + ' : ' + value;
+        let tooltip_width = GetTextSize(tooltip_content, 14, 'normal').width + 30;
+        return tooltip_width + 'px';
+      })
       .html((d) => {
         var title = timelineType === TIMELINE_HOUR ? 'time' : 'percent';
         var value = timelineType === TIMELINE_HOUR ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
-        return '<table><tbody><tr><td>' + title + '<span> : </span></td><td>' + value + '</td></tr></td></tr></tbody></table>';
+        return '<table><tbody><tr><td>' + title + ' : </td><td>' + value + '</td></tr></td></tr></tbody></table>';
       });
 
     DrawDevices();
