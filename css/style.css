@@ -10,6 +10,17 @@ text {
   cursor: default;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .toolTip {
   position: absolute;
   color: #fff;
@@ -56,7 +67,7 @@ text {
 }
 
 body.loading {
-  overflow: hidden;   
+  overflow: hidden;
 }
 
 body.loading .loading-layer {

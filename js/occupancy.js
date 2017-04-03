@@ -11,6 +11,7 @@ function Occupancy() {
   const deviceCircleRadius = 8;
   const legendRectSize = { height: 30, width: 20 };
   const timelineSliderPadding = { left: 50, right: 50 };
+  const zoomRatio = 1.2;
   // input data
   var dataset = {};
   var legendTitle = '';
@@ -48,6 +49,10 @@ function Occupancy() {
   var defRadialGradientMergedUpdateSelection = null;
   var defRadialGradientStop0Selection = null;
   var defRadialGradientStop100Selection = null;
+  var zoomControlUpdateSelection = null;
+  var zoomInUpdateSelection = null;
+  var zoomOutUpdateSelection = null;
+  var zoomResetUpdateSelection = null;
   // dimensions
   var canvasSize = { height: 600, width: 1336 };
   var floorImageSize = {};
@@ -264,9 +269,9 @@ function Occupancy() {
         .style('cursor', 'move')
         .call(
           d3.zoom()
-          .scaleExtent(zoomExtent)
-          .on('zoom', this.zoom)
-        );
+            .scaleExtent(zoomExtent)
+            .on('zoom', this.zoom)
+          );
 
     defsSelection = svgSelection
       .append('defs');
@@ -279,6 +284,48 @@ function Occupancy() {
       .append('g')
         .attr('class', 'legends');
 
+    zoomInUpdateSelection = floorCanvasContainerSelection
+      .append('div')
+        .attr('id', 'divZoomInOutsView')
+        .style('position', 'absolute')
+        .style('right', '12px')
+        .style('top', '0')
+    var ulSelection = zoomInUpdateSelection
+      .append('ul');
+    zoomInUpdateSelection = ulSelection
+      .append('li')
+        .append('button')
+          .attr('id', 'ZoomIns1')
+          .attr('class', 'zoomin')
+          .attr('title', 'Zoom In')
+          .attr('data-zoom', '+1');
+    zoomOutUpdateSelection = ulSelection
+      .append('li')
+        .append('button')
+          .attr('id', 'ZoomOuts1')
+          .attr('class', 'zoomout')
+          .attr('title', 'Zoom Out')
+          .attr('data-zoom', '-1');
+    zoomResetUpdateSelection = ulSelection
+      .append('li')
+        .append('button')
+          .attr('id', 'ZoomResets1')
+          .attr('class', 'zoomreset')
+          .attr('title', 'Zoom Reset')
+          .attr('data-zoom', '0');
+    zoomInUpdateSelection
+      .append('span')
+        .attr('class', 'sprite');
+    zoomOutUpdateSelection
+      .append('span')
+        .attr('class', 'sprite');
+    zoomResetUpdateSelection
+      .append('span')
+        .attr('class', 'sprite');
+
+    d3.selectAll("button[data-zoom]")
+      .on("click", _this.onClickZoom);
+
     flagInit = true;
   }
 
@@ -286,6 +333,12 @@ function Occupancy() {
     d3Transform = d3.event.transform;
     floorCanvasContextSelection.clearRect(0, 0, canvasSize.width, canvasSize.height);
     _this.DrawFloorImage();
+  }
+
+  this.onClickZoom = function() {
+    let zoomScale = +this.getAttribute('data-zoom');
+    
+    console.log(zoomScale);
   }
 
   this.DrawFloorImage = function() {
@@ -445,7 +498,7 @@ function Occupancy() {
 
     legendMergedEnterUpdateSelection
       .attr('transform', (d, i) => 'translate(' + 
-        (legendDirection === 'vertical' ? 0 : ( i * 130 - 50 )) + ',' +
+        (legendDirection === 'vertical' ? 0 : ( i * 130 - 150 )) + ',' +
         (legendDirection === 'vertical' ? (i * legendRectSize.height + 5) : 5) + ')');
 
     legendInnerCircleSelection

@@ -3,24 +3,48 @@
 <head>
   <title>fusemap-occupancy</title>
 
-  <link rel='stylesheet' href='./css/style.css'>
+  <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/occupancy.css">
 
   <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src='./bower_components/d3/d3.min.js'></script>
 </head>
 <body>
 <div>
   <a href='./'>home</a>
 </div>
-<div class="canvas-wrapper">
-  <canvas id='floorCanvasView'></canvas>
+<div class="container">
+  <ul class="tab-view text-right">
+    <li id="tabFloorPlan" class="active">
+      <a href="#divTabFloorPlan" data-toggle="tab">Floor Plan</a>
+    </li>
+    <li id="tabOccupancyGraph">
+      <a href="#divTabOccupancyGraph" data-toggle="tab">Occupancy Graph</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="divTabFloorPlan">
+      <div class="canvas-wrapper">
+        <canvas id='floorCanvasView'></canvas>
+      </div>
+    </div>
+    <div class="tab-pane bg-white" id="divTabOccupancyGraph" style="height: 800px;">
+      divTabOccupancyGraph
+    </div>
+  </div>
 </div>
+
 <div class="loading-layer"></div>
 
 <script src='./js/app.js'></script>
 <script src='./js/occupancy.js'></script>
 
 <script>
+$(document).ready(function() {
   var occupancy = new Occupancy();
 
   d3.json('data/occupancy/occupancy.json', function(data) {
@@ -35,6 +59,7 @@ console.log(formatedData);
 
     occupancy.Init(timelineChangedCallback);
   });
+})
 
   function timelineChangedCallback(value) {
     console.log('callback : ', d3.timeFormat('%H:%M')(value));
