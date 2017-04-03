@@ -1,0 +1,10 @@
+{"_id":{"$oid":"58da2a62ff03d3e661f713cf"},"day":"Friday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d0"},"day":"Thursday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":10.9,"timeformat":"10:54"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d1"},"day":"Tuesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":10.9545,"timeformat":"10:57"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d2"},"day":"Monday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d3"},"day":"Wednesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d4"},"day":"Friday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":10,"timeformat":"10:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d5"},"day":"Thursday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d6"},"day":"Tuesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d7"},"day":"Monday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}
+{"_id":{"$oid":"58da2a62ff03d3e661f713d8"},"day":"Wednesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0"}

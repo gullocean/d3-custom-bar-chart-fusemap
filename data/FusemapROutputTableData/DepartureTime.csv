@@ -1,0 +1,10 @@
+{"_id":{"$oid":"58da2aadff03d3e661f713e7"},"day":"Friday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":17,"timeformat":"17:0"}
+{"_id":{"$oid":"58da2aadff03d3e661f713e8"},"day":"Monday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.8857,"timeformat":"16:53"}
+{"_id":{"$oid":"58da2aadff03d3e661f713e9"},"day":"Thursday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.9194,"timeformat":"16:55"}
+{"_id":{"$oid":"58da2aadff03d3e661f713ea"},"day":"Tuesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.4,"timeformat":"16:23"}
+{"_id":{"$oid":"58da2aadff03d3e661f713eb"},"day":"Wednesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.9492,"timeformat":"16:56"}
+{"_id":{"$oid":"58da2aadff03d3e661f713ec"},"day":"Friday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":15.7692,"timeformat":"15:46"}
+{"_id":{"$oid":"58da2aadff03d3e661f713ed"},"day":"Monday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.8125,"timeformat":"16:48"}
+{"_id":{"$oid":"58da2aadff03d3e661f713ee"},"day":"Thursday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.9268,"timeformat":"16:55"}
+{"_id":{"$oid":"58da2aadff03d3e661f713ef"},"day":"Tuesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.3818,"timeformat":"16:22"}
+{"_id":{"$oid":"58da2aadff03d3e661f713f0"},"day":"Wednesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.8824,"timeformat":"16:52"}

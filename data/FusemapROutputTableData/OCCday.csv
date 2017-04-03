@@ -1,0 +1,10 @@
+{"_id":{"$oid":"58da2a17ff03d3e661f71393"},"dayofweek":"Friday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":9.0193}
+{"_id":{"$oid":"58da2a17ff03d3e661f71394"},"dayofweek":"Monday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":8.1048}
+{"_id":{"$oid":"58da2a17ff03d3e661f71395"},"dayofweek":"Thursday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":28.0933}
+{"_id":{"$oid":"58da2a17ff03d3e661f71396"},"dayofweek":"Tuesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":27.8947}
+{"_id":{"$oid":"58da2a17ff03d3e661f71397"},"dayofweek":"Wednesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":26.4896}
+{"_id":{"$oid":"58da2a17ff03d3e661f71398"},"dayofweek":"Friday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":2.3078}
+{"_id":{"$oid":"58da2a17ff03d3e661f71399"},"dayofweek":"Monday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":8.8016}
+{"_id":{"$oid":"58da2a17ff03d3e661f7139a"},"dayofweek":"Thursday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":11.0853}
+{"_id":{"$oid":"58da2a17ff03d3e661f7139b"},"dayofweek":"Tuesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":12.2506}
+{"_id":{"$oid":"58da2a17ff03d3e661f7139c"},"dayofweek":"Wednesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":5.0554}

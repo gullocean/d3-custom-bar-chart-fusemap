@@ -7,7 +7,7 @@ function Occupancy() {
   TIMELINE_HOUR = 1;
   // constants
   const zoomExtent = [1, 3];
-  const legendsCNT = 5;
+  const legendsCNT = 6;
   const deviceCircleRadius = 8;
   const legendRectSize = { height: 30, width: 20 };
   const timelineSliderPadding = { left: 50, right: 50 };
@@ -16,6 +16,7 @@ function Occupancy() {
   var legendTitle = '';
   var heatmapType = HEATMAP_PERCENT;
   var timelineType = TIMELINE_PERCENT;
+  var legendDirection = 'vertical';
   // selections
   var floorCanvasSelection = null;
   var floorCanvasContextSelection = null;
@@ -77,6 +78,8 @@ function Occupancy() {
   };
   var timelineCurrentPercent = 100;
   var timelineCurrentHour = 6;
+  // legend
+
   /*
    *  color range of color scale for heatmap
    */
@@ -97,6 +100,7 @@ function Occupancy() {
       return;
     }
     let total_power_usage = d3.sum(dataset[key], (d) => +d.PowerUsage);
+    let max_power_usage = d3.max(dataset[key], (d) => +d.PowerUsage);
     total_power_usage = total_power_usage === 0 ? 1 : total_power_usage;
     dataset[key].map((d) => {
       d.show = true;
@@ -111,7 +115,7 @@ function Occupancy() {
         default:
           d.index = d.SeatId;
       }
-      if (timelineType === TIMELINE_PERCENT) d.percent = d.PowerUsage / total_power_usage * 100;
+      d.percent = d.PowerUsage / max_power_usage * 100;
       return d;
     });
     legendData = GetLegendData(dataset.SeatScheduleList, 'PowerUsage', legendsCNT, heatmapType);
@@ -155,6 +159,8 @@ function Occupancy() {
   this.HeatmapType = function(value) {
     if (!arguments.length) return heatmapType;
     heatmapType = value;
+    if (heatmapType === HEATMAP_OCC_STATE) legendDirection = 'horizontal';
+    else legendDirection = 'vertical';
   }
 
   this.numberFormat = (d) => (Math.round(d * 10000) / 10000);
@@ -235,7 +241,7 @@ function Occupancy() {
 
     legendsTranslate = {
       x: heatmapType === HEATMAP_PERCENT ? (canvasSize.width - 150) : (canvasSize.width - 200),
-      y: heatmapType === HEATMAP_PERCENT ? ((canvasSize.height - (legendsCNT - 1) * legendRectSize.height) / 2) : (canvasSize.height - 50)
+      y: heatmapType === HEATMAP_PERCENT ? ((canvasSize.height - (legendsCNT - 1) * legendRectSize.height) / 2) : 10
     };
 
     floorCanvasSelection
@@ -346,8 +352,6 @@ function Occupancy() {
 
     defRadialGradientStop0Selection
       .attr('stop-color', (d) => colorScale(d.value));
-    // defRadialGradientStop100Selection
-    //   .attr('stop-color', (d) => colorScale(d.PowerUsage));
   }
 
   function DrawDevices() {
@@ -394,8 +398,11 @@ function Occupancy() {
   }
 
   function UpdateScale() {
-    colorScale
-      .domain(GetHeatmapExtent(dataset.SeatScheduleList, 'PowerUsage'));
+    if (heatmapType === HEATMAP_OCC_STATE)
+      colorScale.domain([0, 0.5, 1])
+    else
+      colorScale.domain(GetHeatmapExtent(dataset.SeatScheduleList, 'PowerUsage'));
+
     devicePositionScale = {
       x: (x) => (d3Transform.x + d3Transform.k * floorImageSize.width / floorImageOriginSize.width * x),
       y: (y) => (d3Transform.y + d3Transform.k * floorImageSize.height / floorImageOriginSize.height * y)
@@ -437,7 +444,9 @@ function Occupancy() {
       .attr('transform', 'translate(' + legendsTranslate.x + ',' + legendsTranslate.y + ')');
 
     legendMergedEnterUpdateSelection
-      .attr('transform', (d, i) => 'translate(0,' + (i * legendRectSize.height + 5) + ')');
+      .attr('transform', (d, i) => 'translate(' + 
+        (legendDirection === 'vertical' ? 0 : ( i * 130 - 50 )) + ',' +
+        (legendDirection === 'vertical' ? (i * legendRectSize.height + 5) : 5) + ')');
 
     legendInnerCircleSelection
       .attr('height', legendRectSize.height)
@@ -637,12 +646,13 @@ function Occupancy() {
     switch(type) {
       case HEATMAP_PERCENT:
         var heatmapExtent = GetHeatmapExtent(data, key);
-        
+        var legendExtent = GetHeatmapExtent(data, 'percent');
+
         for (var i = 0; i < legendsCNT; i ++) {
           var legend_value = heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1);
           legendData.push({
-            text: _this.numberFormat(legend_value),
-            value: legend_value,
+            text: _this.numberFormat(legendExtent[0] + i * (legendExtent[legendExtent.length - 1] - legendExtent[0]) / (legendsCNT - 1)),
+            value: heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1),
             active: true
           });
         }
@@ -660,12 +670,13 @@ function Occupancy() {
         break;
       default:
         var heatmapExtent = GetHeatmapExtent(data, key);
-        
+        var legendExtent = GetHeatmapExtent(data, 'percent');
+
         for (var i = 0; i < legendsCNT; i ++) {
           var legend_value = heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1);
           legendData.push({
-            text: _this.numberFormat(legend_value),
-            value: legend_value,
+            text: _this.numberFormat(legendExtent[0] + i * (legendExtent[legendExtent.length - 1] - legendExtent[0]) / (legendsCNT - 1)),
+            value: heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1),
             active: true
           });
         }
@@ -697,7 +708,6 @@ function Occupancy() {
   }
 
   function onClickLegend(i) {
-    console.log(i);
     legendData[i].active = !legendData[i].active;
     dataset.SeatScheduleList.forEach((device) => {
       if (device.index === legendData[i].text) device.show = legendData[i].active;
