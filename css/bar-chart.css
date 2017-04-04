@@ -3,13 +3,24 @@
   width: 100%;
 }
 
-.bar-chart .chart .axis-x path,
 .bar-chart .chart .axis-y path,
 .bar-chart .chart .grids-x path,
 .bar-chart .chart .grids-y path,
-.bar-chart .chart .grids-x .tick line,
+.bar-chart .chart .grids-x .tick line {
+  stroke: transparent;
+}
+
+.bar-chart .chart .axis-y .tick line {
+  stroke: transparent;
+}
+
+.bar-chart .chart .axis-x path,
+.bar-chart .chart .axis-x .tick line {
+  stroke: #ccd6eb;
+}
+
 .bar-chart .chart .grids-y .tick line {
-  stroke: #FFFFFF;
+  stroke: #e6e6e6;
 }
 
 .bar-chart .chart .cover-x {
@@ -25,15 +36,6 @@
   alignment-baseline: after-edge;
 }
 
-.bar-chart .chart .label-y {
-  fill: #000000;
-  font-size: 12px;
-  font-weight: bold;
-  text-anchor: middle;
-  text-transform: capitalize;
-  alignment-baseline: before-edge;
-}
-
 .bar-chart .chart-container {
   float: left;
 }
@@ -46,7 +48,7 @@
 }
 
 .bar-chart .chart-container .chart-background {
-  fill: #EBEBEB;
+  fill: transparent;
 }
 
 .bar-chart .chart-container .zoom-layer {

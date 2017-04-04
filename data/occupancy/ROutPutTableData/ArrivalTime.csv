@@ -1,0 +1,10 @@
+{"_id":{"$oid":"58e2165bff03792354fc670b"},"day":"Friday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc670c"},"day":"Thursday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":10.9,"timeformat":"10:54","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc670d"},"day":"Tuesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":10.9545,"timeformat":"10:57","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc670e"},"day":"Monday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc670f"},"day":"Wednesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc6710"},"day":"Friday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":10,"timeformat":"10:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc6711"},"day":"Thursday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc6712"},"day":"Tuesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc6713"},"day":"Monday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165bff03792354fc6714"},"day":"Wednesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","arrival":11,"timeformat":"11:0","maxdate":"2017-01-16","mindate":"2017-01-03"}

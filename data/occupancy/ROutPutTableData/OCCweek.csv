@@ -1,0 +1,14 @@
+{"_id":{"$oid":"58e2165dff03792354fc6715"},"day":"Tuesday","week":1,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":49,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6716"},"day":"Friday","week":2,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":15,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6717"},"day":"Monday","week":2,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":26,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6718"},"day":"Thursday","week":2,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":45,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6719"},"day":"Tuesday","week":2,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":43,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc671a"},"day":"Wednesday","week":2,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":43,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc671b"},"day":"Monday","week":3,"FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","occ":1,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc671c"},"day":"Tuesday","week":1,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":25,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc671d"},"day":"Friday","week":2,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":6,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc671e"},"day":"Monday","week":2,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":28,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc671f"},"day":"Thursday","week":2,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":33,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6720"},"day":"Tuesday","week":2,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":18,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6721"},"day":"Wednesday","week":2,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":12,"maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e2165dff03792354fc6722"},"day":"Monday","week":3,"FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","occ":2,"maxdate":"2017-01-16","mindate":"2017-01-03"}

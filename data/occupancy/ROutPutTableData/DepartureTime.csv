@@ -1,0 +1,10 @@
+{"_id":{"$oid":"58e216a9ff03792354fc6723"},"day":"Friday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":17,"timeformat":"17:0","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc6724"},"day":"Monday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.8857,"timeformat":"16:53","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc6725"},"day":"Thursday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.9194,"timeformat":"16:55","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc6726"},"day":"Tuesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.4,"timeformat":"16:23","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc6727"},"day":"Wednesday","FloorName":"PTPP31","BuildingID":"5823a1b14a5d27089406a77e","departure":16.9492,"timeformat":"16:56","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc6728"},"day":"Friday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":15.7692,"timeformat":"15:46","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc6729"},"day":"Monday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.8125,"timeformat":"16:48","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc672a"},"day":"Thursday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.9268,"timeformat":"16:55","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc672b"},"day":"Tuesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.3818,"timeformat":"16:22","maxdate":"2017-01-16","mindate":"2017-01-03"}
+{"_id":{"$oid":"58e216a9ff03792354fc672c"},"day":"Wednesday","FloorName":"PTPP32","BuildingID":"5823a1b14a5d27089406a77e","departure":16.8824,"timeformat":"16:52","maxdate":"2017-01-16","mindate":"2017-01-03"}
