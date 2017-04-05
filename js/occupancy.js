@@ -1,6 +1,6 @@
 function Occupancy() {
   // global
-  var _this = this;
+  let _this = this;
   HEATMAP_PERCENT = 0;
   HEATMAP_OCC_STATE = 1;
   TIMELINE_PERCENT = 0;
@@ -13,77 +13,78 @@ function Occupancy() {
   const timelineSliderPadding = { left: 50, right: 50 };
   const zoomRatio = 1.2;
   // input data
-  var dataset = {};
-  var legendTitle = '';
-  var heatmapType = HEATMAP_PERCENT;
-  var timelineType = TIMELINE_PERCENT;
-  var legendDirection = 'vertical';
+  let dataset = {};
+  let legendTitle = '';
+  let heatmapType = HEATMAP_PERCENT;
+  let timelineType = TIMELINE_PERCENT;
+  let legendDirection = 'vertical';
   // selections
-  var floorCanvasSelection = null;
-  var floorCanvasContextSelection = null;
-  var floorCanvasContainerSelection = null;
-  var floorImage = null;
-  var svgSelection = null;
-  var devicesSelection = null;
-  var deviceUpdateSelection = null;
-  var deviceEnterSelection = null;
-  var deviceExitSelection = null;
-  var deviceMergedEnterUpdateSelection = null;
-  var deviceCircleMergedUpdateSelection = null;
-  var legendEnterSelection = null;
-  var legendExitSelection = null;
-  var legendMergedEnterUpdateSelection = null;
-  var legendTextSelection = null;
-  var legendTitleTextSelection = null;
-  var legendInnerCircleSelection = null;
-  var legendOuterCircleSelection = null;
-  var legendUpdateSelection = null;
-  var legendsSelection = null;
-  var timelineSliderSVGSelection = null;
-  var timelineSliderSelection = null;
-  var timelineSliderHandleSelection = null;
-  var defsSelection = null;
-  var defRadialGradientUpdateSelection = null;
-  var defRadialGradientEnterSelection = null;
-  var defRadialGradientExitSelection = null;
-  var defRadialGradientMergedUpdateSelection = null;
-  var defRadialGradientStop0Selection = null;
-  var defRadialGradientStop100Selection = null;
-  var zoomControlUpdateSelection = null;
-  var zoomInUpdateSelection = null;
-  var zoomOutUpdateSelection = null;
-  var zoomResetUpdateSelection = null;
+  let floorCanvasSelection = null;
+  let floorCanvasContextSelection = null;
+  let floorCanvasContainerSelection = null;
+  let floorImage = null;
+  let svgSelection = null;
+  let devicesSelection = null;
+  let deviceUpdateSelection = null;
+  let deviceEnterSelection = null;
+  let deviceExitSelection = null;
+  let deviceMergedEnterUpdateSelection = null;
+  let deviceCircleMergedUpdateSelection = null;
+  let legendEnterSelection = null;
+  let legendExitSelection = null;
+  let legendMergedEnterUpdateSelection = null;
+  let legendTextSelection = null;
+  let legendTitleTextSelection = null;
+  let legendInnerCircleSelection = null;
+  let legendOuterCircleSelection = null;
+  let legendUpdateSelection = null;
+  let legendsSelection = null;
+  let timelineSliderSVGSelection = null;
+  let timelineSliderSelection = null;
+  let timelineSliderHandleSelection = null;
+  let defsSelection = null;
+  let defRadialGradientUpdateSelection = null;
+  let defRadialGradientEnterSelection = null;
+  let defRadialGradientExitSelection = null;
+  let defRadialGradientMergedUpdateSelection = null;
+  let defRadialGradientStop0Selection = null;
+  let defRadialGradientStop100Selection = null;
+  let zoomControlUpdateSelection = null;
+  let zoomInUpdateSelection = null;
+  let zoomOutUpdateSelection = null;
+  let zoomResetUpdateSelection = null;
   // dimensions
-  var canvasSize = { height: 600, width: 1336 };
-  var floorImageSize = {};
-  var floorImageOriginSize = {};
-  var floorImageInitPosition = {};
-  var d3Transform = { x: 0, y: 0, k: 1 };
-  var legendsTranslate = {};
-  var timelineSliderSize = { height: 50, width: 0 };
+  let canvasSize = { height: 600, width: 1336 };
+  let floorImageSize = {};
+  let floorImageOriginSize = {};
+  let floorImageInitPosition = {};
+  let d3Transform = { x: 0, y: 0, k: 1 };
+  let legendsTranslate = {};
+  let timelineSliderSize = { height: 50, width: 0 };
   // flags
-  var flagInit = false;
+  let flagInit = false;
   // scale
-  var colorScale = null;
-  var colorRange = ['#008000', '#FFF200', '#FF0000'];
-  var devicePositionScale = {};
-  var timelineSliderScale = null;
+  let colorScale = null;
+  let colorRange = ['#008000', '#FFF200', '#FF0000'];
+  let devicePositionScale = {};
+  let timelineSliderScale = null;
   // tooltip
-  var tooltip = null;
-  var tooltipSlider = null;
+  let tooltip = null;
   // data
-  var timelineOffset = 0;
-  var legendData = [];
+  let timelineOffset = 0;
+  let legendData = [];
   // callback
-  var callbackTimelineChanged = function() {};
+  let callbackTimelineChanged = function() {};
   // timeline slider
-  var timelineSliderScaleDomain = {
+  let timelineSliderScaleDomain = {
     percent: [0, 100],
     hour: [6, 18]
   };
-  var timelineCurrentPercent = 100;
-  var timelineCurrentHour = 6;
-  // legend
+  let timelineCurrentPercent = 100;
+  let timelineCurrentHour = 6;
+  // jquery instances
+  let jqElementTimelineSliderHandle = null;
+  let jqElementFloorCanvasContainer = null;
 
   /*
    *  color range of color scale for heatmap
@@ -138,7 +139,8 @@ function Occupancy() {
       console.error('Invalid id of canvas!');
       return;
     }
-    floorCanvasContainerSelection = d3.select(floorCanvasSelection.node().parentNode);
+    jqElementFloorCanvasContainer = $('#' + value).parent();
+    floorCanvasContainerSelection = d3.select(jqElementFloorCanvasContainer[0]);
     if (floorCanvasContainerSelection.empty()) {
       console.error('There is no container of canvas!');
       return;
@@ -214,13 +216,13 @@ function Occupancy() {
         timelineOffset = timelineCurrentPercent;
     }
 
-    tooltip = d3.select('body')
-      .append('div')
-      .attr('class', 'toolTip');
-
-    tooltipSlider = floorCanvasContainerSelection
-      .append('div')
-      .attr('class', 'toolTip');
+    if (!$('.toolTip').length) {
+      tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'toolTip');
+    } else {
+      tooltip = d3.select('.toolTip');
+    }
 
     colorScale = d3.scaleLinear()
       .range(colorRange);
@@ -245,7 +247,7 @@ function Occupancy() {
     canvasSize.height = canvasSize.height - timelineSliderSize.height;
 
     legendsTranslate = {
-      x: heatmapType === HEATMAP_PERCENT ? (canvasSize.width - 150) : (canvasSize.width - 200),
+      x: heatmapType === HEATMAP_PERCENT ? (canvasSize.width - 90) : (canvasSize.width - 200),
       y: heatmapType === HEATMAP_PERCENT ? ((canvasSize.height - (legendsCNT - 1) * legendRectSize.height) / 2) : 10
     };
 
@@ -290,7 +292,7 @@ function Occupancy() {
         .style('position', 'absolute')
         .style('right', '12px')
         .style('top', '0')
-    var ulSelection = zoomInUpdateSelection
+    let ulSelection = zoomInUpdateSelection
       .append('ul');
     zoomInUpdateSelection = ulSelection
       .append('li')
@@ -443,6 +445,7 @@ function Occupancy() {
           .style('left', d3.event.pageX + 'px')
           .style('top', d3.event.pageY + 'px')
           .style('display', 'inline-block')
+          .style('min-width', 'initial')
           .html('<table><tbody><tr><td>Seat<span> : </span></td><td>' + d.SeatName + '</td></tr>' + 
             '<tr><td>Device<span> : </span></td><td>' + d.ApplianceName + '</td></tr>' +
             '<tr><td>User<span> : </span></td><td>' + (d.IsAssigned ? d.UserFullName : 'Not Assigned') + '</td></tr></tbody></table>');
@@ -525,7 +528,7 @@ function Occupancy() {
       legendOuterCircleSelection
         .style('cursor', 'pointer')
         .style('pointer-events', 'fill')
-        .on('click', (d, i) => onClickLegend(i));
+        .on('click', (d, i) => _this.onClickLegend(i));
     }
 
     if (legendTitleTextSelection !== null) {
@@ -587,12 +590,12 @@ function Occupancy() {
         .style('font', '10px sans-serif')
       .selectAll('text')
       .data((d) => {
-        var tickCount = timelineType === TIMELINE_HOUR ? 13 : 11;
-        var tickMin = d3.min(timelineSliderScale.domain());
-        var tickMax = d3.max(timelineSliderScale.domain());
-        var tickStep = (tickMax - tickMin) / (tickCount - 1);
-        var ticks = new Array(tickCount);
-        for (var i = 0; i < tickCount; i ++) ticks[i] = tickMin + i * tickStep;
+        let tickCount = timelineType === TIMELINE_HOUR ? 13 : 11;
+        let tickMin = d3.min(timelineSliderScale.domain());
+        let tickMax = d3.max(timelineSliderScale.domain());
+        let tickStep = (tickMax - tickMin) / (tickCount - 1);
+        let ticks = new Array(tickCount);
+        for (let i = 0; i < tickCount; i ++) ticks[i] = tickMin + i * tickStep;
         return ticks;
       })
       .enter()
@@ -619,14 +622,16 @@ function Occupancy() {
         .style('stroke-opacity', '0.5')
         .style('stroke-width', '1.25px');
 
+    jqElementTimelineSliderHandle = jqElementFloorCanvasContainer.find('.handle');
+
     timelineSliderSelection
       .transition()
         .duration(200)
         .tween('hue', function() {
-          var i = d3.interpolate(timelineOffset, timelineOffset);
+          let i = d3.interpolate(timelineOffset, timelineOffset);
           return function(t) {
             _this.changingTimeline(i(t));
-            tooltipSlider.style('display', 'none');
+            tooltip.style('display', 'none');
           }
         });
   }
@@ -644,20 +649,18 @@ function Occupancy() {
     }
     timelineSliderHandleSelection.attr('cx', timelineSliderScale(xOffset));
 
-    tooltipSlider
-      .style('left', (timelineSliderScale(xOffset) + 50) + 'px')
-      .style('bottom', 0)
+    const title = (timelineType === TIMELINE_HOUR) ? 'time' : 'percent';
+    const value = (timelineType === TIMELINE_HOUR) ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
+    const tooltip_content = title + ' : ' + value;
+    const tooltip_width = GetTextSize(tooltip_content, 14, 'normal').width + 30;
+    tooltip
+      .style('left', (timelineSliderScale(xOffset) + 50 + tooltip_width / 2) + 'px')
       .style('display', 'inline-block')
-      .style('min-width', () => {
-        var title = timelineType === TIMELINE_HOUR ? 'time' : 'percent';
-        var value = timelineType === TIMELINE_HOUR ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
-        let tooltip_content = title + ' : ' + value;
-        let tooltip_width = GetTextSize(tooltip_content, 14, 'normal').width + 30;
-        return tooltip_width + 'px';
-      })
+      .style('top', (jqElementTimelineSliderHandle.offset().top) + 'px')
+      .style('min-width', tooltip_width + 'px')
       .html((d) => {
-        var title = timelineType === TIMELINE_HOUR ? 'time' : 'percent';
-        var value = timelineType === TIMELINE_HOUR ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
+        let title = timelineType === TIMELINE_HOUR ? 'time' : 'percent';
+        let value = timelineType === TIMELINE_HOUR ? d3.timeFormat('%H:%M')(xOffset) : _this.numberFormat(xOffset);
         return '<table><tbody><tr><td>' + title + ' : </td><td>' + value + '</td></tr></td></tr></tbody></table>';
       });
 
@@ -666,7 +669,7 @@ function Occupancy() {
 
   this.changedTimeline = function(xOffset) {
     console.log(xOffset);
-    tooltipSlider.style('display', 'none');
+    tooltip.style('display', 'none');
     if (timelineType === TIMELINE_HOUR)
       callbackTimelineChanged(xOffset);
   }
@@ -701,15 +704,15 @@ function Occupancy() {
       console.error('Invalid key!');
       return null;
     }
-    var legendData = [];
+    let legendData = [];
+
+    let heatmapExtent = GetHeatmapExtent(data, key);
+    let legendExtent = GetHeatmapExtent(data, 'percent');
 
     switch(type) {
       case HEATMAP_PERCENT:
-        var heatmapExtent = GetHeatmapExtent(data, key);
-        var legendExtent = GetHeatmapExtent(data, 'percent');
-
-        for (var i = 0; i < legendsCNT; i ++) {
-          var legend_value = heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1);
+        for (let i = 0; i < legendsCNT; i ++) {
+          let legend_value = heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1);
           legendData.push({
             text: _this.numberFormat(legendExtent[0] + i * (legendExtent[legendExtent.length - 1] - legendExtent[0]) / (legendsCNT - 1)),
             value: heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1),
@@ -729,11 +732,8 @@ function Occupancy() {
         }];
         break;
       default:
-        var heatmapExtent = GetHeatmapExtent(data, key);
-        var legendExtent = GetHeatmapExtent(data, 'percent');
-
-        for (var i = 0; i < legendsCNT; i ++) {
-          var legend_value = heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1);
+        for (let i = 0; i < legendsCNT; i ++) {
+          let legend_value = heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1);
           legendData.push({
             text: _this.numberFormat(legendExtent[0] + i * (legendExtent[legendExtent.length - 1] - legendExtent[0]) / (legendsCNT - 1)),
             value: heatmapExtent[0] + i * (heatmapExtent[heatmapExtent.length - 1] - heatmapExtent[0]) / (legendsCNT - 1),
@@ -767,7 +767,7 @@ function Occupancy() {
     }
   }
 
-  function onClickLegend(i) {
+  this.onClickLegend = function(i) {
     legendData[i].active = !legendData[i].active;
     dataset.SeatScheduleList.forEach((device) => {
       if (device.index === legendData[i].text) device.show = legendData[i].active;

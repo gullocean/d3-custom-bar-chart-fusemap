@@ -38,17 +38,17 @@
         <canvas id='floorCanvasView'></canvas>
       </div>
     </div>
+
+    <div class="tab-pane bg-white" id="divTabOccupancyPercentage">
+      <div class="canvas-wrapper">
+        <canvas id='floorCanvasViewPercentage'></canvas>
+      </div>
+    </div>
+
     <div class="tab-pane bg-white" id="divTabOccupancyGraph">
       <div style="width: 100%;">
         <div style="width: 100%; height: 500px;">
           <div id="plugloadsGraph-barchart" class="bar-chart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-pane bg-white" id="divTabOccupancyPercentage">
-      <div style="width: 100%;">
-        <div style="width: 100%; height: 500px;">
-          <div>divTabOccupancyPercentage</div>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@
 
       d3.json('data/occupancy/occupancy.json', function(data) {
         var formatedData = FormatJsonForOccupancy(data);
-        console.log(formatedData);
+
         occupancy.FloorCanvasID('floorCanvasView');
         occupancy.ColorRange(['#88D8B0', '#FFF200', '#FF6F69']);
         occupancy.HeatmapType(HEATMAP_OCC_STATE); // HEATMAP_PERCENT HEATMAP_OCC_STATE
@@ -79,11 +79,24 @@
 
         occupancy.Init(timelineChangedCallback);
       });
+    } else if (target[0] === $('#divTabOccupancyPercentage')[0]) {
+      var occupancy = new Occupancy();
+
+      d3.json('data/occupancy/occupancy.json', function(data) {
+        var formatedData = FormatJsonForOccupancy(data);
+
+        occupancy.FloorCanvasID('floorCanvasViewPercentage');
+        occupancy.ColorRange(['#88D8B0', '#FFF200', '#FF6F69']);
+        occupancy.HeatmapType(HEATMAP_PERCENT); // HEATMAP_PERCENT HEATMAP_OCC_STATE
+        occupancy.TimelineType(TIMELINE_PERCENT); // TIMELINE_PERCENT TIMELINE_HOUR
+        occupancy.Dataset(formatedData);
+        occupancy.LegendTitle('seat utilization');
+
+        occupancy.Init(timelineChangedCallback);
+      });
     } else if (target[0] === $('#divTabOccupancyGraph')[0]) {
         d3.csv('./data/occupancy/occupancy.csv', function(chartData) {
           var formatedData = FormatCSVForBarchart(chartData, 'hour', 'occ', 'FloorName', false);
-
-          console.log(formatedData);
 
           var barChart_csv = new BarChart();
 

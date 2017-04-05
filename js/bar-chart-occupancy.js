@@ -215,9 +215,13 @@ function BarChart() {
   }
 
   this.Init = function() {
-    tooltip = d3.select('body')
-      .append('div')
-      .attr('class', 'toolTip');
+    if (!$('.toolTip').length) {
+      tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'toolTip');
+    } else {
+      tooltip = d3.select('.toolTip');
+    }
 
     zoom = d3.zoom()
       .scaleExtent([1, 10])
@@ -566,6 +570,7 @@ function BarChart() {
           .style('left', (d3.event.pageX) + 'px')
           .style('top', (d3.event.pageY) + 'px')
           .style('display', 'inline-block')
+          .style('min-width', 'initial')
           .html('<table><tbody><tr><td>' + chartData.labelXaxis + '<span> : </span></td><td>' + (chartData.formatXaxis === '' ? d.Xaxis : d3.timeFormat(chartData.formatXaxis)(d.Xaxis)) + '</td></tr>' + 
             '<tr><td>' + d.itemName + '<span> : </span></td><td>' + numberFormat(d.Yaxis) + '</td></tr></tbody></table>');
       })
